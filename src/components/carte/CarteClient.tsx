@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
-import { MiyabiSymbol } from "@/components/logo/Logo";
 import { useSmoothScroll } from "@/components/shell/SmoothScroll";
 import { ArrowRight } from "@/components/ui/Icons";
 import { Photo } from "@/components/ui/Photo";
@@ -17,8 +16,7 @@ const CARD_SIZES = "(min-width: 160rem) 18vw, (min-width: 96rem) 23vw, (min-widt
 /**
  * La carte : une page d'usage, pensée pour être consultée vite, debout, d'une main.
  * Catégories en onglets (tout le contenu reste dans le code de la page pour le référencement et sans JavaScript).
- * Toutes les cartes ont le même format : photographie et nom japonais à sa droite,
- * ou fiche de papier quand aucune image n'est disponible.
+ * Toutes les cartes ont le même format : photographie et nom japonais à sa droite.
  */
 export function CarteClient({ menu }: { menu: MenuSection[] }) {
   const firstId = menu[0]?.id ?? "matcha";
@@ -27,12 +25,25 @@ export function CarteClient({ menu }: { menu: MenuSection[] }) {
 
   const root = useRef<HTMLDivElement>(null);
   const navRef = useRef<HTMLDivElement>(null);
+  const sentinel = useRef<HTMLSpanElement>(null);
   const indicator = useRef<HTMLSpanElement>(null);
   const anchor = useRef<HTMLDivElement>(null);
   const busy = useRef(false);
   const { scrollTo } = useSmoothScroll();
 
   const allPriced = menu.every((c) => c.products.every((p) => p.price != null));
+
+  // La barre d'onglets est-elle collée en haut de l'écran ? Le navigateur le signale sans calcul au défilement.
+  useEffect(() => {
+    const mark = sentinel.current;
+    const nav = navRef.current;
+    if (!mark || !nav) return;
+    const io = new IntersectionObserver(([entry]) => {
+      if (entry) nav.dataset.stuck = String(!entry.isIntersecting && entry.boundingClientRect.top < 0);
+    });
+    io.observe(mark);
+    return () => io.disconnect();
+  }, []);
 
   // L'indicateur glisse sous l'onglet actif.
   const moveIndicator = useCallback((id: string, animate: boolean) => {
@@ -135,6 +146,7 @@ export function CarteClient({ menu }: { menu: MenuSection[] }) {
       </header>
 
       {/* Catégories */}
+      <span ref={sentinel} aria-hidden className="block h-px" />
       <div ref={navRef} className="carte-nav border-y border-ink/10 bg-ivory">
         <div role="tablist" aria-label="Catégories de la carte" className="no-scrollbar relative flex gap-1 overflow-x-auto container-x sm:gap-3 lg:gap-8">
           {menu.map((c) => {
@@ -181,7 +193,7 @@ export function CarteClient({ menu }: { menu: MenuSection[] }) {
             </div>
             <div className="grid grid-cols-2 gap-x-3 gap-y-7 sm:grid-cols-3 sm:gap-x-5 lg:gap-x-7 lg:gap-y-11 2xl:grid-cols-4 4xl:grid-cols-5">
               {c.products.map((p, i) => (
-                <ProductCard key={p.id} product={p} paper={c.paper} priority={c.id === firstId && i < 3} />
+                <ProductCard key={p.id} product={p} priority={c.id === firstId && i < 3} />
               ))}
             </div>
           </div>
@@ -233,45 +245,32 @@ function ProductText({ product }: { product: MenuProduct }) {
   );
 }
 
-/** Une carte : photographie et nom japonais à sa droite, ou fiche de papier. Même format pour toutes. */
-function ProductCard({ product, paper, priority }: { product: MenuProduct; paper: string; priority: boolean }) {
+/** Une carte : photographie et nom japonais à sa droite. Même format pour toutes. */
+function ProductCard({ product, priority }: { product: MenuProduct; priority: boolean }) {
   const { photo, nameJa } = product;
   return (
     <article data-card className="group flex flex-col">
-      {photo ? (
-        <div className="menu-media flex gap-1.5 lg:gap-2.5">
-          <div className="relative min-w-0 flex-1 overflow-hidden">
-            <Photo
-              src={photo.src}
-              alt={photo.alt}
-              focus={photo.focus}
-              fill
-              sizes={CARD_SIZES}
-              quality={85}
-              priority={priority}
-              className="transition-transform duration-[1400ms] ease-[var(--ease-expo)] group-hover:scale-[1.04]"
-            />
-          </div>
-          {nameJa ? (
-            <p lang="ja" className="tategaki menu-jp">
-              {nameJa}
-            </p>
-          ) : (
-            <span aria-hidden className="menu-jp" />
-          )}
+      <div className="menu-media flex gap-1.5 lg:gap-2.5">
+        <div className="relative min-w-0 flex-1 overflow-hidden">
+          <Photo
+            src={photo.src}
+            alt={photo.alt}
+            focus={photo.focus}
+            fill
+            sizes={CARD_SIZES}
+            quality={85}
+            priority={priority}
+            className="transition-transform duration-[1400ms] ease-[var(--ease-expo)] group-hover:scale-[1.04]"
+          />
         </div>
-      ) : (
-        <div className="menu-media relative flex items-center justify-center p-3" style={{ backgroundColor: paper }}>
-          {nameJa ? (
-            <span lang="ja" className="tategaki max-h-full text-[clamp(0.85rem,6.2cqw,1.5rem)] leading-[1.7] text-matcha [text-wrap:balance] transition-transform duration-[1100ms] ease-[var(--ease-expo)] group-hover:-translate-y-1">
-              {nameJa}
-            </span>
-          ) : (
-            <span className="display text-center text-[clamp(1.2rem,10cqw,2.2rem)] italic leading-[1.1] text-matcha">{product.name}</span>
-          )}
-          <MiyabiSymbol className="absolute bottom-3 left-3 w-6 text-matcha/35" />
-        </div>
-      )}
+        {nameJa ? (
+          <p lang="ja" className="tategaki menu-jp">
+            {nameJa}
+          </p>
+        ) : (
+          <span aria-hidden className="menu-jp" />
+        )}
+      </div>
       <ProductText product={product} />
     </article>
   );

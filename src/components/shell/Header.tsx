@@ -17,6 +17,7 @@ export function Header() {
   const [state, setState] = useState({ solid: false, hidden: false });
   const { lock, unlock } = useSmoothScroll();
   const trigger = useRef<HTMLButtonElement>(null);
+  const headerRef = useRef<HTMLElement>(null);
   const openRef = useRef(false);
 
   const toggle = useCallback(
@@ -70,15 +71,16 @@ export function Header() {
 
   // Couleur de l'interface : suit la section sous l'en-tête.
   useEffect(() => {
-    const html = document.documentElement;
-    html.dataset.surfaceLive = "1";
-    const nodes = Array.from(document.querySelectorAll<HTMLElement>("[data-surface]")).filter((n) => n !== html);
+    const header = headerRef.current;
+    if (!header) return;
+    document.documentElement.dataset.toneLive = "1";
+    const nodes = Array.from(document.querySelectorAll<HTMLElement>("[data-surface]"));
     const first = nodes[0];
-    if (first) html.dataset.surface = first.dataset.surface;
+    if (first) header.dataset.tone = first.dataset.surface;
     const io = new IntersectionObserver(
       (entries) => {
         for (const e of entries) {
-          if (e.isIntersecting) html.dataset.surface = (e.target as HTMLElement).dataset.surface;
+          if (e.isIntersecting) header.dataset.tone = (e.target as HTMLElement).dataset.surface;
         }
       },
       { rootMargin: "-2% 0px -97% 0px" },
@@ -93,6 +95,7 @@ export function Header() {
         Aller au contenu
       </a>
       <header
+        ref={headerRef}
         data-header
         className={cn(
           "fixed inset-x-0 top-0 z-[110] flex h-[var(--header-h)] items-center justify-between container-x pt-[env(safe-area-inset-top)]",

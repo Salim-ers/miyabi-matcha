@@ -27,8 +27,6 @@ export type MenuCategory = {
   /** Intitulé japonais tel qu'il figure sur la carte officielle. */
   labelJa?: string;
   order: number;
-  /** Teinte du papier pour les références sans photographie. */
-  paper: string;
 };
 
 export type MenuProduct = {
@@ -40,8 +38,8 @@ export type MenuProduct = {
   description?: string;
   /** Une seule ligne, issue de `description`. */
   short?: string;
-  /** Photo du produit. Sans photo, une fiche de papier affiche le nom japonais. */
-  photo?: ArtPhoto;
+  /** Photo du produit, obligatoire : un produit sans photo ne figure pas sur la carte. */
+  photo: ArtPhoto;
   /** Prix en euros, tel qu'affiché en boutique. Laisser vide tant qu'il n'est pas confirmé. */
   price?: number;
   available?: boolean;
@@ -49,11 +47,11 @@ export type MenuProduct = {
 };
 
 export const menuCategories: MenuCategory[] = [
-  { id: "matcha", label: "Matcha", short: "Matcha", labelJa: "宇治・福岡産の高級抹茶", order: 1, paper: "#E4E8D9" },
-  { id: "crepes", label: "Crêpes japonaises au matcha", short: "Crêpes japonaises", tab: "Crêpes", labelJa: "抹茶の和風クレープ", order: 2, paper: "#E9E9D6" },
-  { id: "cafe", label: "Café", short: "Café", labelJa: "コーヒー", order: 3, paper: "#EADFD0" },
-  { id: "boba", label: "Boba", short: "Boba", order: 4, paper: "#EDE3D3" },
-  { id: "fruity-tea", label: "Fruity Tea", short: "Fruity Tea", labelJa: "フルーティーティー", order: 5, paper: "#EFE6DB" },
+  { id: "matcha", label: "Matcha", short: "Matcha", labelJa: "宇治・福岡産の高級抹茶", order: 1 },
+  { id: "crepes", label: "Crêpes japonaises au matcha", short: "Crêpes japonaises", tab: "Crêpes", labelJa: "抹茶の和風クレープ", order: 2 },
+  { id: "cafe", label: "Café", short: "Café", labelJa: "コーヒー", order: 3 },
+  { id: "boba", label: "Boba", short: "Boba", order: 4 },
+  { id: "fruity-tea", label: "Fruity Tea", short: "Fruity Tea", labelJa: "フルーティーティー", order: 5 },
 ];
 
 export const menuProducts: MenuProduct[] = [
@@ -250,36 +248,6 @@ export const menuProducts: MenuProduct[] = [
     order: 5,
   },
 
-  // Sur la carte de la boutique
-  {
-    id: "sweet-potato-latte",
-    name: "Sweet Potato Latte",
-    category: "cafe",
-    price: 5.95,
-    order: 6,
-  },
-  {
-    id: "americano-coconut-water",
-    name: "Americano Coconut Water",
-    category: "cafe",
-    price: 4.5,
-    order: 7,
-  },
-  {
-    id: "espresso",
-    name: "Espresso",
-    category: "cafe",
-    price: 2.8,
-    order: 8,
-  },
-  {
-    id: "cappuccino",
-    name: "Cappuccino",
-    category: "cafe",
-    price: 3.8,
-    order: 9,
-  },
-
   // BOBA
   {
     id: "thai-milk-tea",
@@ -324,13 +292,6 @@ export const menuProducts: MenuProduct[] = [
     price: 6.5,
     order: 2,
   },
-  {
-    id: "brown-sugar-creme-brulee-milk",
-    name: "Brown Sugar Crème Brûlée Milk",
-    category: "boba",
-    price: 6.5,
-    order: 8,
-  },
 
 
   // FRUITY TEA
@@ -368,7 +329,7 @@ export const menuExtras = [
 const priceFormat = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" });
 export const formatPrice = (price: number) => priceFormat.format(price);
 
-/** Catégories triées. Dans chacune, les produits photographiés d'abord (grand format), puis l'ordre de la carte. */
+/** Catégories triées, avec leurs produits disponibles triés. Les catégories vides sont masquées. */
 export function getMenu() {
   return [...menuCategories]
     .sort((a, b) => a.order - b.order)
@@ -376,7 +337,7 @@ export function getMenu() {
       ...category,
       products: menuProducts
         .filter((p) => p.category === category.id && p.available !== false)
-        .sort((a, b) => Number(Boolean(b.photo)) - Number(Boolean(a.photo)) || (a.order ?? 99) - (b.order ?? 99)),
+        .sort((a, b) => (a.order ?? 99) - (b.order ?? 99)),
     }))
     .filter((c) => c.products.length > 0);
 }

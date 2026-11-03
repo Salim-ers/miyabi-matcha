@@ -98,7 +98,7 @@ const jsonLd = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fr" className={`${display.variable} ${sans.variable} ${japanese.variable}`} data-surface="light" suppressHydrationWarning>
+    <html lang="fr" className={`${display.variable} ${sans.variable} ${japanese.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: stageBootScript }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />

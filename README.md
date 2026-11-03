@@ -23,7 +23,7 @@ Node 20.9 ou plus récent.
 | Route | Rôle | Mise en scène |
 | --- | --- | --- |
 | `/` | Accueil, court et spectaculaire | Couverture de magazine dans une alcôve noire, paravent 3D, rouleau photographique, deux portes typographiques |
-| `/carte` | Consultation rapide | Onglets, cartes alignées : photo et titre japonais à sa droite, prix, 27 produits |
+| `/carte` | Consultation rapide | Onglets, cartes alignées : photo et titre japonais à sa droite, prix, 22 produits |
 | `/creations` | Émerveiller | Galerie sur le noir du studio, une mise en scène par création |
 | `/maison` | Univers et gestes | Trois séquences photographiques, presque sans texte |
 | `/contact` | Venir | Adresse, horaires, itinéraire, Google Maps, Instagram |
@@ -40,13 +40,13 @@ Node 20.9 ou plus récent.
 
 - **Horaires** : `hours` dans `src/data/site.ts`, source : fiche Google et bio Instagram. Ils alimentent aussi la page Contact, le pied de page et les données structurées.
 - **Prix** : champ `price` de chaque produit dans `src/data/menu.ts` (en euros, ex. `price: 6.5`). Il s'affiche seul dès qu'il est renseigné. La mention « Tarifs en boutique » disparaît quand tous les produits en ont un. Source : carte de la boutique, pas Uber Eats, dont les tarifs diffèrent. Les suppléments sont dans `menuExtras`.
-- **Masquer un produit** : `available: false`.
+- **Masquer un produit** : `available: false`. Chaque produit doit avoir une photo (`photo` est obligatoire).
 - **Description d'une ligne** : `short`, à composer uniquement avec les mots de `description`.
 
 ## Ajouter ou remplacer une photo
 
 1. Déposer le fichier dans `public/images/<dossier>/`.
-2. Lancer `npm run images:manifest`. Le script régénère `src/data/images.ts` avec les dimensions réelles et le flou de chargement.
+2. Lancer `npm run images:manifest`. Le script régénère `src/data/images.ts` avec les dimensions réelles et la couleur de chargement.
 3. Déclarer la photo dans `src/data/photos.ts` avec son point focal, puis l'utiliser dans `menu.ts` ou `products.ts`.
 
 **Règle du site : chaque photo n'apparaît qu'une seule fois**, sauf quatre exceptions validées. La répartition est dans [docs/AUDIT-PHOTOS.md](docs/AUDIT-PHOTOS.md).
@@ -73,7 +73,7 @@ Les caractères absents s'affichent dans la police mincho du système.
 - **Résolution des photos** : les photos de produits font de 774 à 864 px de large. Elles restent belles jusqu'au 1440p, mais sont un peu douces sur un écran 4K. Pour un rendu natif, remplacer les fichiers par des exports haute définition de même cadrage, puis relancer `npm run images:manifest`.
 - **Images générées par IA** : 5 produits sans prise de vue ont une image créée avec gpt-image-2 à partir des photos du site (`public/images/menu/ia/`) : Hojicha Soy Cream, Brown Sugar Milk Tea, Black Sesame Mochi Cream, Various Berry Black Tea, Passionfruit Sparkling. Elles montrent une boisson plausible, pas le produit réel : à faire valider par la boutique, puis à remplacer par de vraies photos (même nom de fichier).
 - **Prix** : repris de la carte de la boutique. Trois diffèrent des affiches, qui indiquent 10 € pour la Crêpe Strawberry (carte : 9 €) et 6,50 € pour Matcha Yuzu Sparkling et Matcha Coconut Cloud (carte : 5,95 €). À confirmer.
-- **Sans image** : Sweet Potato Latte, Americano Coconut Water, Espresso, Cappuccino et Brown Sugar Crème Brûlée Milk, repris de la carte de la boutique.
+- **Retirés faute de photo** : Sweet Potato Latte (5,95 €), Americano Coconut Water (4,50 €), Espresso (2,80 €), Cappuccino (3,80 €) et Brown Sugar Crème Brûlée Milk (6,50 €) figurent sur la carte de la boutique mais pas sur le site. Pour les ajouter : une photo et une entrée dans `menu.ts`.
 - **Associations photo / produit** à confirmer par la boutique : `strawberry-splash` illustre le Strawberry Matcha, et la photo « Thai Milk Tea Iced Smoothie » l'article Thai Milk Tea.
 - **Photo de la boutique** : aucune photo de la façade ou de l'intérieur n'est disponible. La page Contact montre le plateau devant la vitrine.
 - **Descriptions de la carte** : elles reprennent le texte visible sur Uber Eats, coupé avant les passages tronqués. Les intitulés japonais sont ceux de la carte, y compris 宇治・福岡産の高級抹茶 pour la catégorie Matcha.
@@ -88,7 +88,7 @@ src/
   components/
     shell/        En-tête, menu mobile, barre basse, pied de page, intro, transitions, défilement
     home/         Couverture (HomeHero), paravent (HomeByobu), rouleau (HomeEmaki), portes (HomeDoors)
-    carte/        Onglets, cartes photo avec titre japonais et prix, fiches de papier
+    carte/        Onglets, cartes photo avec titre japonais et prix
     creations/    Galerie et mises en scène
     maison/       Les trois séquences
     contact/      Carte Google Maps avec consentement
@@ -104,8 +104,8 @@ src/
 ## Accessibilité et mouvement
 
 - `prefers-reduced-motion` : ni intro, ni transition, ni épinglage, ni parallaxe. Les compositions restent complètes, et la phrase d'identité retrouve sa propre section.
-- Écrans tactiles : défilement natif, pas de scène épinglée, séquences en CSS (`position: sticky`) et glissements natifs. Deux boutons La Carte + Itinéraire restent en bas de l'écran, sur mobile et tablette.
+- Écrans tactiles : défilement natif, pas de scène épinglée, séquences en CSS (`position: sticky`) et glissements natifs. Uniquement des animations d'opacité et de déplacement, gérées par le processeur graphique : ni masque animé, ni filtre, ni parallaxe liée au défilement. Deux boutons La Carte + Itinéraire restent en bas de l'écran, sur mobile et tablette.
 - Appareils très modestes (classe `lite`) : ni parallaxe, ni paravent 3D, ni scène épinglée.
-- Sans JavaScript : toutes les pages restent lisibles, et les 25 produits de la carte s'affichent.
+- Sans JavaScript : toutes les pages restent lisibles, et tous les produits de la carte s'affichent.
 - L'intro est jouée une seule fois par session, et se passe par un clic ou la touche Échap.
 - Clavier : lien d'évitement, focus piégé et Échap dans le menu, focus replacé sur le contenu après une transition.

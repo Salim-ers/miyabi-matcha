@@ -63,4 +63,5 @@ Le site affiche 31 photographies distinctes et 5 images générées par IA. Un a
 1. Une seconde photo du Matcha Tornado, de la Crêpe Forest Fruit, du Camelot et de l'Americano : elle supprimerait les quatre exceptions.
 2. Une vraie photo de la façade et de l'intérieur de la boutique : aucune n'existe dans le projet. Elle irait sur `/contact` et sur la porte « La Boutique ».
 3. Les exports haute définition des photos de produits (3 000 px de large ou plus) : c'est ce qui manque pour un rendu natif sur écran 4K.
-4. De vraies photos pour remplacer les 5 images générées par IA, et pour les 5 produits sans image : elles montrent une boisson plausible, pas le produit tel qu'il est servi.
+4. De vraies photos pour remplacer les 5 images générées par IA, qui montrent une boisson plausible et non le produit tel qu'il est servi.
+5. Des photos de Sweet Potato Latte, Americano Coconut Water, Espresso, Cappuccino et Brown Sugar Crème Brûlée Milk : ces produits de la boutique sont retirés du site faute de photo.

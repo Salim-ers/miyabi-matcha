@@ -4,7 +4,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, type ReactNode } from "react";
 import { BrushSymbol } from "@/components/logo/BrushSymbol";
 import { MiyabiWordmark } from "@/components/logo/Logo";
-import { gsap, prefersReducedMotion, ScrollTrigger } from "@/lib/animation/gsap";
+import { gsap, isLightDevice, prefersReducedMotion, ScrollTrigger } from "@/lib/animation/gsap";
 import { releaseStage } from "@/lib/stage";
 import { useSmoothScroll } from "./SmoothScroll";
 
@@ -51,7 +51,9 @@ export function PageTransition({ children }: { children: ReactNode }) {
     window.scrollTo(0, 0);
     const html = document.documentElement;
     html.dataset.transition = "reveal";
-    ScrollTrigger.refresh();
+    const light = isLightDevice();
+    // Écran tactile : pas de scène épinglée, le recalcul attend que le navigateur soit libre.
+    if (!light) ScrollTrigger.refresh();
     releaseStage();
     const q = gsap.utils.selector(el);
     gsap
@@ -61,12 +63,13 @@ export function PageTransition({ children }: { children: ReactNode }) {
           html.dataset.transition = "";
           phase.current = "idle";
           resume();
-          ScrollTrigger.refresh();
+          if (light) window.setTimeout(() => ScrollTrigger.refresh(), 400);
+          else ScrollTrigger.refresh();
           document.getElementById("contenu")?.focus({ preventScroll: true });
         },
       })
       .to(q("[data-pt-content]"), { yPercent: -7, autoAlpha: 0, duration: 0.42, ease: "power2.in" }, 0)
-      .to(q(".pt-panel"), { yPercent: -101, duration: 0.72, ease: "expo.inOut", stagger: { each: 0.035, from: "center" } }, 0.05);
+      .to(q(".pt-panel"), { yPercent: -101, duration: light ? 0.5 : 0.72, ease: "expo.inOut", stagger: { each: light ? 0.02 : 0.035, from: "center" } }, 0.05);
   }, [resume, scrollTo]);
 
   const navigate = useCallback(
@@ -94,8 +97,10 @@ export function PageTransition({ children }: { children: ReactNode }) {
       gsap.set(q(".pt-panel"), { yPercent: 101 });
       gsap.set(q("[data-pt-content]"), { autoAlpha: 1, yPercent: 0 });
       gsap.set(q("[data-pt-word]"), { autoAlpha: 0, y: 10 });
-      gsap.set(stroke.current, { strokeDashoffset: 1 });
-      gsap
+      const light = isLightDevice();
+      gsap.set(stroke.current, { strokeDashoffset: light ? 0 : 1 });
+      gsap.set(q("[data-pt-symbol]"), light ? { autoAlpha: 0, scale: 0.94 } : { autoAlpha: 1, scale: 1 });
+      const cover = gsap
         .timeline({
           onComplete: () => {
             phase.current = "wait";
@@ -103,9 +108,11 @@ export function PageTransition({ children }: { children: ReactNode }) {
             fallback.current = window.setTimeout(reveal, 4000);
           },
         })
-        .to(q(".pt-panel"), { yPercent: 0, duration: 0.62, ease: "expo.inOut", stagger: { each: 0.035, from: "center" } }, 0)
-        .to(stroke.current, { strokeDashoffset: 0, duration: 0.72, ease: "power2.inOut" }, 0.12)
-        .to(q("[data-pt-word]"), { autoAlpha: 1, y: 0, duration: 0.5, ease: "expo.out" }, 0.4);
+        .to(q(".pt-panel"), { yPercent: 0, duration: light ? 0.46 : 0.62, ease: "expo.inOut", stagger: { each: light ? 0.02 : 0.035, from: "center" } }, 0)
+        .to(q("[data-pt-word]"), { autoAlpha: 1, y: 0, duration: light ? 0.3 : 0.5, ease: "expo.out" }, light ? 0.22 : 0.4);
+      // Écran tactile : le logo apparaît en fondu. Ailleurs, il se trace au pinceau.
+      if (light) cover.to(q("[data-pt-symbol]"), { autoAlpha: 1, scale: 1, duration: 0.34, ease: "power2.out" }, 0.14);
+      else cover.to(stroke.current, { strokeDashoffset: 0, duration: 0.72, ease: "power2.inOut" }, 0.12);
     },
     [pause, reveal, router, scrollTo],
   );
@@ -136,7 +143,7 @@ export function PageTransition({ children }: { children: ReactNode }) {
           ))}
         </div>
         <div data-pt-content className="absolute inset-0 flex flex-col items-center justify-center gap-6 text-ivory">
-          <div className="w-[min(42vw,11rem)]">
+          <div data-pt-symbol className="w-[min(42vw,11rem)]">
             <BrushSymbol strokeRef={stroke} ghostOpacity={0.1} className="h-auto w-full" />
           </div>
           <div data-pt-word>

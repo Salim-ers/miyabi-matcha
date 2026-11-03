@@ -29,7 +29,7 @@ export default function CartePage() {
         "@type": "MenuItem",
         name: p.name,
         ...(p.description ? { description: p.description } : {}),
-        ...(p.photo ? { image: `${site.url}${p.photo.src}` } : {}),
+        image: `${site.url}${p.photo.src}`,
         ...(p.price != null ? { offers: { "@type": "Offer", price: p.price.toFixed(2), priceCurrency: "EUR" } } : {}),
       })),
     })),

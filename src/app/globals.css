@@ -37,21 +37,17 @@
 @media (min-width: 64rem) {
   :root { --header-h: 5rem; }
 }
-html[data-surface="dark"] {
+/* Les teintes sont portées par l'en-tête seul : en changer ne recalcule pas le style de toute la page. */
+[data-header][data-tone="dark"],
+html:not([data-tone-live]):has(#contenu > [data-surface="dark"]) [data-header] {
   --chrome-fg: var(--color-ivory);
   --chrome-muted: color-mix(in oklab, var(--color-ivory) 62%, transparent);
   --chrome-bg: var(--color-night);
 }
-html[data-surface="green"] {
+[data-header][data-tone="green"] {
   --chrome-fg: var(--color-ivory);
   --chrome-muted: color-mix(in oklab, var(--color-ivory) 62%, transparent);
   --chrome-bg: var(--color-matcha);
-}
-
-html:not([data-surface-live]):has(#contenu > [data-surface="dark"]) {
-  --chrome-fg: var(--color-ivory);
-  --chrome-muted: color-mix(in oklab, var(--color-ivory) 62%, transparent);
-  --chrome-bg: var(--color-night);
 }
 
 /* Barre Carte + Itinéraire : mobile et tablette, y compris une tablette à l'horizontale */
@@ -229,11 +225,19 @@ html[data-transition="cover"] #contenu { pointer-events: none; }
   margin-left: calc(var(--pw) / -2);
 }
 /* Le décor s'efface dans le noir du studio : le produit, lui, n'est jamais touché. */
-.hero-photo-mask {
-  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 17%, #000 83%, transparent 100%), linear-gradient(180deg, transparent 0, #000 7%);
-  -webkit-mask-composite: source-in;
-  mask-image: linear-gradient(90deg, transparent 0, #000 17%, #000 83%, transparent 100%), linear-gradient(180deg, transparent 0, #000 7%);
-  mask-composite: intersect;
+@media (min-width: 64rem) and (hover: hover) and (pointer: fine) {
+  .hero-photo-mask {
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 17%, #000 83%, transparent 100%), linear-gradient(180deg, transparent 0, #000 7%);
+    -webkit-mask-composite: source-in;
+    mask-image: linear-gradient(90deg, transparent 0, #000 17%, #000 83%, transparent 100%), linear-gradient(180deg, transparent 0, #000 7%);
+    mask-composite: intersect;
+  }
+}
+/* Écran tactile : un dégradé posé sur l'image remplace le masque, bien plus coûteux à composer */
+@media (hover: none), (pointer: coarse), (max-width: 63.999rem) {
+  .hero-photo-mask::after { content: ""; position: absolute; inset: 0 0 auto; height: 7%; background: linear-gradient(180deg, var(--color-night), transparent); }
+  .hero-sweep { display: none; }
+  [data-brush-stroke] { filter: none; }
 }
 /* Tablette à l'horizontale : l'alcôve s'arrête au-dessus de la barre */
 @media (min-width: 64rem) and (pointer: coarse) {
@@ -261,7 +265,6 @@ html[data-transition="cover"] #contenu { pointer-events: none; }
 }
 
 /* ───────────────────────── Accueil : le paravent ───────────────────────── */
-.byobu-stage { perspective: 2000px; perspective-origin: 50% 42%; }
 .byobu-panel { position: relative; overflow: hidden; background: var(--color-night); }
 .byobu-shade {
   position: absolute;
@@ -272,7 +275,7 @@ html[data-transition="cover"] #contenu { pointer-events: none; }
 .byobu-shade-a { background: linear-gradient(90deg, transparent 40%, rgba(0, 0, 0, 0.55)); }
 .byobu-shade-b { background: linear-gradient(90deg, rgba(0, 0, 0, 0.55), transparent 60%); }
 /* Le panneau central est derrière le plan de la scène : la scène ne doit pas intercepter ses clics. */
-.byobu-stage.is-3d { transform-style: preserve-3d; pointer-events: none; }
+.byobu-stage.is-3d { perspective: 2000px; perspective-origin: 50% 42%; transform-style: preserve-3d; pointer-events: none; }
 .byobu-stage.is-3d .byobu-panel { position: absolute; top: 0; left: 0; transform-origin: 0% 50%; will-change: transform; backface-visibility: hidden; pointer-events: auto; }
 
 /* ───────────────────────── Accueil : l'emaki ───────────────────────── */
@@ -282,10 +285,11 @@ html[data-transition="cover"] #contenu { pointer-events: none; }
 .emaki-track.is-driven { overflow: visible; scroll-snap-type: none; width: max-content; will-change: transform; }
 
 /* ───────────────────────── La carte ───────────────────────── */
-.carte-nav { position: sticky; top: 0; z-index: 60; transition: top 0.7s var(--ease-expo); }
-html[data-header-visible="true"] .carte-nav { top: var(--header-h); }
+.carte-nav { position: sticky; top: 0; z-index: 60; }
+.carte-nav[data-stuck="true"] { transition: transform 0.7s var(--ease-expo); }
+html[data-header-visible="true"] .carte-nav[data-stuck="true"] { transform: translateY(var(--header-h)); }
 [data-category][hidden] { display: none; }
-/* Toutes les cartes partagent ce format, avec ou sans photographie */
+/* Toutes les cartes partagent ce format */
 .menu-media { aspect-ratio: 1 / 1.06; container-type: size; }
 /* Titre japonais à droite de la photo : il tient toujours sur une colonne, quelle que soit la taille de la carte */
 .menu-jp {
@@ -298,21 +302,20 @@ html[data-header-visible="true"] .carte-nav { top: var(--header-h); }
 }
 
 /* ───────────────────────── Nos créations ───────────────────────── */
-.studio-fade {
-  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 9%, #000 91%, transparent 100%), linear-gradient(180deg, transparent 0, #000 5%, #000 96%, transparent 100%);
-  -webkit-mask-composite: source-in;
-  mask-image: linear-gradient(90deg, transparent 0, #000 9%, #000 91%, transparent 100%), linear-gradient(180deg, transparent 0, #000 5%, #000 96%, transparent 100%);
-  mask-composite: intersect;
+@media (min-width: 64rem) and (hover: hover) and (pointer: fine) {
+  .studio-fade {
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 9%, #000 91%, transparent 100%), linear-gradient(180deg, transparent 0, #000 5%, #000 96%, transparent 100%);
+    -webkit-mask-composite: source-in;
+    mask-image: linear-gradient(90deg, transparent 0, #000 9%, #000 91%, transparent 100%), linear-gradient(180deg, transparent 0, #000 5%, #000 96%, transparent 100%);
+    mask-composite: intersect;
+  }
+  .reveal-inner { will-change: transform; }
 }
-.studio-fade-wide {
-  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 20%, #000 91%, transparent 100%), linear-gradient(180deg, transparent 0, #000 5%, #000 96%, transparent 100%);
-  -webkit-mask-composite: source-in;
-  mask-image: linear-gradient(90deg, transparent 0, #000 20%, #000 91%, transparent 100%), linear-gradient(180deg, transparent 0, #000 5%, #000 96%, transparent 100%);
-  mask-composite: intersect;
-}
-@media (min-width: 64rem) {
-  .seam-right-lg { -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 8%, #000 80%, transparent 100%); mask-image: linear-gradient(90deg, transparent 0, #000 8%, #000 80%, transparent 100%); }
-  .seam-left-lg { -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 20%, #000 92%, transparent 100%); mask-image: linear-gradient(90deg, transparent 0, #000 20%, #000 92%, transparent 100%); }
+@media (hover: none), (pointer: coarse), (max-width: 63.999rem) {
+  .studio-fade::before,
+  .studio-fade::after { content: ""; position: absolute; z-index: 1; inset-inline: 0; height: 6%; pointer-events: none; }
+  .studio-fade::before { top: 0; background: linear-gradient(180deg, var(--color-night), transparent); }
+  .studio-fade::after { bottom: 0; background: linear-gradient(0deg, var(--color-night), transparent); }
 }
 
 /* ───────────────────────── Notre maison : la séquence du geste ───────────────────────── */

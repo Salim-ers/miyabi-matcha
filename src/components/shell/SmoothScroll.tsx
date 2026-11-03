@@ -1,6 +1,6 @@
 "use client";
 
-import Lenis from "lenis";
+import type Lenis from "lenis";
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, type ReactNode } from "react";
 import { gsap, MQ, ScrollTrigger } from "@/lib/animation/gsap";
 import { isIntroPending, STAGE_EVENT } from "@/lib/stage";
@@ -33,22 +33,32 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
     const coarse = window.matchMedia("(pointer: coarse)").matches;
     if (reduce || coarse) return;
 
-    const lenis = new Lenis({ lerp: 0.09, wheelMultiplier: 0.95, anchors: false });
-    lenisRef.current = lenis;
-    lenis.on("scroll", ScrollTrigger.update);
-    const tick = (time: number) => lenis.raf(time * 1000);
-    gsap.ticker.add(tick);
-    gsap.ticker.lagSmoothing(0);
-    if (isIntroPending()) lenis.stop();
-    const onStage = () => {
-      if (holds.current === 0) lenis.start();
-    };
-    window.addEventListener(STAGE_EVENT, onStage);
+    let cancelled = false;
+    let cleanup = () => {};
+    // Chargé à la demande : téléphones et tablettes ne téléchargent pas ce code.
+    void import("lenis").then(({ default: LenisClass }) => {
+      if (cancelled) return;
+      const lenis = new LenisClass({ lerp: 0.09, wheelMultiplier: 0.95, anchors: false });
+      lenisRef.current = lenis;
+      lenis.on("scroll", ScrollTrigger.update);
+      const tick = (time: number) => lenis.raf(time * 1000);
+      gsap.ticker.add(tick);
+      gsap.ticker.lagSmoothing(0);
+      if (isIntroPending() || holds.current > 0) lenis.stop();
+      const onStage = () => {
+        if (holds.current === 0) lenis.start();
+      };
+      window.addEventListener(STAGE_EVENT, onStage);
+      cleanup = () => {
+        window.removeEventListener(STAGE_EVENT, onStage);
+        gsap.ticker.remove(tick);
+        lenis.destroy();
+        lenisRef.current = null;
+      };
+    });
     return () => {
-      window.removeEventListener(STAGE_EVENT, onStage);
-      gsap.ticker.remove(tick);
-      lenis.destroy();
-      lenisRef.current = null;
+      cancelled = true;
+      cleanup();
     };
   }, []);
 

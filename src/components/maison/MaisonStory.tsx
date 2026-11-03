@@ -8,7 +8,7 @@ import { Cta } from "@/components/ui/Cta";
 import { Photo } from "@/components/ui/Photo";
 import { maison } from "@/data/content";
 import { photos } from "@/data/photos";
-import { gsap, MQ, useGSAP } from "@/lib/animation/gsap";
+import { gsap, isLightDevice, MQ, useGSAP } from "@/lib/animation/gsap";
 import { isLite, onStage } from "@/lib/stage";
 
 const FRAMES = [photos.powder, photos.water, photos.whisk];
@@ -46,8 +46,17 @@ export function MaisonStory() {
         const path = stroke.current;
         if (!path) return;
         let tween: gsap.core.Tween | null = null;
+        const light = isLightDevice();
+        const symbol = q("[data-maison-symbol]");
+        // Écran tactile : le symbole apparaît en fondu, le tracé au pinceau redessinerait une grande zone à chaque image.
+        if (light) {
+          path.style.strokeDashoffset = "0";
+          gsap.set(symbol, { opacity: 0 });
+        }
         const stop = onStage(() => {
-          tween = gsap.to(path, { strokeDashoffset: 0, duration: 1.8, ease: "power2.inOut", delay: 0.15 });
+          tween = light
+            ? gsap.to(symbol, { opacity: 1, duration: 1.2, ease: "power1.out", delay: 0.15 })
+            : gsap.to(path, { strokeDashoffset: 0, duration: 1.8, ease: "power2.inOut", delay: 0.15 });
         });
         return () => {
           stop();
@@ -97,7 +106,7 @@ export function MaisonStory() {
     <div ref={root} className="bg-ivory text-ink">
       {/* ─── Ouverture ─── */}
       <header data-surface="light" className="container-x relative flex min-h-[86svh] flex-col justify-end overflow-hidden pb-10 pt-[calc(var(--header-h)+1rem)] lg:min-h-[100svh] lg:pb-14">
-        <div aria-hidden className="pointer-events-none absolute right-[-8vw] top-[10svh] w-[92vw] text-sage/60 lg:right-[4vw] lg:top-[9svh] lg:w-[min(58vw,104svh)]">
+        <div data-maison-symbol aria-hidden className="pointer-events-none absolute right-[-8vw] top-[10svh] w-[92vw] text-sage/60 lg:right-[4vw] lg:top-[9svh] lg:w-[min(58vw,104svh)]">
           <BrushSymbol strokeRef={stroke} ghostOpacity={0} className="h-auto w-full" />
         </div>
         <h1 className="display relative text-[clamp(4rem,15vw,20rem)] leading-[0.86]">
@@ -111,7 +120,7 @@ export function MaisonStory() {
       <section data-surface="light" aria-label={maison.leaf.title} className="relative lg:flex lg:items-stretch">
         <div className="relative h-[112vw] sm:h-[90vw] lg:h-[100svh] lg:w-[62vw]">
           <RevealImage variant="rise" className="absolute inset-0" parallax={6} zoom={1.1}>
-            <Photo src={photos.leaves.src} alt={photos.leaves.alt} focus={photos.leaves.focus} fill sizes="(min-width: 64rem) 62vw, 100vw" quality={85} />
+            <Photo src={photos.leaves.src} alt={photos.leaves.alt} focus={photos.leaves.focus} fill sizes="(min-width: 64rem) 62vw, 66vw" quality={85} />
           </RevealImage>
         </div>
         <div className="container-x flex flex-col justify-center py-12 lg:w-[38vw] lg:px-[4vw] lg:py-0">
@@ -133,7 +142,7 @@ export function MaisonStory() {
             return (
               <div key={photo.src} data-frame className="gesture-frame h-[100svh] overflow-hidden bg-night" style={{ zIndex: i + 1 }}>
                 <div data-frame-img className="absolute inset-y-0 right-0 w-full lg:w-[min(62vw,106svh)]">
-                  <Photo src={photo.src} alt={photo.alt} focus={photo.focus} fill sizes="(min-width: 64rem) 62vw, 100vw" quality={85} />
+                  <Photo src={photo.src} alt={photo.alt} focus={photo.focus} fill sizes="(min-width: 64rem) 62vw, 66vw" quality={85} />
                 </div>
                 <div aria-hidden className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-black/70 to-transparent lg:hidden" />
                 <div className="container-x absolute inset-x-0 bottom-[calc(var(--bar-h)+2rem)] lg:bottom-[12svh] lg:w-[38vw]">

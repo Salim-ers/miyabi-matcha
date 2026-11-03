@@ -33,7 +33,7 @@ function Caption({ item, index }: { item: Panel; index: number }) {
 /**
  * Trois signatures sur un paravent (byōbu) : les panneaux restent solidaires de leurs charnières
  * et le paravent se déplie au défilement. Une vraie perspective, portée par de vraies photographies.
- * Sur mobile : glissement tactile natif, chaque panneau pivote légèrement selon sa position.
+ * Sur écran tactile : glissement natif, sans calcul pendant le geste.
  */
 export function HomeByobu() {
   const root = useRef<HTMLElement>(null);
@@ -46,7 +46,7 @@ export function HomeByobu() {
       const panels = gsap.utils.toArray<HTMLElement>(stage.querySelectorAll("[data-panel]"));
       const mm = gsap.matchMedia();
 
-      mm.add(`${MQ.desktop} and ${MQ.motion}`, () => {
+      mm.add(MQ.stage, () => {
         if (isLite()) return;
         stage.classList.add("is-3d");
         const fold = { a: FOLDED, tilt: 0 };
@@ -91,30 +91,6 @@ export function HomeByobu() {
           stage.classList.remove("is-3d");
           stage.removeAttribute("style");
           panels.forEach((p) => gsap.set(p, { clearProps: "all" }));
-        };
-      });
-
-      // Mobile : pivot léger selon la position dans le glissement
-      mm.add(`${MQ.mobile} and ${MQ.motion}`, () => {
-        let raf = 0;
-        const update = () => {
-          raf = 0;
-          const center = stage.getBoundingClientRect().left + stage.clientWidth / 2;
-          panels.forEach((panel) => {
-            const r = panel.getBoundingClientRect();
-            const ratio = gsap.utils.clamp(-1, 1, (r.left + r.width / 2 - center) / r.width);
-            panel.style.transform = `rotateY(${(ratio * -9).toFixed(2)}deg) scale(${(1 - Math.abs(ratio) * 0.05).toFixed(3)})`;
-          });
-        };
-        const onScroll = () => {
-          if (!raf) raf = requestAnimationFrame(update);
-        };
-        update();
-        stage.addEventListener("scroll", onScroll, { passive: true });
-        return () => {
-          stage.removeEventListener("scroll", onScroll);
-          cancelAnimationFrame(raf);
-          panels.forEach((p) => (p.style.transform = ""));
         };
       });
 

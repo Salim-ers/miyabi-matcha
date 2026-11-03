@@ -70,8 +70,8 @@ export function CreationsGallery() {
       const q = gsap.utils.selector(el);
       const mm = gsap.matchMedia();
 
-      // La lumière change d'une création à l'autre.
-      mm.add(MQ.motion, () => {
+      // La lumière change d'une création à l'autre (grand écran : sur un téléphone, repeindre toute la page coûte trop cher).
+      mm.add(MQ.stage, () => {
         const scenes = q<HTMLElement>("[data-tint]");
         scenes.forEach((scene) => {
           gsap.to(el, {
@@ -146,7 +146,7 @@ export function CreationsGallery() {
       <section id={crepe.id} data-tint={crepe.tint} aria-label={crepe.name} className="relative scroll-mt-10 pt-6 lg:min-h-[100svh] lg:pt-[4svh]">
         <div className="relative w-full lg:w-[min(58vw,92svh)]">
           <RevealImage variant="left" className="studio-fade aspect-[823/915] w-full" zoom={1.1}>
-            <Photo src={crepe.photo.src} alt={crepe.photo.alt} focus="50% 50%" fill sizes="(min-width: 64rem) 58vw, 100vw" quality={88} />
+            <Photo src={crepe.photo.src} alt={crepe.photo.alt} focus="50% 50%" fill sizes="(min-width: 64rem) 58vw, 66vw" quality={88} />
           </RevealImage>
         </div>
         <div data-speed="-0.35" className="container-x relative pt-8 lg:absolute lg:right-0 lg:top-[18svh] lg:w-[46vw] lg:pt-0">
@@ -188,7 +188,7 @@ export function CreationsGallery() {
       <section id={camelot.id} data-tint={camelot.tint} aria-label={camelot.name} className="relative mt-14 scroll-mt-10 lg:mt-[12svh] lg:min-h-[100svh]">
         <div className="relative ml-auto w-full lg:absolute lg:bottom-0 lg:right-[3vw] lg:w-[min(56vw,88svh)]">
           <RevealImage variant="right" className="studio-fade aspect-[778/865] w-full" zoom={1.1}>
-            <Photo src={camelot.photo.src} alt={camelot.photo.alt} focus="50% 50%" fill sizes="(min-width: 64rem) 56vw, 100vw" quality={88} />
+            <Photo src={camelot.photo.src} alt={camelot.photo.alt} focus="50% 50%" fill sizes="(min-width: 64rem) 56vw, 66vw" quality={88} />
           </RevealImage>
         </div>
         <div className="container-x relative pt-8 lg:absolute lg:bottom-[12svh] lg:left-0 lg:w-[42vw] lg:pt-0">
@@ -207,7 +207,7 @@ export function CreationsGallery() {
         </div>
         <div className="relative mx-auto mt-4 w-full lg:mt-6 lg:w-[min(62vw,96svh)]">
           <RevealImage variant="shoji" className="studio-fade aspect-[774/860] w-full" zoom={1.08}>
-            <Photo src={americano.photo.src} alt={americano.photo.alt} focus={americano.photo.focus} fill sizes="(min-width: 64rem) 62vw, 100vw" quality={88} />
+            <Photo src={americano.photo.src} alt={americano.photo.alt} focus={americano.photo.focus} fill sizes="(min-width: 64rem) 62vw, 66vw" quality={88} />
           </RevealImage>
         </div>
         <div className="container-x flex items-end justify-between gap-8 pt-6 lg:absolute lg:inset-x-0 lg:bottom-[8svh] lg:pt-0">

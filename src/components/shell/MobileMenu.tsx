@@ -46,7 +46,7 @@ export function MobileMenu({ open, onClose }: { open: boolean; onClose: () => vo
     const el = root.current;
     if (!t || !el) return;
     if (open) {
-      t.timeScale(1).play();
+      t.timeScale(1.35).play();
       window.setTimeout(() => el.querySelector<HTMLElement>("[data-m-focus]")?.focus({ preventScroll: true }), 80);
     } else if (t.progress() > 0) {
       t.timeScale(1.9).reverse();

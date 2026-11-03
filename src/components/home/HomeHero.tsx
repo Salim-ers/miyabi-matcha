@@ -7,7 +7,7 @@ import { Photo } from "@/components/ui/Photo";
 import { home } from "@/data/content";
 import { photos } from "@/data/photos";
 import { site } from "@/data/site";
-import { gsap, MQ, SplitText, useGSAP } from "@/lib/animation/gsap";
+import { gsap, isLightDevice, MQ, SplitText, useGSAP } from "@/lib/animation/gsap";
 import { isDirectLoad, isLite, onStage } from "@/lib/stage";
 
 const DEPTH_LAYER = "/images/hero/matcha-tornado-depth.webp";
@@ -44,6 +44,27 @@ export function HomeHero() {
       mm.add(MQ.motion, () => {
         // Rechargement dans la même session, sans écran : la couverture est déjà là, on ne la cache pas.
         if (isDirectLoad()) return;
+        if (isLightDevice()) {
+          // Écran tactile : fondu et léger déplacement, sans ouverture de masque ni découpage en lettres.
+          const words = q("[data-mast-move]");
+          gsap.set(q("[data-enter-photo]"), { opacity: 0, scale: 1.05, transformOrigin: "50% 78%" });
+          gsap.set(words, { opacity: 0, y: 14 });
+          gsap.set(q("[data-tag-line]"), { yPercent: 110 });
+          gsap.set(q("[data-enter]"), { opacity: 0, y: 12 });
+          let tl: gsap.core.Timeline | null = null;
+          const stop = onStage(() => {
+            tl = gsap
+              .timeline({ defaults: { ease: "power3.out" } })
+              .to(q("[data-enter-photo]"), { opacity: 1, scale: 1, duration: 1 }, 0)
+              .to(words, { opacity: 1, y: 0, duration: 0.9 }, 0.15)
+              .to(q("[data-tag-line]"), { yPercent: 0, duration: 0.9, stagger: 0.08 }, 0.35)
+              .to(q("[data-enter]"), { opacity: 1, y: 0, duration: 0.8 }, 0.5);
+          });
+          return () => {
+            stop();
+            tl?.kill();
+          };
+        }
         const windowEl = el.querySelector<HTMLElement>("[data-window]");
         if (!windowEl) return;
         const splits = q("[data-mast]").map((m) => SplitText.create(m, { type: "chars", aria: "none" }));
@@ -80,7 +101,7 @@ export function HomeHero() {
       // — Au défilement (grand écran) : l'alcôve s'ouvre jusqu'à devenir tout l'écran —
       mm.add(MQ.stage, () => {
         if (isLite()) return;
-        const html = document.documentElement;
+        const header = document.querySelector<HTMLElement>("[data-header]");
         const windowEl = el.querySelector<HTMLElement>("[data-window]");
         if (!windowEl) return;
         const tl = gsap.timeline({
@@ -92,7 +113,8 @@ export function HomeHero() {
             scrub: 0.7,
             anticipatePin: 1,
             onUpdate: (self) => {
-              html.dataset.surface = self.progress > 0.32 ? "dark" : "light";
+              const tone = self.progress > 0.32 ? "dark" : "light";
+              if (header && header.dataset.tone !== tone) header.dataset.tone = tone;
             },
           },
         });
@@ -174,7 +196,7 @@ export function HomeHero() {
           </div>
         </div>
 
-        <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden mix-blend-soft-light">
+        <div aria-hidden className="hero-sweep pointer-events-none absolute inset-0 overflow-hidden mix-blend-soft-light">
           <span data-light className="absolute inset-y-0 -left-1/4 block w-[150%] -translate-x-[130%] bg-[linear-gradient(105deg,transparent_38%,rgba(255,255,255,0.55)_50%,transparent_62%)]" />
         </div>
       </div>

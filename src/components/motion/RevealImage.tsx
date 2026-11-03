@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, type CSSProperties, type ReactNode } from "react";
-import { gsap, MQ, useGSAP } from "@/lib/animation/gsap";
+import { gsap, isLightDevice, MQ, useGSAP } from "@/lib/animation/gsap";
 import { isDirectLoad, isLite, onStage } from "@/lib/stage";
 import { cn } from "@/lib/utils/cn";
 
@@ -44,9 +44,18 @@ export function RevealImage({ children, className, style, variant = "shoji", par
 
       mm.add(MQ.motion, () => {
         let stop = () => {};
+        const light = isLightDevice();
         const inView = el.getBoundingClientRect().top < window.innerHeight * 0.92;
         // Arrivée directe : ce qui est déjà à l'écran reste en place, sans clignoter.
-        if (!(inView && isDirectLoad())) {
+        if (light) {
+          // Écran tactile : opacité et déplacement seulement, pour ne rien redessiner pendant le défilement.
+          if (!(inView && isDirectLoad())) {
+            gsap.set(el, { opacity: 0, y: 28 });
+            stop = onStage(() => {
+              gsap.to(el, { opacity: 1, y: 0, duration: 0.9, ease: "power3.out", delay, clearProps: "opacity,transform", scrollTrigger: { trigger: el, start, once: true } });
+            });
+          }
+        } else if (!(inView && isDirectLoad())) {
           gsap.set(el, { clipPath: HIDDEN[variant] });
           gsap.set(zoomer, { scale: zoom });
           stop = onStage(() => {
@@ -67,7 +76,7 @@ export function RevealImage({ children, className, style, variant = "shoji", par
             });
           });
         }
-        if (parallax > 0 && !isLite()) {
+        if (parallax > 0 && !isLite() && !light) {
           const travel = (parallax / (100 + 2 * parallax)) * 100;
           gsap.fromTo(
             inner,
@@ -84,7 +93,7 @@ export function RevealImage({ children, className, style, variant = "shoji", par
 
   return (
     <div ref={ref} className={cn(!className?.includes("absolute") && "relative", "overflow-hidden", className)} style={style}>
-      <div data-reveal-inner className="absolute inset-x-0 will-change-transform" style={{ top: `${-parallax}%`, bottom: `${-parallax}%` }}>
+      <div data-reveal-inner className="reveal-inner absolute inset-x-0" style={{ top: `${-parallax}%`, bottom: `${-parallax}%` }}>
         <div data-reveal-zoom className="absolute inset-0">
           {children}
         </div>

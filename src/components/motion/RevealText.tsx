@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, type ElementType, type ReactNode } from "react";
-import { gsap, MQ, SplitText, useGSAP } from "@/lib/animation/gsap";
+import { gsap, isLightDevice, MQ, SplitText, useGSAP } from "@/lib/animation/gsap";
 import { isDirectLoad, onStage } from "@/lib/stage";
 
 type Props = {
@@ -25,6 +25,13 @@ export function RevealText({ as: Tag = "div", children, className, id, mode = "l
       const mm = gsap.matchMedia();
       mm.add(MQ.motion, () => {
         if (el.getBoundingClientRect().top < window.innerHeight * 0.92 && isDirectLoad()) return;
+        if (isLightDevice()) {
+          // Écran tactile : le texte n'est pas découpé en lignes, ce qui évite un recalcul de mise en page.
+          gsap.set(el, { opacity: 0, y: 18 });
+          return onStage(() => {
+            gsap.to(el, { opacity: 1, y: 0, duration: 0.9, ease: "power3.out", delay, clearProps: "opacity,transform", scrollTrigger: { trigger: el, start, once: true } });
+          });
+        }
         let split: SplitText | null = null;
         let cancelled = false;
         const isHeading = /^H[1-6]$/.test(el.tagName);

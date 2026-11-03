@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { BrushSymbol } from "@/components/logo/BrushSymbol";
 import { MiyabiWordmark } from "@/components/logo/Logo";
-import { gsap } from "@/lib/animation/gsap";
+import { gsap, isLightDevice } from "@/lib/animation/gsap";
 import { completeIntro, isIntroPending } from "@/lib/stage";
 
 /**
@@ -37,10 +37,16 @@ export function Preloader() {
       new Promise((r) => setTimeout(r, 1900)),
     ]);
 
-    const draw = gsap
-      .timeline()
-      .to(path, { strokeDashoffset: 0, duration: 1.05, ease: "power2.inOut" }, 0)
-      .fromTo(q("[data-pl-word]"), { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: 0.8, ease: "expo.out" }, 0.5);
+    const light = isLightDevice();
+    if (light) {
+      // Écran tactile : le logo apparaît en fondu, sans redessiner le tracé à chaque image.
+      path.style.strokeDashoffset = "0";
+      gsap.set(q("[data-pl-symbol]"), { autoAlpha: 0, scale: 0.94 });
+    }
+    const draw = gsap.timeline();
+    if (light) draw.to(q("[data-pl-symbol]"), { autoAlpha: 1, scale: 1, duration: 0.9, ease: "power2.out" }, 0);
+    else draw.to(path, { strokeDashoffset: 0, duration: 1.05, ease: "power2.inOut" }, 0);
+    draw.fromTo(q("[data-pl-word]"), { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: 0.8, ease: "expo.out" }, 0.5);
 
     let finished = false;
     let leave: gsap.core.Timeline | null = null;
@@ -79,7 +85,7 @@ export function Preloader() {
         .set(q("[data-pl-symbol]"), { autoAlpha: 0 }, 1.0);
     };
 
-    const minTime = new Promise((r) => setTimeout(r, 1450));
+    const minTime = new Promise((r) => setTimeout(r, light ? 1000 : 1450));
     Promise.all([ready, minTime]).then(exit);
 
     const onKey = (e: KeyboardEvent) => {

@@ -6,10 +6,11 @@ const walk = (d) => fs.readdirSync(d).flatMap((f) => { const p = path.join(d, f)
   const entries = [];
   for (const f of files) {
     const meta = await sharp(f).metadata();
-    const buf = await sharp(f).resize(16).jpeg({ quality: 55 }).toBuffer();
+    const { dominant } = await sharp(f).stats();
+    const color = "#" + [dominant.r, dominant.g, dominant.b].map((v) => v.toString(16).padStart(2, "0")).join("");
     const rel = '/' + path.relative(path.join(root, 'public'), f).split(path.sep).join('/');
-    entries.push(`  "${rel}": { width: ${meta.width}, height: ${meta.height}, blurDataURL: "data:image/jpeg;base64,${buf.toString('base64')}" },`);
+    entries.push(`  "${rel}": { width: ${meta.width}, height: ${meta.height}, color: "${color}" },`);
   }
-  fs.writeFileSync(out, `// Généré automatiquement par scripts/generate-image-manifest.js — ne pas modifier à la main.\n// Dimensions réelles des fichiers sources (aucune image n'est upscalée).\nexport type ImageMeta = { width: number; height: number; blurDataURL: string };\n\nexport const imageManifest: Record<string, ImageMeta> = {\n${entries.join('\n')}\n};\n`);
+  fs.writeFileSync(out, `// Généré automatiquement par scripts/generate-image-manifest.js — ne pas modifier à la main.\n// Dimensions réelles des fichiers sources et couleur dominante, affichée pendant le chargement.\nexport type ImageMeta = { width: number; height: number; color: string };\n\nexport const imageManifest: Record<string, ImageMeta> = {\n${entries.join('\n')}\n};\n`);
   console.log(entries.length, 'images');
 })();
