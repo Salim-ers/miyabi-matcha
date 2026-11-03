@@ -38,11 +38,6 @@ export const photos = {
     alt: "Thai Milk Tea Iced Smoothie MIYABI, crème et perles de tapioca, dans un gobelet au logo 雅",
     focus: "50% 55%",
   },
-  brownSugar: {
-    src: "/images/products/brown-sugar-coffee-iced-smoothie.jpg",
-    alt: "Brown Sugar Coffee Iced Smoothie MIYABI, crème caramélisée et perles de tapioca",
-    focus: "50% 50%",
-  },
   latte: {
     src: "/images/products/latte.jpg",
     alt: "Latte glacé MIYABI, espresso et lait en deux couches, dans un gobelet au logo 雅",
@@ -58,7 +53,6 @@ export const photos = {
   matchaLatte: { src: "/images/menu/matcha-latte.jpg", alt: "Matcha Latte MIYABI, vert tendre, gobelet au logo 雅" },
   strawberryCream: { src: "/images/menu/strawberry-matcha-cream.jpg", alt: "Strawberry Matcha Cream MIYABI : matcha, lait et fraise en trois couches" },
   yuzu: { src: "/images/menu/matcha-yuzu-sparkling.jpg", alt: "Matcha Yuzu Sparkling MIYABI, matcha et yuzu dans un gobelet au logo 雅" },
-  hojicha: { src: "/images/menu/hojicha-black-sesame-cream.jpg", alt: "Hojicha Black Sesame Cream MIYABI, gobelet au logo 雅" },
   coconut: { src: "/images/menu/matcha-coconut-cloud.jpg", alt: "Matcha Coconut Cloud MIYABI, matcha sur une base blanche" },
   jasmine: { src: "/images/menu/jasmine-matcha-mochi.jpg", alt: "Jasmine Matcha Mochi MIYABI, matcha sur une base claire" },
   crepeClassic: { src: "/images/menu/crepe-classic.jpg", alt: "Crêpe Classic au matcha, disque de crème marqué MIYABI MATCHA" },
@@ -70,13 +64,9 @@ export const photos = {
 
   /* — Carte : images générées par IA (gpt-image-2) à partir des photos du site, pour les produits sans prise de vue.
        À remplacer par de vraies photos dès que possible : même nom de fichier, même cadrage. — */
-  iaMangue: { src: "/images/menu/ia/matcha-latte-mangue.jpg", alt: "Illustration du Matcha Latte Mangue : matcha, lait et purée de mangue en trois couches" },
   iaHojichaSoy: { src: "/images/menu/ia/hojicha-soy-cream.jpg", alt: "Illustration du Hojicha Soy Cream : hojicha sur lait de soja, crème légère" },
-  iaPistache: { src: "/images/menu/ia/pistache-latte-matcha.jpg", alt: "Illustration du Pistache Latte Matcha : matcha sur crème de pistache, éclats de pistache" },
-  iaBobaMilk: { src: "/images/menu/ia/brown-sugar-boba-milk.jpg", alt: "Illustration du Brown Sugar Boba Milk : lait frais, sirop de sucre brun, perles de tapioca" },
   iaMilkTea: { src: "/images/menu/ia/brown-sugar-milk-tea.jpg", alt: "Illustration du Brown Sugar Milk Tea : thé au lait et sucre brun caramélisé" },
   iaSesameMochi: { src: "/images/menu/ia/black-sesame-mochi-cream.jpg", alt: "Illustration du Black Sesame Mochi Cream : crème au sésame noir et mochi" },
-  iaJasmine: { src: "/images/menu/ia/jasmine-milk-tea.jpg", alt: "Illustration du Jasmine Milk Tea glacé : thé au jasmin et lait crémeux" },
   iaBerry: { src: "/images/menu/ia/various-berry-black-tea.jpg", alt: "Illustration du Various Berry Black Tea : thé noir glacé et baies rouges" },
   iaPassion: { src: "/images/menu/ia/passionfruit-sparkling.jpg", alt: "Illustration du Passionfruit Sparkling : fruit de la passion, bulles et glaçons" },
 

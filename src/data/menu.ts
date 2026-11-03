@@ -8,7 +8,7 @@ import { photos, type ArtPhoto } from "./photos";
  * composé uniquement de mots déjà présents dans cette description : rien n'est ajouté.
  *
  * Sources complémentaires : carte de la boutique (prix et produits) et affiches officielles (photos, noms japonais).
- * Images : 9 produits sans prise de vue ont une image générée par IA (public/images/menu/ia), à remplacer par de vraies photos.
+ * Images : 5 produits sans prise de vue ont une image générée par IA (public/images/menu/ia), à remplacer par de vraies photos.
  * Prix : champ `price` (en euros, ex. 6.5), repris de la carte de la boutique, et non d'Uber Eats, dont les tarifs diffèrent.
  * Il s'affiche automatiquement dès qu'il est renseigné. Aucun prix n'est deviné.
  *
@@ -117,17 +117,6 @@ export const menuProducts: MenuProduct[] = [
     order: 5,
   },
   {
-    id: "matcha-latte-mangue",
-    name: "Matcha Latte Mangue",
-    nameJa: "抹茶マンゴーラテ",
-    category: "matcha",
-    description:
-      "Un latte raffiné combinant matcha japonais d'exception et purée de mangue juteuse, surmonté d'une crème veloutée.",
-    short: "Matcha japonais, purée de mangue, crème veloutée.",
-    photo: photos.iaMangue,
-    order: 6,
-  },
-  {
     id: "jasmine-matcha-mochi",
     name: "Jasmine Matcha Mochi",
     nameJa: "ジャスミン抹茶餅",
@@ -139,27 +128,7 @@ export const menuProducts: MenuProduct[] = [
     price: 6.5,
     order: 7,
   },
-  {
-    id: "pistache-latte-matcha",
-    name: "Pistache Latte Matcha",
-    nameJa: "ピスタチオ抹茶ラテ",
-    category: "matcha",
-    description: "Un mariage raffiné entre le matcha japonais et la douceur de la pistache.",
-    short: "Matcha japonais et douceur de la pistache.",
-    photo: photos.iaPistache,
-    order: 8,
-  },
 
-  // Sur les affiches officielles, absent de la carte de la boutique (prix de l'affiche)
-  {
-    id: "hojicha-black-sesame-cream",
-    name: "Hojicha Black Sesame Cream",
-    nameJa: "焙じ茶黒ごまクリーム",
-    category: "matcha",
-    photo: photos.hojicha,
-    price: 6.5,
-    order: 9,
-  },
 
   // CRÊPES JAPONAISES AU MATCHA
   {
@@ -324,16 +293,6 @@ export const menuProducts: MenuProduct[] = [
     order: 1,
   },
   {
-    id: "brown-sugar-boba-milk",
-    name: "Brown Sugar Boba Milk",
-    nameJa: "黒糖タピオカミルクティー",
-    category: "boba",
-    description: "Sirop de sucre brun, perles de tapioca moelleuses et lait frais.",
-    short: "Sucre brun, perles de tapioca, lait frais.",
-    photo: photos.iaBobaMilk,
-    order: 2,
-  },
-  {
     id: "brown-sugar-milk-tea",
     name: "Brown Sugar Milk Tea",
     nameJa: "黒糖ミルクティー",
@@ -355,17 +314,6 @@ export const menuProducts: MenuProduct[] = [
     price: 6.95,
     order: 4,
   },
-  {
-    id: "jasmine-milk-tea",
-    name: "Jasmine Milk Tea",
-    nameJa: "ジャスミンミルクティー",
-    category: "boba",
-    description:
-      "Thé au jasmin délicatement infusé, mélangé à du lait crémeux. À savourer chaud ou glacé.",
-    short: "Thé au jasmin et lait crémeux, chaud ou glacé.",
-    photo: photos.iaJasmine,
-    order: 5,
-  },
 
   // Sur la carte de la boutique
   {
@@ -384,14 +332,6 @@ export const menuProducts: MenuProduct[] = [
     order: 8,
   },
 
-  // Sur les affiches officielles, absent de la carte de la boutique
-  {
-    id: "brown-sugar-coffee-iced-smoothie",
-    name: "Brown Sugar Coffee Iced Smoothie",
-    category: "boba",
-    photo: photos.brownSugar,
-    order: 6,
-  },
 
   // FRUITY TEA
   {

@@ -19,7 +19,6 @@ const CROPS = [
   { out: "matcha-latte", poster: "16.png", y0: 245, y1: 1100, cx: 565 },
   { out: "strawberry-matcha-cream", poster: "17.png", y0: 245, y1: 1036, cx: 562 },
   { out: "matcha-yuzu-sparkling", poster: "20.png", y0: 245, y1: 1058, cx: 555 },
-  { out: "hojicha-black-sesame-cream", poster: "21.png", y0: 245, y1: 1058, cx: 572 },
   { out: "matcha-coconut-cloud", poster: "19.png", y0: 245, y1: 1042, cx: 555 },
   { out: "jasmine-matcha-mochi", poster: "18.png", y0: 245, y1: 1082, cx: 552 },
   { out: "crepe-classic", poster: "12.png", y0: 292, y1: 1052, cx: 550 },
