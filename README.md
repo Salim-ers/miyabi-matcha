@@ -23,7 +23,7 @@ Node 20.9 ou plus récent.
 | Route | Rôle | Mise en scène |
 | --- | --- | --- |
 | `/` | Accueil, court et spectaculaire | Couverture de magazine dans une alcôve noire, paravent 3D, rouleau photographique, deux portes typographiques |
-| `/carte` | Consultation rapide | Onglets, grands formats avec le titre japonais à droite de la photo, fiches de papier, 25 produits alignés |
+| `/carte` | Consultation rapide | Onglets, cartes alignées : photo et titre japonais à sa droite, prix, 28 produits |
 | `/creations` | Émerveiller | Galerie sur le noir du studio, une mise en scène par création |
 | `/maison` | Univers et gestes | Trois séquences photographiques, presque sans texte |
 | `/contact` | Venir | Adresse, horaires, itinéraire, Google Maps, Instagram |
@@ -39,7 +39,7 @@ Node 20.9 ou plus récent.
 | Photographies : fichier, description, point focal | `src/data/photos.ts` |
 
 - **Horaires** : `hours` dans `src/data/site.ts`, source : fiche Google et bio Instagram. Ils alimentent aussi la page Contact, le pied de page et les données structurées.
-- **Prix** : champ `price` de chaque produit dans `src/data/menu.ts` (en euros, ex. `price: 6.5`). Il s'affiche seul dès qu'il est renseigné, et la mention « Tarifs en boutique » disparaît. À reprendre de la carte de la boutique, pas d'Uber Eats, dont les tarifs diffèrent.
+- **Prix** : champ `price` de chaque produit dans `src/data/menu.ts` (en euros, ex. `price: 6.5`). Il s'affiche seul dès qu'il est renseigné. La mention « Tarifs en boutique » disparaît quand tous les produits en ont un. Source : affiches ou carte de la boutique, pas Uber Eats, dont les tarifs diffèrent.
 - **Masquer un produit** : `available: false`.
 - **Description d'une ligne** : `short`, à composer uniquement avec les mots de `description`.
 
@@ -49,7 +49,9 @@ Node 20.9 ou plus récent.
 2. Lancer `npm run images:manifest`. Le script régénère `src/data/images.ts` avec les dimensions réelles et le flou de chargement.
 3. Déclarer la photo dans `src/data/photos.ts` avec son point focal, puis l'utiliser dans `menu.ts` ou `products.ts`.
 
-**Règle du site : chaque photo n'apparaît qu'une seule fois.** La répartition est dans [docs/AUDIT-PHOTOS.md](docs/AUDIT-PHOTOS.md).
+**Règle du site : chaque photo n'apparaît qu'une seule fois**, sauf quatre exceptions validées. La répartition est dans [docs/AUDIT-PHOTOS.md](docs/AUDIT-PHOTOS.md).
+
+**Affiche avec logo et texte incrustés** : ajouter une ligne dans `scripts/crop-menu-posters.js`, puis lancer `npm run images:menu -- <dossier des affiches>`. Le script retire le logo et le texte, sans retoucher la photo.
 
 Les images passent par `next/image`, qui sert de l'AVIF ou du WebP à la taille de l'écran. Next n'agrandit jamais une image au-delà de sa taille d'origine.
 
@@ -69,9 +71,10 @@ Les caractères absents s'affichent dans la police mincho du système.
 ## Points à valider
 
 - **Résolution des photos** : les photos de produits font de 774 à 864 px de large. Elles restent belles jusqu'au 1440p, mais sont un peu douces sur un écran 4K. Pour un rendu natif, remplacer les fichiers par des exports haute définition de même cadrage, puis relancer `npm run images:manifest`.
-- **Prix** : à renseigner depuis une photo nette de la carte de la boutique.
-- **Associations photo / produit** à confirmer par la boutique : `matcha-cup-hand` illustre le Matcha Latte, `strawberry-splash` le Strawberry Matcha, et la photo « Thai Milk Tea Iced Smoothie » l'article Thai Milk Tea.
-- **Produits photographiés mais absents de la carte source** : Matcha Tornado (accueil) et Brown Sugar Coffee Iced Smoothie (paravent de l'accueil).
+- **Prix manquants** : 12 produits ont un prix, repris des affiches officielles. Les autres attendent une photo nette de la carte de la boutique.
+- **Hojicha** : les affiches montrent « Hojicha Black Sesame Cream », la carte source « Hojicha Soy Cream ». Les deux sont affichés : à confirmer.
+- **Produits ajoutés d'après les affiches**, absents de la carte source : Hojicha Black Sesame Cream, Matcha Tornado, Brown Sugar Coffee Iced Smoothie (classé en Boba pour ses perles de tapioca).
+- **Associations photo / produit** à confirmer par la boutique : `strawberry-splash` illustre le Strawberry Matcha, et la photo « Thai Milk Tea Iced Smoothie » l'article Thai Milk Tea.
 - **Photo de la boutique** : aucune photo de la façade ou de l'intérieur n'est disponible. La page Contact montre le plateau devant la vitrine.
 - **Descriptions de la carte** : elles reprennent le texte visible sur Uber Eats, coupé avant les passages tronqués. Les intitulés japonais sont ceux de la carte, y compris 宇治・福岡産の高級抹茶 pour la catégorie Matcha.
 - **Mentions légales** : les champs surlignés « à compléter » (raison sociale, SIRET, contact…) sont dans `src/app/mentions-legales/page.tsx` et `src/app/confidentialite/page.tsx`.
@@ -85,7 +88,7 @@ src/
   components/
     shell/        En-tête, menu mobile, barre basse, pied de page, intro, transitions, défilement
     home/         Couverture (HomeHero), paravent (HomeByobu), rouleau (HomeEmaki), portes (HomeDoors)
-    carte/        Onglets, grands formats avec titre japonais, fiches de papier
+    carte/        Onglets, cartes photo avec titre japonais et prix, fiches de papier
     creations/    Galerie et mises en scène
     maison/       Les trois séquences
     contact/      Carte Google Maps avec consentement

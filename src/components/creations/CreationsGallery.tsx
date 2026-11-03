@@ -7,6 +7,7 @@ import { useSmoothScroll } from "@/components/shell/SmoothScroll";
 import { TLink } from "@/components/shell/TLink";
 import { Cta } from "@/components/ui/Cta";
 import { Photo } from "@/components/ui/Photo";
+import { photos } from "@/data/photos";
 import { signature, signatures, type Signature } from "@/data/products";
 import { gsap, MQ, useGSAP } from "@/lib/animation/gsap";
 import { isLite } from "@/lib/stage";
@@ -154,6 +155,12 @@ export function CreationsGallery() {
             <Kind>{crepe.kind}</Kind>
             <p className="mt-3 text-[0.9375rem] leading-relaxed text-ivory/80">{crepe.description}</p>
           </div>
+        </div>
+        {/* La matière : la crêpe, avant la garniture */}
+        <div data-speed="0.7" className="relative ml-auto mt-10 w-[56vw] pr-[var(--gutter)] lg:absolute lg:bottom-[2svh] lg:right-[8vw] lg:mt-0 lg:w-[min(21vw,34svh)] lg:pr-0">
+          <RevealImage variant="rise" className="aspect-[3/4]">
+            <Photo src={photos.crepeSpread.src} alt={photos.crepeSpread.alt} focus={photos.crepeSpread.focus} fill sizes="(min-width: 64rem) 22vw, 56vw" />
+          </RevealImage>
         </div>
         <Vertical text={crepe.nameJa} className="absolute right-[var(--gutter)] top-[18svh] hidden lg:block" />
       </section>

@@ -8,7 +8,8 @@
     "start": "next start",
     "typecheck": "tsc --noEmit",
     "images:manifest": "node scripts/generate-image-manifest.js",
-    "images:depth": "node scripts/build-hero-cutout.js"
+    "images:depth": "node scripts/build-hero-cutout.js",
+    "images:menu": "node scripts/crop-menu-posters.js"
   },
   "dependencies": {
     "@gsap/react": "2.1.2",

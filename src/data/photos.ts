@@ -1,6 +1,7 @@
 /**
  * Registre photographique de MIYABI MATCHA.
  * Règle du site : chaque photographie n'apparaît qu'une seule fois, toutes pages confondues.
+ * Exception validée : Crêpe Forest Fruit, Camelot, Americano et Matcha Tornado figurent aussi sur la carte.
  * Chaque entrée : fichier réel, description, point focal (object-position).
  * L'audit complet (dimensions, sujet, usages, limites) est dans docs/AUDIT-PHOTOS.md.
  *
@@ -52,6 +53,23 @@ export const photos = {
     alt: "Americano glacé MIYABI, glaçons dans un café ambré, gobelet au logo 雅",
     focus: "50% 50%",
   },
+
+  /* — Carte : prises de vue recadrées depuis les affiches officielles (scripts/crop-menu-posters.js) — */
+  matchaLatte: { src: "/images/menu/matcha-latte.jpg", alt: "Matcha Latte MIYABI, vert tendre, gobelet au logo 雅" },
+  strawberryCream: { src: "/images/menu/strawberry-matcha-cream.jpg", alt: "Strawberry Matcha Cream MIYABI : matcha, lait et fraise en trois couches" },
+  yuzu: { src: "/images/menu/matcha-yuzu-sparkling.jpg", alt: "Matcha Yuzu Sparkling MIYABI, matcha et yuzu dans un gobelet au logo 雅" },
+  hojicha: { src: "/images/menu/hojicha-black-sesame-cream.jpg", alt: "Hojicha Black Sesame Cream MIYABI, gobelet au logo 雅" },
+  coconut: { src: "/images/menu/matcha-coconut-cloud.jpg", alt: "Matcha Coconut Cloud MIYABI, matcha sur une base blanche" },
+  jasmine: { src: "/images/menu/jasmine-matcha-mochi.jpg", alt: "Jasmine Matcha Mochi MIYABI, matcha sur une base claire" },
+  crepeClassic: { src: "/images/menu/crepe-classic.jpg", alt: "Crêpe Classic au matcha, disque de crème marqué MIYABI MATCHA" },
+  crepeBrulee: { src: "/images/menu/crepe-creme-brulee.jpg", alt: "Crêpe Crème Brûlée au matcha, surface caramélisée" },
+  crepeStrawberry: { src: "/images/menu/crepe-strawberry.jpg", alt: "Crêpe Strawberry au matcha, fraises fraîches et crème" },
+  crepeLotus: { src: "/images/menu/crepe-lotus-speculoos.jpg", alt: "Crêpe Lotus Speculoos au matcha, deux biscuits Lotus" },
+  whiteVienna: { src: "/images/menu/white-vienna.jpg", alt: "White Vienna MIYABI, café sous une crème blanche" },
+  blackSesameVienna: { src: "/images/menu/black-sesame-vienna.jpg", alt: "Black Sesame Vienna MIYABI, café sur une base mouchetée de sésame noir" },
+
+  /** Même prise de vue que le Hero, cadrée sur le gobelet pour la carte. */
+  tornadoCard: { src: "/images/products/matcha-tornado.jpg", alt: "Matcha Tornado MIYABI : matcha glacé tourbillonnant sous une crème légère" },
 
   /* — Boissons en situation — */
   cupHand: {

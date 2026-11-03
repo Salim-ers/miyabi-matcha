@@ -2,8 +2,7 @@ import { photos, type ArtPhoto } from "./photos";
 
 /**
  * Créations mises en scène sur /creations. Aucun prix.
- * Règle du site : une photographie n'apparaît qu'une seule fois. Une photo utilisée ici
- * ne doit donc pas servir ailleurs (voir la répartition dans docs/AUDIT-PHOTOS.md).
+ * Règle du site : une photographie n'apparaît qu'une seule fois (répartition et exceptions dans docs/AUDIT-PHOTOS.md).
  * Les descriptions reprennent le texte de la carte source.
  */
 

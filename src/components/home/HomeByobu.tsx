@@ -15,7 +15,7 @@ type Panel = { id: string; name: string; photo: ArtPhoto; focus: string; href: s
 const TRIO: Panel[] = [
   { id: "crepe", name: "Crêpe au matcha", photo: photos.crepeLift, focus: "50% 55%", href: "/creations#crepe-forest-fruit" },
   { id: "strawberry", name: "Strawberry Matcha", photo: photos.pour, focus: "50% 100%", href: "/creations#strawberry-matcha" },
-  { id: "brown-sugar", name: "Brown Sugar Coffee Iced Smoothie", photo: photos.brownSugar, focus: "50% 50%", href: "/creations" },
+  { id: "matcha", name: "Le matcha", photo: photos.cupHand, focus: "42% 70%", href: "/carte#matcha" },
 ];
 
 const OPEN = (9 * Math.PI) / 180;

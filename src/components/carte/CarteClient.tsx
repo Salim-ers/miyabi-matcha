@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { MiyabiSymbol } from "@/components/logo/Logo";
 import { useSmoothScroll } from "@/components/shell/SmoothScroll";
-import { TLink } from "@/components/shell/TLink";
 import { ArrowRight } from "@/components/ui/Icons";
 import { Photo } from "@/components/ui/Photo";
 import { formatPrice, type MenuProduct, type MenuSection } from "@/data/menu";
@@ -13,13 +12,13 @@ import { cn } from "@/lib/utils/cn";
 
 const useIsoLayoutEffect = typeof window === "undefined" ? useEffect : useLayoutEffect;
 
-const FEATURE_SIZES = "(min-width: 120rem) 36vw, (min-width: 80rem) 44vw, (min-width: 40rem) 58vw, 88vw";
+const CARD_SIZES = "(min-width: 160rem) 18vw, (min-width: 96rem) 23vw, (min-width: 40rem) 30vw, 44vw";
 
 /**
  * La carte : une page d'usage, pensée pour être consultée vite, debout, d'une main.
  * Catégories en onglets (tout le contenu reste dans le code de la page pour le référencement et sans JavaScript).
- * Un produit photographié occupe un grand format, son nom japonais à droite de la photo.
- * Les autres s'affichent en fiche de papier à la verticale : aucune photo n'est inventée ni répétée.
+ * Toutes les cartes ont le même format : photographie et nom japonais à sa droite,
+ * ou fiche de papier quand aucune photo n'est disponible (aucune n'est inventée).
  */
 export function CarteClient({ menu }: { menu: MenuSection[] }) {
   const firstId = menu[0]?.id ?? "matcha";
@@ -33,7 +32,7 @@ export function CarteClient({ menu }: { menu: MenuSection[] }) {
   const busy = useRef(false);
   const { scrollTo } = useSmoothScroll();
 
-  const hasPrices = menu.some((c) => c.products.some((p) => p.price != null));
+  const allPriced = menu.every((c) => c.products.every((p) => p.price != null));
 
   // L'indicateur glisse sous l'onglet actif.
   const moveIndicator = useCallback((id: string, animate: boolean) => {
@@ -132,7 +131,7 @@ export function CarteClient({ menu }: { menu: MenuSection[] }) {
       {/* Titre */}
       <header className="container-x flex items-end justify-between gap-6 pb-5 pt-[calc(var(--header-h)+1.25rem)] lg:pb-7 lg:pt-[calc(var(--header-h)+1.5rem)]">
         <h1 className="display shrink-0 whitespace-nowrap text-[clamp(3rem,13vw,6rem)] leading-[0.86] lg:text-[clamp(4rem,6.8vw,9.5rem)]">La Carte</h1>
-        {!hasPrices && <p className="max-w-[24ch] pb-1 text-right text-[0.75rem] leading-snug text-smoke sm:text-[0.8125rem]">Tarifs et disponibilités en boutique.</p>}
+        {!allPriced && <p className="max-w-[24ch] pb-1 text-right text-[0.75rem] leading-snug text-smoke sm:text-[0.8125rem]">Tarifs et disponibilités en boutique.</p>}
       </header>
 
       {/* Catégories */}
@@ -180,16 +179,10 @@ export function CarteClient({ menu }: { menu: MenuSection[] }) {
                 </p>
               )}
             </div>
-            <div className="grid grid-flow-dense grid-cols-2 gap-x-3 gap-y-7 sm:grid-cols-3 sm:gap-x-5 xl:grid-cols-4 xl:gap-x-6 xl:gap-y-10 3xl:grid-cols-5">
-              {c.scene && (
-                <figure data-card className="col-span-2 flex gap-2.5 sm:row-span-2 lg:gap-3">
-                  <div className="relative aspect-[1/1.05] min-w-0 flex-1 overflow-hidden sm:aspect-auto sm:min-h-[24rem]">
-                    <Photo src={c.scene.src} alt={c.scene.alt} focus={c.scene.focus} fill sizes={FEATURE_SIZES} />
-                  </div>
-                  {c.labelJa && <JapaneseTitle text={c.labelJa} />}
-                </figure>
-              )}
-              {c.products.map((p) => (p.photo ? <FeatureCard key={p.id} product={p} /> : <PaperCard key={p.id} product={p} paper={c.paper} />))}
+            <div className="grid grid-cols-2 gap-x-3 gap-y-7 sm:grid-cols-3 sm:gap-x-5 lg:gap-x-7 lg:gap-y-11 2xl:grid-cols-4 4xl:grid-cols-5">
+              {c.products.map((p, i) => (
+                <ProductCard key={p.id} product={p} paper={c.paper} priority={c.id === firstId && i < 3} />
+              ))}
             </div>
           </div>
         ))}
@@ -218,16 +211,7 @@ export function CarteClient({ menu }: { menu: MenuSection[] }) {
   );
 }
 
-/** Le titre japonais officiel, à la verticale, à droite de la photographie. */
-function JapaneseTitle({ text }: { text: string }) {
-  return (
-    <p lang="ja" className="tategaki max-h-full shrink-0 text-[clamp(0.95rem,1.35vw,1.5rem)] leading-[1.5] text-matcha [text-wrap:balance]">
-      {text}
-    </p>
-  );
-}
-
-/** Nom, prix (dès qu'il est renseigné), description et lien vers la photo de la création. */
+/** Nom, prix (dès qu'il est renseigné) et description. */
 function ProductText({ product }: { product: MenuProduct }) {
   return (
     <>
@@ -236,54 +220,49 @@ function ProductText({ product }: { product: MenuProduct }) {
         {product.price != null && <span className="shrink-0 text-[0.9375rem] tabular-nums">{formatPrice(product.price)}</span>}
       </div>
       {product.short && <p className="mt-1 text-[0.8125rem] leading-snug text-smoke">{product.short}</p>}
-      {product.creation && (
-        <TLink href={`/creations#${product.creation}`} className="group/link mt-1 inline-flex min-h-9 w-fit items-center gap-1.5 text-[0.8125rem] font-medium">
-          <span className="hairline">Voir la photo</span>
-          <ArrowRight className="size-3.5 transition-transform duration-500 ease-[var(--ease-expo)] group-hover/link:translate-x-1" />
-        </TLink>
-      )}
     </>
   );
 }
 
-/** Produit photographié : grand format, nom japonais à droite de la photo. */
-function FeatureCard({ product }: { product: MenuProduct }) {
-  const { photo } = product;
-  if (!photo) return null;
-  return (
-    <article data-card className="group col-span-2 flex flex-col sm:row-span-2">
-      <div className="flex min-h-0 flex-1 gap-2.5 lg:gap-3">
-        <div className="relative aspect-[1/1.05] min-w-0 flex-1 overflow-hidden sm:aspect-auto sm:min-h-[24rem]">
-          <Photo
-            src={photo.src}
-            alt={photo.alt}
-            focus={photo.focus}
-            focusM={photo.focusM}
-            fill
-            sizes={FEATURE_SIZES}
-            quality={85}
-            className="transition-transform duration-[1400ms] ease-[var(--ease-expo)] group-hover:scale-[1.04]"
-          />
-        </div>
-        {product.nameJa && <JapaneseTitle text={product.nameJa} />}
-      </div>
-      <ProductText product={product} />
-    </article>
-  );
-}
-
-/** Produit sans photographie : fiche de papier au nom japonais vertical. */
-function PaperCard({ product, paper }: { product: MenuProduct; paper: string }) {
+/** Une carte : photographie et nom japonais à sa droite, ou fiche de papier. Même format pour toutes. */
+function ProductCard({ product, paper, priority }: { product: MenuProduct; paper: string; priority: boolean }) {
+  const { photo, nameJa } = product;
   return (
     <article data-card className="group flex flex-col">
-      <div className="relative flex aspect-[4/5] items-center justify-center overflow-hidden p-3 [container-type:inline-size] sm:aspect-square" style={{ backgroundColor: paper }}>
-        {product.nameJa && (
-          <span lang="ja" className="tategaki max-h-full text-[clamp(0.85rem,6.4cqw,1.5rem)] leading-[1.7] text-matcha [text-wrap:balance] transition-transform duration-[1100ms] ease-[var(--ease-expo)] group-hover:-translate-y-1">
-            {product.nameJa}
-          </span>
-        )}
-        <MiyabiSymbol className="absolute bottom-3 left-3 w-6 text-matcha/35" />
-      </div>
+      {photo ? (
+        <div className="menu-media flex gap-1.5 lg:gap-2.5">
+          <div className="relative min-w-0 flex-1 overflow-hidden">
+            <Photo
+              src={photo.src}
+              alt={photo.alt}
+              focus={photo.focus}
+              fill
+              sizes={CARD_SIZES}
+              quality={85}
+              priority={priority}
+              className="transition-transform duration-[1400ms] ease-[var(--ease-expo)] group-hover:scale-[1.04]"
+            />
+          </div>
+          {nameJa ? (
+            <p lang="ja" className="tategaki menu-jp">
+              {nameJa}
+            </p>
+          ) : (
+            <span aria-hidden className="menu-jp" />
+          )}
+        </div>
+      ) : (
+        <div className="menu-media relative flex items-center justify-center p-3" style={{ backgroundColor: paper }}>
+          {nameJa ? (
+            <span lang="ja" className="tategaki max-h-full text-[clamp(0.85rem,6.2cqw,1.5rem)] leading-[1.7] text-matcha [text-wrap:balance] transition-transform duration-[1100ms] ease-[var(--ease-expo)] group-hover:-translate-y-1">
+              {nameJa}
+            </span>
+          ) : (
+            <span className="display text-center text-[clamp(1.2rem,10cqw,2.2rem)] italic leading-[1.1] text-matcha">{product.name}</span>
+          )}
+          <MiyabiSymbol className="absolute bottom-3 left-3 w-6 text-matcha/35" />
+        </div>
+      )}
       <ProductText product={product} />
     </article>
   );
