@@ -1,6 +1,6 @@
 /**
  * Configuration centrale du site MIYABI MATCHA.
- * Tous les textes, liens et informations pratiques modifiables sont ici.
+ * Coordonnées, liens et navigation. Aucune information non vérifiée ici.
  */
 
 const ADDRESS_QUERY = "2 Rue Joseph Sansboeuf, 75008 Paris";
@@ -8,11 +8,10 @@ const ADDRESS_QUERY = "2 Rue Joseph Sansboeuf, 75008 Paris";
 export const site = {
   name: "MIYABI MATCHA",
   shortName: "MIYABI",
-  /** URL de production — à définir via NEXT_PUBLIC_SITE_URL sur Vercel. */
+  /** URL de production, à définir via NEXT_PUBLIC_SITE_URL sur Vercel. */
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://miyabi-matcha.vercel.app",
   locale: "fr_FR",
   tagline: "The Art of Matcha",
-  subtitle: "L'élégance japonaise, à savourer à Paris.",
   description:
     "MIYABI MATCHA, maison du matcha à Paris 8e : boissons au matcha, café japonais, boba et crêpes japonaises au matcha, à deux pas de Saint-Lazare.",
 
@@ -39,28 +38,33 @@ export const site = {
   },
 
   /**
-   * Horaires d'ouverture — à renseigner une fois validés.
-   * Laisser `null` tant que les horaires ne sont pas confirmés :
-   * le site affiche alors un message neutre (jamais « ouvert actuellement »).
+   * Horaires d'ouverture, à renseigner une fois validés par la boutique.
+   * Tant que la valeur est `null`, aucun horaire n'est affiché (seul un lien vers la fiche Google Maps l'est).
    * Exemple : [{ days: "Lundi – Dimanche", hours: "12:00 – 20:00" }]
    */
   hours: null as null | { days: string; hours: string }[],
 } as const;
 
-export type NavItem = { id: string; label: string; href: string };
+export type NavItem = { id: string; label: string; short: string; href: string };
 
-/** Navigation principale — l'ordre suit celui de la page. */
+/** Navigation principale : chaque entrée est une véritable page. */
 export const navigation: NavItem[] = [
-  { id: "accueil", label: "Accueil", href: "/#accueil" },
-  { id: "art", label: "L'art du matcha", href: "/#art" },
-  { id: "creations", label: "Nos créations", href: "/#creations" },
-  { id: "univers", label: "Notre univers", href: "/#univers" },
-  { id: "carte", label: "La carte", href: "/#carte" },
-  { id: "visite", label: "Nous trouver", href: "/#visite" },
+  { id: "carte", label: "La Carte", short: "Carte", href: "/carte" },
+  { id: "creations", label: "Nos Créations", short: "Créations", href: "/creations" },
+  { id: "maison", label: "Notre Maison", short: "Maison", href: "/maison" },
+  { id: "contact", label: "Nous Trouver", short: "Nous trouver", href: "/contact" },
 ];
 
+/** Image de partage, à répéter dans chaque page qui définit son propre `openGraph`. */
+export const shareImage = {
+  url: "/opengraph-image.jpg",
+  width: 1200,
+  height: 630,
+  alt: "MIYABI MATCHA : logo 雅 et Matcha Tornado sur fond noir",
+};
+
 export const seo = {
-  title: "MIYABI MATCHA — Matcha, café japonais & crêpes au matcha · Paris 8e",
+  title: "MIYABI MATCHA, Matcha, café japonais & crêpes au matcha · Paris 8e",
   keywords: [
     "Miyabi Matcha Paris",
     "Matcha Paris 8",

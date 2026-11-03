@@ -18,6 +18,8 @@ export const MQ = {
   motion: "(prefers-reduced-motion: no-preference)",
   reduce: "(prefers-reduced-motion: reduce)",
   finePointer: "(hover: hover) and (pointer: fine)",
+  /** Scènes épinglées : grand écran, pointeur précis, mouvement autorisé. */
+  stage: "(min-width: 64rem) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)",
 } as const;
 
 export function prefersReducedMotion() {

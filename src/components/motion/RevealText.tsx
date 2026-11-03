@@ -2,20 +2,21 @@
 
 import { useRef, type ElementType, type ReactNode } from "react";
 import { gsap, MQ, SplitText, useGSAP } from "@/lib/animation/gsap";
+import { isDirectLoad, onStage } from "@/lib/stage";
 
 type Props = {
   as?: ElementType;
   children: ReactNode;
   className?: string;
   id?: string;
-  /** "lines" : découpage en lignes masquées · "chars" : entrée lettre par lettre. */
+  /** "lines" : lignes masquées · "chars" : lettre par lettre. */
   mode?: "lines" | "chars";
   delay?: number;
   start?: string;
 };
 
-/** Révélation typographique au défilement (lignes masquées ou lettres). */
-export function RevealText({ as: Tag = "div", children, className, id, mode = "lines", delay = 0, start = "top 86%" }: Props) {
+/** Apparition typographique : les lignes montent derrière leur masque. */
+export function RevealText({ as: Tag = "div", children, className, id, mode = "lines", delay = 0, start = "top 90%" }: Props) {
   const ref = useRef<HTMLElement>(null);
   useGSAP(
     () => {
@@ -23,28 +24,39 @@ export function RevealText({ as: Tag = "div", children, className, id, mode = "l
       if (!el) return;
       const mm = gsap.matchMedia();
       mm.add(MQ.motion, () => {
+        if (el.getBoundingClientRect().top < window.innerHeight * 0.92 && isDirectLoad()) return;
+        let split: SplitText | null = null;
+        let cancelled = false;
         const isHeading = /^H[1-6]$/.test(el.tagName);
-        const split = SplitText.create(el, {
-          type: mode === "chars" ? "lines,chars" : "lines",
-          // aria-label n'est autorisé que sur les titres ; ailleurs le texte reste lisible tel quel.
-          aria: isHeading && mode === "chars" ? "auto" : "none",
-          mask: "lines",
-          linesClass: "reveal-line",
-          autoSplit: true,
-          onSplit(self) {
-            const targets = mode === "chars" ? self.chars : self.lines;
-            return gsap.from(targets, {
-              yPercent: 115,
-              rotate: mode === "chars" ? 4 : 0,
-              duration: mode === "chars" ? 1.2 : 1.3,
+        gsap.set(el, { autoAlpha: 0 });
+        const stop = onStage(() => {
+          void (document.fonts?.ready ?? Promise.resolve()).then(() => {
+            if (cancelled) return;
+            gsap.set(el, { autoAlpha: 1 });
+            split = SplitText.create(el, {
+              type: mode === "chars" ? "lines,chars" : "lines",
+              aria: isHeading && mode === "chars" ? "auto" : "none",
+              mask: "lines",
+            });
+            gsap.from(mode === "chars" ? split.chars : split.lines, {
+              yPercent: 112,
+              duration: mode === "chars" ? 1.15 : 1.25,
               ease: "expo.out",
-              stagger: mode === "chars" ? 0.022 : 0.09,
+              stagger: mode === "chars" ? 0.022 : 0.085,
               delay,
               scrollTrigger: { trigger: el, start, once: true },
+              onComplete: () => {
+                split?.revert();
+                split = null;
+              },
             });
-          },
+          });
         });
-        return () => split.revert();
+        return () => {
+          cancelled = true;
+          stop();
+          split?.revert();
+        };
       });
       return () => mm.revert();
     },

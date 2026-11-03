@@ -1,22 +1,33 @@
+import { photos, type ArtPhoto } from "./photos";
+
 /**
  * La carte MIYABI MATCHA.
  *
  * Source : carte Uber Eats fournie (catégories, noms et noms japonais repris à l'identique).
- * Les descriptions reprennent uniquement le texte visible sur la carte source,
- * coupé avant les passages tronqués — rien n'a été ajouté.
+ * `description` reprend le texte visible sur la carte source. `short` en est un raccourci d'une ligne,
+ * composé uniquement de mots déjà présents dans cette description : rien n'est ajouté.
  *
  * ⚠️ Volontairement AUCUN prix : les tarifs peuvent différer entre la livraison et la vente sur place.
  *
- * Pour mettre à jour la carte : modifier / ajouter des entrées ci-dessous.
+ * Pour mettre à jour la carte : modifier ou ajouter des entrées ci-dessous.
  * Aucune modification de composant n'est nécessaire.
  */
 
 export type MenuCategory = {
   id: string;
+  /** Intitulé complet (titre et référencement). */
   label: string;
+  /** Intitulé court (navigation par catégories). */
+  short: string;
+  /** Intitulé le plus court, pour les petits écrans. */
+  tab?: string;
   /** Intitulé japonais tel qu'il figure sur la carte officielle. */
   labelJa?: string;
   order: number;
+  /** Photographie d'ambiance de la catégorie (matière ou geste, jamais un autre produit de la carte). */
+  scene: ArtPhoto;
+  /** Teinte du papier pour les références sans photographie. */
+  paper: string;
 };
 
 export type MenuProduct = {
@@ -26,30 +37,32 @@ export type MenuProduct = {
   nameJa?: string;
   category: string;
   description?: string;
-  /** Chemin d'une photo réelle du produit (voir src/data/images.ts). */
-  image?: string;
-  featured?: boolean;
+  /** Une seule ligne, issue de `description`. */
+  short?: string;
+  /** Photo réelle du produit. Sans photo, le nom japonais tient lieu de visuel : aucune image n'est inventée. */
+  photo?: ArtPhoto;
   available?: boolean;
   order?: number;
 };
 
 export const menuCategories: MenuCategory[] = [
-  { id: "matcha", label: "Matcha", labelJa: "宇治・福岡産の高級抹茶", order: 1 },
-  { id: "crepes", label: "Crêpes japonaises au matcha", labelJa: "抹茶の和風クレープ", order: 2 },
-  { id: "cafe", label: "Café", labelJa: "コーヒー", order: 3 },
-  { id: "boba", label: "Boba", order: 4 },
-  { id: "fruity-tea", label: "Fruity Tea", labelJa: "フルーティーティー", order: 5 },
+  { id: "matcha", label: "Matcha", short: "Matcha", labelJa: "宇治・福岡産の高級抹茶", order: 1, scene: photos.whisked, paper: "#E4E8D9" },
+  { id: "crepes", label: "Crêpes japonaises au matcha", short: "Crêpes japonaises", tab: "Crêpes", labelJa: "抹茶の和風クレープ", order: 2, scene: photos.crepeLift, paper: "#E9E9D6" },
+  { id: "cafe", label: "Café", short: "Café", labelJa: "コーヒー", order: 3, scene: photos.camelot, paper: "#EADFD0" },
+  { id: "boba", label: "Boba", short: "Boba", order: 4, scene: photos.brownSugar, paper: "#EDE3D3" },
+  { id: "fruity-tea", label: "Fruity Tea", short: "Fruity Tea", labelJa: "フルーティーティー", order: 5, scene: photos.leaves, paper: "#EFE6DB" },
 ];
 
 export const menuProducts: MenuProduct[] = [
-  // — MATCHA —
+  // MATCHA
   {
     id: "matcha-latte",
     name: "Matcha Latte",
     nameJa: "抹茶ラテ",
     category: "matcha",
     description: "Préparé avec un matcha Cérémonie d'exception, soigneusement fouetté.",
-    featured: true,
+    short: "Matcha Cérémonie d'exception, soigneusement fouetté.",
+    photo: photos.cupHand,
     order: 1,
   },
   {
@@ -59,7 +72,8 @@ export const menuProducts: MenuProduct[] = [
     category: "matcha",
     description:
       "Un mélange délicat de matcha japonais et de purée de fraise, surmonté d'une crème légère et veloutée.",
-    featured: true,
+    short: "Matcha japonais, purée de fraise, crème légère.",
+    photo: photos.splash,
     order: 2,
   },
   {
@@ -68,6 +82,7 @@ export const menuProducts: MenuProduct[] = [
     nameJa: "抹茶ゆずスパークリング",
     category: "matcha",
     description: "Un mélange pétillant de matcha japonais d'exception et de yuzu frais.",
+    short: "Matcha japonais et yuzu frais, pétillant.",
     order: 3,
   },
   {
@@ -77,6 +92,7 @@ export const menuProducts: MenuProduct[] = [
     category: "matcha",
     description:
       "Un mélange délicat de hojicha japonais, infusé et mélangé à du lait de soja velouté, surmonté d'une crème légère.",
+    short: "Hojicha japonais, lait de soja, crème légère.",
     order: 4,
   },
   {
@@ -86,6 +102,7 @@ export const menuProducts: MenuProduct[] = [
     category: "matcha",
     description:
       "Un latte aérien : matcha japonais d'exception et lait de coco onctueux, surmonté d'une mousse légère.",
+    short: "Matcha japonais, lait de coco, mousse légère.",
     order: 5,
   },
   {
@@ -95,6 +112,7 @@ export const menuProducts: MenuProduct[] = [
     category: "matcha",
     description:
       "Un latte raffiné combinant matcha japonais d'exception et purée de mangue juteuse, surmonté d'une crème veloutée.",
+    short: "Matcha japonais, purée de mangue, crème veloutée.",
     order: 6,
   },
   {
@@ -104,6 +122,7 @@ export const menuProducts: MenuProduct[] = [
     category: "matcha",
     description:
       "Un latte unique combinant le matcha japonais d'exception et la délicatesse du thé jasmin, accompagné de mochi moelleux.",
+    short: "Matcha japonais, thé jasmin, mochi moelleux.",
     order: 7,
   },
   {
@@ -112,10 +131,11 @@ export const menuProducts: MenuProduct[] = [
     nameJa: "ピスタチオ抹茶ラテ",
     category: "matcha",
     description: "Un mariage raffiné entre le matcha japonais et la douceur de la pistache.",
+    short: "Matcha japonais et douceur de la pistache.",
     order: 8,
   },
 
-  // — CRÊPES JAPONAISES AU MATCHA —
+  // CRÊPES JAPONAISES AU MATCHA
   {
     id: "crepe-classic",
     name: "Crêpe Matcha Japonais Classic",
@@ -123,6 +143,7 @@ export const menuProducts: MenuProduct[] = [
     category: "crepes",
     description:
       "Une crêpe fine et moelleuse, préparée avec du matcha japonais d'exception et garnie de crème légère.",
+    short: "Crêpe fine au matcha japonais, crème légère.",
     order: 1,
   },
   {
@@ -132,8 +153,8 @@ export const menuProducts: MenuProduct[] = [
     category: "crepes",
     description:
       "Une crêpe fine et moelleuse, préparée avec du matcha japonais d'exception et garnie de crème légère et de fruits rouges.",
-    image: "/images/products/crepe-forest-fruit.jpg",
-    featured: true,
+    short: "Crêpe fine au matcha, crème légère, fruits rouges.",
+    photo: photos.crepeForest,
     order: 2,
   },
   {
@@ -143,6 +164,7 @@ export const menuProducts: MenuProduct[] = [
     category: "crepes",
     description:
       "Une crêpe fine et moelleuse, préparée avec du matcha japonais d'exception et garnie de crème légère et de fraises fraîches.",
+    short: "Crêpe fine au matcha, crème légère, fraises fraîches.",
     order: 3,
   },
   {
@@ -151,6 +173,7 @@ export const menuProducts: MenuProduct[] = [
     nameJa: "クレームブリュレクレープ",
     category: "crepes",
     description: "Une crème riche et veloutée, surmontée d'une fine couche de caramel croquant.",
+    short: "Crème veloutée, fine couche de caramel croquant.",
     order: 4,
   },
   {
@@ -160,10 +183,11 @@ export const menuProducts: MenuProduct[] = [
     category: "crepes",
     description:
       "Une crêpe fine et moelleuse, préparée avec du matcha japonais d'exception et garnie de crème légère et de biscuits Lotus.",
+    short: "Crêpe fine au matcha, crème légère, biscuits Lotus.",
     order: 5,
   },
 
-  // — CAFÉ —
+  // CAFÉ
   {
     id: "white-vienna",
     name: "White Vienna",
@@ -171,6 +195,7 @@ export const menuProducts: MenuProduct[] = [
     category: "cafe",
     description:
       "Inspiré des cafés de Kyoto : un espresso doux issu de grains japonais, marié à une crème blanche.",
+    short: "Espresso doux de grains japonais, crème blanche.",
     order: 1,
   },
   {
@@ -180,6 +205,7 @@ export const menuProducts: MenuProduct[] = [
     category: "cafe",
     description:
       "Une création signée Miyabi Matcha : espresso japonais onctueux, relevé par la richesse du sésame noir.",
+    short: "Espresso japonais, richesse du sésame noir.",
     order: 2,
   },
   {
@@ -188,8 +214,8 @@ export const menuProducts: MenuProduct[] = [
     nameJa: "キャメロットキャラメルラテ",
     category: "cafe",
     description: "Entre la noblesse du caramel doré et la profondeur du café japonais.",
-    image: "/images/products/camelot-caramel-latte.jpg",
-    featured: true,
+    short: "Caramel doré et profondeur du café japonais.",
+    photo: photos.camelot,
     order: 3,
   },
   {
@@ -198,7 +224,8 @@ export const menuProducts: MenuProduct[] = [
     nameJa: "ラテ",
     category: "cafe",
     description: "Une boisson à base d'espresso, douce et crémeuse.",
-    image: "/images/products/latte.jpg",
+    short: "À base d'espresso, douce et crémeuse.",
+    photo: photos.latte,
     order: 4,
   },
   {
@@ -207,18 +234,20 @@ export const menuProducts: MenuProduct[] = [
     nameJa: "アメリカーノ",
     category: "cafe",
     description: "Un Americano classique : espresso allongé d'eau chaude.",
-    image: "/images/products/americano.jpg",
+    short: "Espresso allongé d'eau chaude.",
+    photo: photos.americano,
     order: 5,
   },
 
-  // — BOBA —
+  // BOBA
   {
     id: "thai-milk-tea",
     name: "Thai Milk Tea",
     nameJa: "タイミルクティー",
     category: "boba",
     description: "Un classique thaï, doux et crémeux : thé noir corsé et lait.",
-    image: "/images/products/thai-milk-tea-iced-smoothie.jpg",
+    short: "Thé noir corsé et lait, doux et crémeux.",
+    photo: photos.thai,
     order: 1,
   },
   {
@@ -227,6 +256,7 @@ export const menuProducts: MenuProduct[] = [
     nameJa: "黒糖タピオカミルクティー",
     category: "boba",
     description: "Sirop de sucre brun, perles de tapioca moelleuses et lait frais.",
+    short: "Sucre brun, perles de tapioca, lait frais.",
     order: 2,
   },
   {
@@ -235,6 +265,7 @@ export const menuProducts: MenuProduct[] = [
     nameJa: "黒糖ミルクティー",
     category: "boba",
     description: "Thé au lait doux et crémeux, au sucre brun caramélisé.",
+    short: "Thé au lait, sucre brun caramélisé.",
     order: 3,
   },
   {
@@ -243,6 +274,7 @@ export const menuProducts: MenuProduct[] = [
     nameJa: "黒ごまもちクリーム",
     category: "boba",
     description: "Mochi moelleux et crème riche au sésame noir.",
+    short: "Mochi moelleux, crème au sésame noir.",
     order: 4,
   },
   {
@@ -252,16 +284,18 @@ export const menuProducts: MenuProduct[] = [
     category: "boba",
     description:
       "Thé au jasmin délicatement infusé, mélangé à du lait crémeux. À savourer chaud ou glacé.",
+    short: "Thé au jasmin et lait crémeux, chaud ou glacé.",
     order: 5,
   },
 
-  // — FRUITY TEA —
+  // FRUITY TEA
   {
     id: "various-berry-black-tea",
     name: "Various Berry Black Tea",
     nameJa: "ベリーミックス紅茶",
     category: "fruity-tea",
     description: "Un thé noir délicat, infusé avec un mélange de baies rouges fraîches et acidulées.",
+    short: "Thé noir délicat, baies rouges fraîches.",
     order: 1,
   },
   {
@@ -270,6 +304,7 @@ export const menuProducts: MenuProduct[] = [
     nameJa: "パッションフルーツスパークリング",
     category: "fruity-tea",
     description: "Un mélange pétillant de jus de fruit de la passion frais et d'eau gazeuse.",
+    short: "Jus de fruit de la passion frais, eau gazeuse.",
     order: 2,
   },
 ];
@@ -286,3 +321,5 @@ export function getMenu() {
     }))
     .filter((c) => c.products.length > 0);
 }
+
+export type MenuSection = ReturnType<typeof getMenu>[number];

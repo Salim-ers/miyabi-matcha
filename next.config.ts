@@ -5,10 +5,10 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   images: {
     formats: ["image/avif", "image/webp"],
-    // Jusqu'au 4K pour les grands écrans — Next n'agrandit jamais au-delà de la source.
+    // Jusqu'au 4K pour les grands écrans. Next n'agrandit jamais au-delà de la source.
     deviceSizes: [360, 420, 640, 750, 828, 1080, 1200, 1440, 1920, 2560, 3840],
     imageSizes: [48, 64, 96, 128, 256, 384],
-    qualities: [60, 70, 75, 80, 85, 90],
+    qualities: [60, 70, 75, 80, 82, 85, 88, 90],
     minimumCacheTTL: 60 * 60 * 24 * 30,
   },
   async headers() {

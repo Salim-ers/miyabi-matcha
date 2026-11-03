@@ -29,7 +29,7 @@ export default function Confidentialite() {
       <section>
         <h2>Google Maps</h2>
         <p>
-          La carte interactive de la section « Nous trouver » est fournie par Google. Elle n&apos;est chargée qu&apos;après votre accord
+          La carte interactive de la page « Nous Trouver » est fournie par Google. Elle n&apos;est chargée qu&apos;après votre accord
           explicite. Une fois affichée, Google peut collecter des données et déposer des cookies conformément à sa propre{" "}
           <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">
             politique de confidentialité

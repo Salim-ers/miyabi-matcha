@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "typecheck": "tsc --noEmit",
-    "images:manifest": "node scripts/generate-image-manifest.js"
+    "images:manifest": "node scripts/generate-image-manifest.js",
+    "images:depth": "node scripts/build-hero-cutout.js"
   },
   "dependencies": {
     "@gsap/react": "2.1.2",

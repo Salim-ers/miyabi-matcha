@@ -1,23 +1,21 @@
+import { photos, type ArtPhoto } from "./photos";
+
 /**
- * Créations signature — section « Nos créations ».
- * Uniquement des produits réellement photographiés. Aucun prix affiché.
- * Pour ajouter une création : ajouter une entrée avec une photo réelle (fond sombre de préférence).
+ * Créations signature : uniquement des produits réellement photographiés. Aucun prix.
+ * Les descriptions reprennent le texte de la carte source ; sans description fiable, aucune n'est affichée.
  */
 
 export type Signature = {
   id: string;
   name: string;
-  /** Découpage du nom pour la typographie monumentale (1 à 3 lignes). */
+  /** Découpage du nom pour la typographie monumentale. */
   lines: string[];
   nameJa?: string;
   kind: string;
   description?: string;
-  image: string;
-  /** Ajustement du cadrage sur mobile (object-position). */
-  focus?: string;
-  /** Teinte d'ambiance (fond) et accent, dérivés de la photo. */
+  photo: ArtPhoto;
+  /** Teinte d'ambiance de la scène : très sombre, pour se fondre dans le noir du studio. */
   tint: string;
-  accent: string;
 };
 
 export const signatures: Signature[] = [
@@ -25,10 +23,9 @@ export const signatures: Signature[] = [
     id: "matcha-tornado",
     name: "Matcha Tornado",
     lines: ["Matcha", "Tornado"],
-    kind: "Matcha · Iced",
-    image: "/images/products/matcha-tornado.jpg",
-    tint: "#17301a",
-    accent: "#9cbf5a",
+    kind: "Matcha",
+    photo: photos.tornado,
+    tint: "#070903",
   },
   {
     id: "crepe-forest-fruit",
@@ -37,38 +34,44 @@ export const signatures: Signature[] = [
     nameJa: "森のフルーツ抹茶和風クレープ",
     kind: "Crêpe japonaise au matcha",
     description: "Crêpe fine et moelleuse au matcha japonais, crème légère et fruits rouges.",
-    image: "/images/products/crepe-forest-fruit.jpg",
-    tint: "#2e1419",
-    accent: "#d0435a",
+    photo: photos.crepeForest,
+    tint: "#0d0709",
+  },
+  {
+    id: "strawberry-matcha",
+    name: "Strawberry Matcha",
+    lines: ["Strawberry", "Matcha"],
+    nameJa: "いちご抹茶",
+    kind: "Matcha",
+    description: "Matcha japonais et purée de fraise.",
+    photo: photos.splash,
+    tint: "#0e0706",
   },
   {
     id: "camelot-caramel-latte",
     name: "Camelot Caramel Latte",
-    lines: ["Camelot", "Caramel Latte"],
+    lines: ["Camelot", "Caramel", "Latte"],
     nameJa: "キャメロットキャラメルラテ",
     kind: "Café japonais",
     description: "Entre la noblesse du caramel doré et la profondeur du café japonais.",
-    image: "/images/products/camelot-caramel-latte.jpg",
-    tint: "#2f2010",
-    accent: "#d29a5a",
+    photo: photos.camelot,
+    tint: "#0d0905",
   },
   {
     id: "thai-milk-tea-iced-smoothie",
     name: "Thai Milk Tea Iced Smoothie",
     lines: ["Thai Milk Tea", "Iced Smoothie"],
-    kind: "Boba · Iced",
-    image: "/images/products/thai-milk-tea-iced-smoothie.jpg",
-    tint: "#33190a",
-    accent: "#e58c3f",
+    kind: "Boba",
+    photo: photos.thai,
+    tint: "#0c0805",
   },
   {
     id: "brown-sugar-coffee-iced-smoothie",
     name: "Brown Sugar Coffee Iced Smoothie",
-    lines: ["Brown Sugar", "Coffee", "Iced Smoothie"],
-    kind: "Café · Iced",
-    image: "/images/products/brown-sugar-coffee-iced-smoothie.jpg",
-    tint: "#2b1d13",
-    accent: "#c4915e",
+    lines: ["Brown Sugar Coffee", "Iced Smoothie"],
+    kind: "Café",
+    photo: photos.brownSugar,
+    tint: "#0c0805",
   },
   {
     id: "latte",
@@ -77,9 +80,8 @@ export const signatures: Signature[] = [
     nameJa: "ラテ",
     kind: "Café japonais",
     description: "Une boisson à base d'espresso, douce et crémeuse.",
-    image: "/images/products/latte.jpg",
-    tint: "#251c15",
-    accent: "#dcbb92",
+    photo: photos.latte,
+    tint: "#090806",
   },
   {
     id: "americano",
@@ -88,8 +90,13 @@ export const signatures: Signature[] = [
     nameJa: "アメリカーノ",
     kind: "Café japonais",
     description: "Un Americano classique : espresso allongé d'eau chaude.",
-    image: "/images/products/americano.jpg",
-    tint: "#27150a",
-    accent: "#c26a2e",
+    photo: photos.americano,
+    tint: "#090806",
   },
 ];
+
+export const signature = (id: string): Signature => {
+  const found = signatures.find((s) => s.id === id);
+  if (!found) throw new Error(`Création inconnue : ${id}`);
+  return found;
+};

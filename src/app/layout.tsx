@@ -1,30 +1,28 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import { Footer } from "@/components/footer/Footer";
-import { SmoothScroll } from "@/components/layout/SmoothScroll";
-import { Preloader } from "@/components/loader/Preloader";
-import { SiteChrome } from "@/components/navigation/SiteChrome";
+import { Footer } from "@/components/shell/Footer";
+import { Header } from "@/components/shell/Header";
+import { PageTransition } from "@/components/shell/PageTransition";
+import { Preloader } from "@/components/shell/Preloader";
+import { SmoothScroll } from "@/components/shell/SmoothScroll";
 import { seo, site } from "@/data/site";
-import { introBootScript } from "@/lib/intro";
+import { stageBootScript } from "@/lib/stage";
 
+/** Police éditoriale : Bodoni Moda, à axe optique (les déliés s'affinent quand le corps grandit). */
 const display = localFont({
   src: [
-    { path: "../fonts/cormorant-garamond-latin-300-normal.woff2", weight: "300", style: "normal" },
-    { path: "../fonts/cormorant-garamond-latin-300-italic.woff2", weight: "300", style: "italic" },
-    { path: "../fonts/cormorant-garamond-latin-400-normal.woff2", weight: "400", style: "normal" },
-    { path: "../fonts/cormorant-garamond-latin-400-italic.woff2", weight: "400", style: "italic" },
-    { path: "../fonts/cormorant-garamond-latin-500-normal.woff2", weight: "500", style: "normal" },
-    { path: "../fonts/cormorant-garamond-latin-500-italic.woff2", weight: "500", style: "italic" },
+    { path: "../fonts/bodoni-moda-latin-standard-normal.woff2", weight: "400 900", style: "normal" },
+    { path: "../fonts/bodoni-moda-latin-standard-italic.woff2", weight: "400 900", style: "italic" },
   ],
   variable: "--ff-display",
   display: "swap",
-  fallback: ["Georgia", "Times New Roman", "serif"],
+  adjustFontFallback: "Times New Roman",
+  fallback: ["Times New Roman", "serif"],
 });
 
 const sans = localFont({
   src: [
-    { path: "../fonts/manrope-latin-300-normal.woff2", weight: "300", style: "normal" },
     { path: "../fonts/manrope-latin-400-normal.woff2", weight: "400", style: "normal" },
     { path: "../fonts/manrope-latin-500-normal.woff2", weight: "500", style: "normal" },
     { path: "../fonts/manrope-latin-600-normal.woff2", weight: "600", style: "normal" },
@@ -50,11 +48,9 @@ export const metadata: Metadata = {
   description: site.description,
   keywords: seo.keywords,
   applicationName: site.name,
-  alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     locale: site.locale,
-    url: "/",
     siteName: site.name,
     title: seo.title,
     description: site.description,
@@ -65,14 +61,14 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#101510",
-  colorScheme: "dark",
+  themeColor: "#f7f5ef",
+  colorScheme: "light",
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
 };
 
-/** Données structurées — uniquement des informations confirmées (pas d'horaires, de note ni d'avis). */
+/** Données structurées : uniquement des informations confirmées (pas d'horaires, de note ni d'avis). */
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "CafeOrCoffeeShop",
@@ -96,21 +92,22 @@ const jsonLd = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fr" className={`${display.variable} ${sans.variable} ${japanese.variable}`} data-surface="dark" suppressHydrationWarning>
+    <html lang="fr" className={`${display.variable} ${sans.variable} ${japanese.variable}`} data-surface="light" suppressHydrationWarning>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: introBootScript }} />
+        <script dangerouslySetInnerHTML={{ __html: stageBootScript }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       </head>
       <body>
         <SmoothScroll>
-          <Preloader />
-          <SiteChrome />
-          <main id="contenu" className="lg:pl-[var(--rail)]">
-            {children}
-          </main>
-          <Footer />
+          <PageTransition>
+            <Preloader />
+            <Header />
+            <main id="contenu" tabIndex={-1}>
+              {children}
+            </main>
+            <Footer />
+          </PageTransition>
         </SmoothScroll>
-        <div className="grain" aria-hidden />
       </body>
     </html>
   );

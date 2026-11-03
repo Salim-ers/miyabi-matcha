@@ -3,10 +3,19 @@ import { site } from "@/data/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
+  const page = (path: string, changeFrequency: "monthly" | "weekly" | "yearly", priority: number): MetadataRoute.Sitemap[number] => ({
+    url: `${site.url}${path}`,
+    lastModified: now,
+    changeFrequency,
+    priority,
+  });
   return [
-    { url: `${site.url}/`, lastModified: now, changeFrequency: "monthly", priority: 1 },
-    { url: `${site.url}/carte`, lastModified: now, changeFrequency: "weekly", priority: 0.9 },
-    { url: `${site.url}/mentions-legales`, lastModified: now, changeFrequency: "yearly", priority: 0.2 },
-    { url: `${site.url}/confidentialite`, lastModified: now, changeFrequency: "yearly", priority: 0.2 },
+    page("/", "monthly", 1),
+    page("/carte", "weekly", 0.9),
+    page("/creations", "monthly", 0.8),
+    page("/maison", "monthly", 0.6),
+    page("/contact", "yearly", 0.8),
+    page("/mentions-legales", "yearly", 0.2),
+    page("/confidentialite", "yearly", 0.2),
   ];
 }
