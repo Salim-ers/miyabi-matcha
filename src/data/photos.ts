@@ -68,6 +68,18 @@ export const photos = {
   whiteVienna: { src: "/images/menu/white-vienna.jpg", alt: "White Vienna MIYABI, café sous une crème blanche" },
   blackSesameVienna: { src: "/images/menu/black-sesame-vienna.jpg", alt: "Black Sesame Vienna MIYABI, café sur une base mouchetée de sésame noir" },
 
+  /* — Carte : images générées par IA (gpt-image-2) à partir des photos du site, pour les produits sans prise de vue.
+       À remplacer par de vraies photos dès que possible : même nom de fichier, même cadrage. — */
+  iaMangue: { src: "/images/menu/ia/matcha-latte-mangue.jpg", alt: "Illustration du Matcha Latte Mangue : matcha, lait et purée de mangue en trois couches" },
+  iaHojichaSoy: { src: "/images/menu/ia/hojicha-soy-cream.jpg", alt: "Illustration du Hojicha Soy Cream : hojicha sur lait de soja, crème légère" },
+  iaPistache: { src: "/images/menu/ia/pistache-latte-matcha.jpg", alt: "Illustration du Pistache Latte Matcha : matcha sur crème de pistache, éclats de pistache" },
+  iaBobaMilk: { src: "/images/menu/ia/brown-sugar-boba-milk.jpg", alt: "Illustration du Brown Sugar Boba Milk : lait frais, sirop de sucre brun, perles de tapioca" },
+  iaMilkTea: { src: "/images/menu/ia/brown-sugar-milk-tea.jpg", alt: "Illustration du Brown Sugar Milk Tea : thé au lait et sucre brun caramélisé" },
+  iaSesameMochi: { src: "/images/menu/ia/black-sesame-mochi-cream.jpg", alt: "Illustration du Black Sesame Mochi Cream : crème au sésame noir et mochi" },
+  iaJasmine: { src: "/images/menu/ia/jasmine-milk-tea.jpg", alt: "Illustration du Jasmine Milk Tea glacé : thé au jasmin et lait crémeux" },
+  iaBerry: { src: "/images/menu/ia/various-berry-black-tea.jpg", alt: "Illustration du Various Berry Black Tea : thé noir glacé et baies rouges" },
+  iaPassion: { src: "/images/menu/ia/passionfruit-sparkling.jpg", alt: "Illustration du Passionfruit Sparkling : fruit de la passion, bulles et glaçons" },
+
   /** Même prise de vue que le Hero, cadrée sur le gobelet pour la carte. */
   tornadoCard: { src: "/images/products/matcha-tornado.jpg", alt: "Matcha Tornado MIYABI : matcha glacé tourbillonnant sous une crème légère" },
 

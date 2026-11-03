@@ -7,9 +7,10 @@ import { photos, type ArtPhoto } from "./photos";
  * `description` reprend le texte visible sur la carte source. `short` en est un raccourci d'une ligne,
  * composé uniquement de mots déjà présents dans cette description : rien n'est ajouté.
  *
- * Sources complémentaires : affiches officielles MIYABI (photos, nom japonais et prix quand ils y figurent).
- * Prix : champ `price` (en euros, ex. 6.5), à reprendre de la carte ou des affiches de la boutique et non d'Uber Eats,
- * dont les tarifs diffèrent. Il s'affiche automatiquement dès qu'il est renseigné. Aucun prix n'est deviné.
+ * Sources complémentaires : carte de la boutique (prix et produits) et affiches officielles (photos, noms japonais).
+ * Images : 9 produits sans prise de vue ont une image générée par IA (public/images/menu/ia), à remplacer par de vraies photos.
+ * Prix : champ `price` (en euros, ex. 6.5), repris de la carte de la boutique, et non d'Uber Eats, dont les tarifs diffèrent.
+ * Il s'affiche automatiquement dès qu'il est renseigné. Aucun prix n'est deviné.
  *
  * Pour mettre à jour la carte : modifier ou ajouter des entrées ci-dessous.
  * Aucune modification de composant n'est nécessaire.
@@ -39,7 +40,7 @@ export type MenuProduct = {
   description?: string;
   /** Une seule ligne, issue de `description`. */
   short?: string;
-  /** Photo réelle du produit. Sans photo, le nom japonais tient lieu de visuel : aucune image n'est inventée. */
+  /** Photo du produit. Sans photo, une fiche de papier affiche le nom japonais. */
   photo?: ArtPhoto;
   /** Prix en euros, tel qu'affiché en boutique. Laisser vide tant qu'il n'est pas confirmé. */
   price?: number;
@@ -88,7 +89,7 @@ export const menuProducts: MenuProduct[] = [
     description: "Un mélange pétillant de matcha japonais d'exception et de yuzu frais.",
     short: "Matcha japonais et yuzu frais, pétillant.",
     photo: photos.yuzu,
-    price: 6.5,
+    price: 5.95,
     order: 3,
   },
   {
@@ -99,6 +100,8 @@ export const menuProducts: MenuProduct[] = [
     description:
       "Un mélange délicat de hojicha japonais, infusé et mélangé à du lait de soja velouté, surmonté d'une crème légère.",
     short: "Hojicha japonais, lait de soja, crème légère.",
+    photo: photos.iaHojichaSoy,
+    price: 5.95,
     order: 4,
   },
   {
@@ -110,7 +113,7 @@ export const menuProducts: MenuProduct[] = [
       "Un latte aérien : matcha japonais d'exception et lait de coco onctueux, surmonté d'une mousse légère.",
     short: "Matcha japonais, lait de coco, mousse légère.",
     photo: photos.coconut,
-    price: 6.5,
+    price: 5.95,
     order: 5,
   },
   {
@@ -121,6 +124,7 @@ export const menuProducts: MenuProduct[] = [
     description:
       "Un latte raffiné combinant matcha japonais d'exception et purée de mangue juteuse, surmonté d'une crème veloutée.",
     short: "Matcha japonais, purée de mangue, crème veloutée.",
+    photo: photos.iaMangue,
     order: 6,
   },
   {
@@ -142,10 +146,11 @@ export const menuProducts: MenuProduct[] = [
     category: "matcha",
     description: "Un mariage raffiné entre le matcha japonais et la douceur de la pistache.",
     short: "Matcha japonais et douceur de la pistache.",
+    photo: photos.iaPistache,
     order: 8,
   },
 
-  // Sur les affiches officielles, absents de la carte source
+  // Sur les affiches officielles, absent de la carte de la boutique (prix de l'affiche)
   {
     id: "hojicha-black-sesame-cream",
     name: "Hojicha Black Sesame Cream",
@@ -154,13 +159,6 @@ export const menuProducts: MenuProduct[] = [
     photo: photos.hojicha,
     price: 6.5,
     order: 9,
-  },
-  {
-    id: "matcha-tornado",
-    name: "Matcha Tornado",
-    category: "matcha",
-    photo: photos.tornadoCard,
-    order: 10,
   },
 
   // CRÊPES JAPONAISES AU MATCHA
@@ -185,6 +183,7 @@ export const menuProducts: MenuProduct[] = [
       "Une crêpe fine et moelleuse, préparée avec du matcha japonais d'exception et garnie de crème légère et de fruits rouges.",
     short: "Crêpe fine au matcha, crème légère, fruits rouges.",
     photo: photos.crepeForest,
+    price: 9,
     order: 2,
   },
   {
@@ -196,7 +195,7 @@ export const menuProducts: MenuProduct[] = [
       "Une crêpe fine et moelleuse, préparée avec du matcha japonais d'exception et garnie de crème légère et de fraises fraîches.",
     short: "Crêpe fine au matcha, crème légère, fraises fraîches.",
     photo: photos.crepeStrawberry,
-    price: 10,
+    price: 9,
     order: 3,
   },
   {
@@ -256,6 +255,7 @@ export const menuProducts: MenuProduct[] = [
     description: "Entre la noblesse du caramel doré et la profondeur du café japonais.",
     short: "Caramel doré et profondeur du café japonais.",
     photo: photos.camelot,
+    price: 5.95,
     order: 3,
   },
   {
@@ -266,6 +266,7 @@ export const menuProducts: MenuProduct[] = [
     description: "Une boisson à base d'espresso, douce et crémeuse.",
     short: "À base d'espresso, douce et crémeuse.",
     photo: photos.latte,
+    price: 4.8,
     order: 4,
   },
   {
@@ -276,7 +277,38 @@ export const menuProducts: MenuProduct[] = [
     description: "Un Americano classique : espresso allongé d'eau chaude.",
     short: "Espresso allongé d'eau chaude.",
     photo: photos.americano,
+    price: 3,
     order: 5,
+  },
+
+  // Sur la carte de la boutique
+  {
+    id: "sweet-potato-latte",
+    name: "Sweet Potato Latte",
+    category: "cafe",
+    price: 5.95,
+    order: 6,
+  },
+  {
+    id: "americano-coconut-water",
+    name: "Americano Coconut Water",
+    category: "cafe",
+    price: 4.5,
+    order: 7,
+  },
+  {
+    id: "espresso",
+    name: "Espresso",
+    category: "cafe",
+    price: 2.8,
+    order: 8,
+  },
+  {
+    id: "cappuccino",
+    name: "Cappuccino",
+    category: "cafe",
+    price: 3.8,
+    order: 9,
   },
 
   // BOBA
@@ -288,6 +320,7 @@ export const menuProducts: MenuProduct[] = [
     description: "Un classique thaï, doux et crémeux : thé noir corsé et lait.",
     short: "Thé noir corsé et lait, doux et crémeux.",
     photo: photos.thai,
+    price: 6.5,
     order: 1,
   },
   {
@@ -297,6 +330,7 @@ export const menuProducts: MenuProduct[] = [
     category: "boba",
     description: "Sirop de sucre brun, perles de tapioca moelleuses et lait frais.",
     short: "Sucre brun, perles de tapioca, lait frais.",
+    photo: photos.iaBobaMilk,
     order: 2,
   },
   {
@@ -306,6 +340,8 @@ export const menuProducts: MenuProduct[] = [
     category: "boba",
     description: "Thé au lait doux et crémeux, au sucre brun caramélisé.",
     short: "Thé au lait, sucre brun caramélisé.",
+    photo: photos.iaMilkTea,
+    price: 6.5,
     order: 3,
   },
   {
@@ -315,6 +351,8 @@ export const menuProducts: MenuProduct[] = [
     category: "boba",
     description: "Mochi moelleux et crème riche au sésame noir.",
     short: "Mochi moelleux, crème au sésame noir.",
+    photo: photos.iaSesameMochi,
+    price: 6.95,
     order: 4,
   },
   {
@@ -325,10 +363,28 @@ export const menuProducts: MenuProduct[] = [
     description:
       "Thé au jasmin délicatement infusé, mélangé à du lait crémeux. À savourer chaud ou glacé.",
     short: "Thé au jasmin et lait crémeux, chaud ou glacé.",
+    photo: photos.iaJasmine,
     order: 5,
   },
 
-  // Sur les affiches officielles, absent de la carte source
+  // Sur la carte de la boutique
+  {
+    id: "matcha-tornado",
+    name: "Matcha Tornado",
+    category: "boba",
+    photo: photos.tornadoCard,
+    price: 6.5,
+    order: 2,
+  },
+  {
+    id: "brown-sugar-creme-brulee-milk",
+    name: "Brown Sugar Crème Brûlée Milk",
+    category: "boba",
+    price: 6.5,
+    order: 8,
+  },
+
+  // Sur les affiches officielles, absent de la carte de la boutique
   {
     id: "brown-sugar-coffee-iced-smoothie",
     name: "Brown Sugar Coffee Iced Smoothie",
@@ -345,6 +401,8 @@ export const menuProducts: MenuProduct[] = [
     category: "fruity-tea",
     description: "Un thé noir délicat, infusé avec un mélange de baies rouges fraîches et acidulées.",
     short: "Thé noir délicat, baies rouges fraîches.",
+    photo: photos.iaBerry,
+    price: 5.5,
     order: 1,
   },
   {
@@ -354,8 +412,17 @@ export const menuProducts: MenuProduct[] = [
     category: "fruity-tea",
     description: "Un mélange pétillant de jus de fruit de la passion frais et d'eau gazeuse.",
     short: "Jus de fruit de la passion frais, eau gazeuse.",
+    photo: photos.iaPassion,
+    price: 5.5,
     order: 2,
   },
+];
+
+/** Suppléments, tels qu'ils figurent sur la carte de la boutique. */
+export const menuExtras = [
+  { label: "Extra Shot", price: "+ 1 €" },
+  { label: "Extra Matcha Shot", price: "+ 1 €" },
+  { label: "Lait de coco, de soja ou d'avoine", price: "+ 0,50 €" },
 ];
 
 const priceFormat = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" });

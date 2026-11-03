@@ -9,7 +9,7 @@ Une photographie n'apparaît qu'une fois sur le site, toutes pages et tous ongle
 
 **Exceptions validées** : Crêpe Forest Fruit, Camelot Caramel Latte, Americano et Matcha Tornado figurent aussi sur `/carte`, pour que ces produits y aient leur photo.
 
-Le projet compte 33 photographies distinctes, et toutes sont utilisées. Un arbitrage reste à revoir dès que de nouvelles photos arrivent :
+Le projet compte 33 photographies distinctes et 9 images générées par IA, toutes utilisées. Un arbitrage reste à revoir dès que de nouvelles photos arrivent :
 
 - **La porte « La Boutique »** de l'accueil est typographique : aucune photo de la boutique n'est disponible.
 
@@ -31,6 +31,7 @@ Le projet compte 33 photographies distinctes, et toutes sont utilisées. Un arbi
 | `preparation/crepe-batter.jpg` | 1086 × 1448 | Pâte au rouleau, gant noir, plaque rouillée | Bonne | **Accueil, rouleau** |
 | `location/matcha-cup-hand.jpg` | 1024 × 1536 | Gobelet tenu en main, bouteilles floues en haut à droite | Bonne, décor chargé | **Accueil, paravent** |
 | `menu/*.jpg` (12 fichiers) | 684 × 760 à 790 × 878 | Dérivés des affiches officielles : logo et texte retirés, produit entier sur le fond studio | Très bonne | **Carte** : Matcha Latte, Strawberry Matcha Cream, Matcha Yuzu Sparkling, Hojicha Black Sesame Cream, Matcha Coconut Cloud, Jasmine Matcha Mochi, Crêpes Classic, Crème Brûlée, Strawberry et Lotus Speculoos, White Vienna, Black Sesame Vienna |
+| `menu/ia/*.jpg` (9 fichiers) | 922 × 1024 | **Images générées par IA** (gpt-image-2), chacune à partir d'une photo du site dont seul le contenu du gobelet change | Logo et décor contrôlés | **Carte** : Hojicha Soy Cream, Matcha Latte Mangue, Pistache Latte Matcha, Brown Sugar Boba Milk, Brown Sugar Milk Tea, Black Sesame Mochi Cream, Jasmine Milk Tea, Various Berry Black Tea, Passionfruit Sparkling |
 | `products/brown-sugar-coffee-iced-smoothie.jpg` | 864 × 960 | Gobelet, crème caramélisée, perles | Très bonne | **Carte, Brown Sugar Coffee Iced Smoothie** |
 | `products/latte.jpg` | 819 × 910 | Gobelet, deux couches | Très bonne | **Carte, Latte** |
 | `products/thai-milk-tea-iced-smoothie.jpg` | 850 × 931 | Gobelet, crème, perles | Très bonne | **Carte, Thai Milk Tea** : 14 px retirés en haut (reste de texte « MATCHA ») |
@@ -62,4 +63,4 @@ Le projet compte 33 photographies distinctes, et toutes sont utilisées. Un arbi
 1. Une seconde photo du Matcha Tornado, de la Crêpe Forest Fruit, du Camelot et de l'Americano : elle supprimerait les quatre exceptions.
 2. Une vraie photo de la façade et de l'intérieur de la boutique : aucune n'existe dans le projet. Elle irait sur `/contact` et sur la porte « La Boutique ».
 3. Les exports haute définition des photos de produits (3 000 px de large ou plus) : c'est ce qui manque pour un rendu natif sur écran 4K.
-4. Des photos des produits qui n'en ont pas : Fruity Tea, Boba, Matcha Latte Mangue, Pistache Latte Matcha, Hojicha Soy Cream.
+4. De vraies photos pour remplacer les 9 images générées par IA : elles montrent une boisson plausible, pas le produit tel qu'il est servi.

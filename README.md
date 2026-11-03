@@ -23,7 +23,7 @@ Node 20.9 ou plus récent.
 | Route | Rôle | Mise en scène |
 | --- | --- | --- |
 | `/` | Accueil, court et spectaculaire | Couverture de magazine dans une alcôve noire, paravent 3D, rouleau photographique, deux portes typographiques |
-| `/carte` | Consultation rapide | Onglets, cartes alignées : photo et titre japonais à sa droite, prix, 28 produits |
+| `/carte` | Consultation rapide | Onglets, cartes alignées : photo et titre japonais à sa droite, prix, 33 produits |
 | `/creations` | Émerveiller | Galerie sur le noir du studio, une mise en scène par création |
 | `/maison` | Univers et gestes | Trois séquences photographiques, presque sans texte |
 | `/contact` | Venir | Adresse, horaires, itinéraire, Google Maps, Instagram |
@@ -39,7 +39,7 @@ Node 20.9 ou plus récent.
 | Photographies : fichier, description, point focal | `src/data/photos.ts` |
 
 - **Horaires** : `hours` dans `src/data/site.ts`, source : fiche Google et bio Instagram. Ils alimentent aussi la page Contact, le pied de page et les données structurées.
-- **Prix** : champ `price` de chaque produit dans `src/data/menu.ts` (en euros, ex. `price: 6.5`). Il s'affiche seul dès qu'il est renseigné. La mention « Tarifs en boutique » disparaît quand tous les produits en ont un. Source : affiches ou carte de la boutique, pas Uber Eats, dont les tarifs diffèrent.
+- **Prix** : champ `price` de chaque produit dans `src/data/menu.ts` (en euros, ex. `price: 6.5`). Il s'affiche seul dès qu'il est renseigné. La mention « Tarifs en boutique » disparaît quand tous les produits en ont un. Source : carte de la boutique, pas Uber Eats, dont les tarifs diffèrent. Les suppléments sont dans `menuExtras`.
 - **Masquer un produit** : `available: false`.
 - **Description d'une ligne** : `short`, à composer uniquement avec les mots de `description`.
 
@@ -71,9 +71,10 @@ Les caractères absents s'affichent dans la police mincho du système.
 ## Points à valider
 
 - **Résolution des photos** : les photos de produits font de 774 à 864 px de large. Elles restent belles jusqu'au 1440p, mais sont un peu douces sur un écran 4K. Pour un rendu natif, remplacer les fichiers par des exports haute définition de même cadrage, puis relancer `npm run images:manifest`.
-- **Prix manquants** : 12 produits ont un prix, repris des affiches officielles. Les autres attendent une photo nette de la carte de la boutique.
-- **Hojicha** : les affiches montrent « Hojicha Black Sesame Cream », la carte source « Hojicha Soy Cream ». Les deux sont affichés : à confirmer.
-- **Produits ajoutés d'après les affiches**, absents de la carte source : Hojicha Black Sesame Cream, Matcha Tornado, Brown Sugar Coffee Iced Smoothie (classé en Boba pour ses perles de tapioca).
+- **Images générées par IA** : 9 produits sans prise de vue ont une image créée avec gpt-image-2 à partir des photos du site (`public/images/menu/ia/`) : Hojicha Soy Cream, Matcha Latte Mangue, Pistache Latte Matcha, Brown Sugar Boba Milk, Brown Sugar Milk Tea, Black Sesame Mochi Cream, Jasmine Milk Tea, Various Berry Black Tea, Passionfruit Sparkling. Elles montrent une boisson plausible, pas le produit réel : à faire valider par la boutique, puis à remplacer par de vraies photos (même nom de fichier).
+- **Prix** : repris de la carte de la boutique. Trois diffèrent des affiches, qui indiquent 10 € pour la Crêpe Strawberry (carte : 9 €) et 6,50 € pour Matcha Yuzu Sparkling et Matcha Coconut Cloud (carte : 5,95 €). À confirmer.
+- **Sans prix** : Matcha Latte Mangue, Pistache Latte Matcha, Brown Sugar Boba Milk, Jasmine Milk Tea et Brown Sugar Coffee Iced Smoothie ne figurent pas sur la carte de la boutique. Hojicha Black Sesame Cream y manque aussi : son prix vient de l'affiche. À confirmer s'ils sont toujours proposés.
+- **Sans image** : Sweet Potato Latte, Americano Coconut Water, Espresso, Cappuccino et Brown Sugar Crème Brûlée Milk, repris de la carte de la boutique.
 - **Associations photo / produit** à confirmer par la boutique : `strawberry-splash` illustre le Strawberry Matcha, et la photo « Thai Milk Tea Iced Smoothie » l'article Thai Milk Tea.
 - **Photo de la boutique** : aucune photo de la façade ou de l'intérieur n'est disponible. La page Contact montre le plateau devant la vitrine.
 - **Descriptions de la carte** : elles reprennent le texte visible sur Uber Eats, coupé avant les passages tronqués. Les intitulés japonais sont ceux de la carte, y compris 宇治・福岡産の高級抹茶 pour la catégorie Matcha.

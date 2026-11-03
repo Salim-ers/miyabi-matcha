@@ -5,7 +5,7 @@ import { MiyabiSymbol } from "@/components/logo/Logo";
 import { useSmoothScroll } from "@/components/shell/SmoothScroll";
 import { ArrowRight } from "@/components/ui/Icons";
 import { Photo } from "@/components/ui/Photo";
-import { formatPrice, type MenuProduct, type MenuSection } from "@/data/menu";
+import { formatPrice, menuExtras, type MenuProduct, type MenuSection } from "@/data/menu";
 import { gsap, prefersReducedMotion } from "@/lib/animation/gsap";
 import { isDirectLoad, onStage } from "@/lib/stage";
 import { cn } from "@/lib/utils/cn";
@@ -18,7 +18,7 @@ const CARD_SIZES = "(min-width: 160rem) 18vw, (min-width: 96rem) 23vw, (min-widt
  * La carte : une page d'usage, pensée pour être consultée vite, debout, d'une main.
  * Catégories en onglets (tout le contenu reste dans le code de la page pour le référencement et sans JavaScript).
  * Toutes les cartes ont le même format : photographie et nom japonais à sa droite,
- * ou fiche de papier quand aucune photo n'est disponible (aucune n'est inventée).
+ * ou fiche de papier quand aucune image n'est disponible.
  */
 export function CarteClient({ menu }: { menu: MenuSection[] }) {
   const firstId = menu[0]?.id ?? "matcha";
@@ -190,11 +190,20 @@ export function CarteClient({ menu }: { menu: MenuSection[] }) {
           <style>{`[data-category][hidden]{display:block!important;margin-bottom:3rem}`}</style>
         </noscript>
 
+        <dl aria-label="Suppléments" className="mt-10 flex flex-col gap-1.5 border-t border-ink/10 pt-5 text-[0.875rem] sm:flex-row sm:flex-wrap sm:gap-x-8 lg:mt-14">
+          {menuExtras.map((extra) => (
+            <div key={extra.label} className="flex justify-between gap-3 sm:justify-start">
+              <dt className="text-smoke">{extra.label}</dt>
+              <dd className="tabular-nums">{extra.price}</dd>
+            </div>
+          ))}
+        </dl>
+
         {next && (
           <button
             type="button"
             onClick={() => select(next.id)}
-            className="cta mt-10 flex min-h-14 w-full items-center justify-between gap-4 border-t border-ink/10 pt-5 text-left lg:mt-14"
+            className="cta mt-5 flex min-h-14 w-full items-center justify-between gap-4 border-t border-ink/10 pt-5 text-left"
           >
             <span>
               <span className="label block text-[0.6rem] text-smoke">Ensuite</span>
