@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 
 export default function CartePage() {
   const menu = getMenu();
-  /** Données structurées de la carte : noms et descriptions réels, sans aucun prix. */
+  /** Données structurées de la carte : noms et descriptions réels ; le prix seulement s'il est renseigné. */
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Menu",
@@ -30,6 +30,7 @@ export default function CartePage() {
         name: p.name,
         ...(p.description ? { description: p.description } : {}),
         ...(p.photo ? { image: `${site.url}${p.photo.src}` } : {}),
+        ...(p.price != null ? { offers: { "@type": "Offer", price: p.price.toFixed(2), priceCurrency: "EUR" } } : {}),
       })),
     })),
   };

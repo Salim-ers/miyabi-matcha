@@ -192,7 +192,7 @@ export function HomeHero() {
       {/* Signature + bouton */}
       <div
         data-leave
-        className="absolute inset-x-[var(--gutter)] bottom-3 flex flex-col items-start gap-y-2 lg:bottom-[4.6svh] lg:right-auto lg:w-[calc(var(--win-x)-var(--gutter)-2vw)] lg:gap-y-6"
+        className="absolute inset-x-[var(--gutter)] bottom-[calc(var(--bar-h)+1.5rem+env(safe-area-inset-bottom))] flex flex-col items-start gap-y-2 lg:bottom-[4.6svh] lg:right-auto lg:w-[calc(var(--win-x)-var(--gutter)-2vw)] lg:gap-y-6"
       >
         <p className="display flex flex-wrap gap-x-[0.28em] text-[clamp(1.85rem,8.8vw,3.2rem)] italic leading-[1.04] lg:block lg:text-[clamp(2.1rem,3.5vw,5.2rem)]">
           {home.tagline.map((line) => (

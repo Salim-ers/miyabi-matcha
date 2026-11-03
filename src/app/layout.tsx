@@ -68,7 +68,7 @@ export const viewport: Viewport = {
   viewportFit: "cover",
 };
 
-/** Données structurées : uniquement des informations confirmées (pas d'horaires, de note ni d'avis). */
+/** Données structurées : uniquement des informations confirmées (pas de note ni d'avis). */
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "CafeOrCoffeeShop",
@@ -80,6 +80,12 @@ const jsonLd = {
   description: site.description,
   servesCuisine: ["Matcha", "Café japonais", "Crêpes japonaises", "Boba"],
   hasMenu: `${site.url}/carte`,
+  openingHoursSpecification: site.hours.map((h) => ({
+    "@type": "OpeningHoursSpecification",
+    dayOfWeek: h.schema.days,
+    opens: h.schema.opens,
+    closes: h.schema.closes,
+  })),
   address: {
     "@type": "PostalAddress",
     streetAddress: site.address.street,

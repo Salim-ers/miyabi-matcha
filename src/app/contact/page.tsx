@@ -3,14 +3,14 @@ import { MapEmbed } from "@/components/contact/MapEmbed";
 import { RevealImage } from "@/components/motion/RevealImage";
 import { RevealText } from "@/components/motion/RevealText";
 import { Cta } from "@/components/ui/Cta";
-import { ArrowUpRight, InstagramIcon } from "@/components/ui/Icons";
+import { InstagramIcon } from "@/components/ui/Icons";
 import { Photo } from "@/components/ui/Photo";
 import { contact } from "@/data/content";
 import { photos } from "@/data/photos";
 import { shareImage, site } from "@/data/site";
 
 const description =
-  "MIYABI MATCHA, 2 rue Joseph Sansboeuf, 75008 Paris, à deux pas de Saint-Lazare. Itinéraire, carte interactive et Instagram.";
+  "MIYABI MATCHA, 2 rue Joseph Sansboeuf, 75008 Paris, à deux pas de Saint-Lazare. Horaires, itinéraire, carte interactive et Instagram.";
 
 export const metadata: Metadata = {
   title: "Nous Trouver : 2 rue Joseph Sansboeuf, Paris 8e",
@@ -48,23 +48,15 @@ export default function ContactPage() {
             </a>
           </div>
 
-          <div className="mt-8 lg:mt-auto lg:pt-10">
-            {site.hours ? (
-              <dl className="max-w-sm space-y-1 text-[0.9375rem]">
-                <dt className="label mb-3 text-[0.62rem] text-smoke">Horaires</dt>
-                {site.hours.map((h) => (
-                  <dd key={h.days} className="flex justify-between gap-6">
-                    <span className="text-smoke">{h.days}</span>
-                    <span>{h.hours}</span>
-                  </dd>
-                ))}
-              </dl>
-            ) : (
-              <a href={site.maps.place} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center gap-1.5 text-[0.875rem] text-smoke transition-colors duration-300 hover:text-ink">
-                {contact.hoursLink} <ArrowUpRight className="size-3.5" />
-              </a>
-            )}
-          </div>
+          <dl className="mt-8 max-w-sm text-[0.9375rem] lg:mt-auto lg:pt-10">
+            <dt className="label mb-3 text-[0.62rem] text-smoke">Horaires</dt>
+            {site.hours.map((h) => (
+              <dd key={h.days} className="flex justify-between gap-6 py-0.5">
+                <span className="text-smoke">{h.days}</span>
+                <span className="tabular-nums">{h.hours}</span>
+              </dd>
+            ))}
+          </dl>
         </div>
 
         <div className="relative lg:col-span-5">

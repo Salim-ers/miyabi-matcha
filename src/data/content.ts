@@ -28,7 +28,6 @@ export const maison = {
       { title: "La poudre", line: "Fine comme un souffle." },
       { title: "L'eau", line: "L'eau et la poudre se rencontrent." },
       { title: "Le fouet", line: "Le bambou trace ses courbes." },
-      { title: "La mousse", line: "Une mousse fine, une couleur intense." },
     ],
   },
   moment: {
@@ -40,5 +39,4 @@ export const maison = {
 
 export const contact = {
   title: "Nous Trouver",
-  hoursLink: "Consulter la fiche Google Maps",
 };

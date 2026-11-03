@@ -5,16 +5,23 @@ import { TLink } from "@/components/shell/TLink";
 import { ArrowRight } from "@/components/ui/Icons";
 import { Photo } from "@/components/ui/Photo";
 import { home } from "@/data/content";
-import { signature, type Signature } from "@/data/products";
+import { photos, type ArtPhoto } from "@/data/photos";
 import { gsap, MQ, useGSAP } from "@/lib/animation/gsap";
 import { isLite } from "@/lib/stage";
 
-const TRIO = [signature("crepe-forest-fruit"), signature("strawberry-matcha"), signature("camelot-caramel-latte")];
+type Panel = { id: string; name: string; photo: ArtPhoto; focus: string; href: string };
+
+/** Trois photos réservées à l'accueil : aucune ne revient ailleurs sur le site. */
+const TRIO: Panel[] = [
+  { id: "crepe", name: "Crêpe au matcha", photo: photos.crepeLift, focus: "50% 55%", href: "/creations#crepe-forest-fruit" },
+  { id: "strawberry", name: "Strawberry Matcha", photo: photos.pour, focus: "50% 100%", href: "/creations#strawberry-matcha" },
+  { id: "brown-sugar", name: "Brown Sugar Coffee Iced Smoothie", photo: photos.brownSugar, focus: "50% 50%", href: "/creations" },
+];
 
 const OPEN = (9 * Math.PI) / 180;
 const FOLDED = (80 * Math.PI) / 180;
 
-function Caption({ item, index }: { item: Signature; index: number }) {
+function Caption({ item, index }: { item: Panel; index: number }) {
   return (
     <span className="flex items-baseline justify-between gap-3">
       <span className="display text-[clamp(1.5rem,2.2vw,3.2rem)] italic leading-[1.06]">{item.name}</span>
@@ -134,15 +141,14 @@ export function HomeByobu() {
           <div key={item.id} className="w-[78vw] shrink-0 snap-center sm:w-[46vw] lg:contents">
             <TLink
               data-panel
-              href={`/creations#${item.id}`}
+              href={item.href}
               aria-label={item.name}
               className="byobu-panel group block aspect-[1/1.32] w-full lg:aspect-[1/1.4]"
             >
               <Photo
                 src={item.photo.src}
                 alt={item.photo.alt}
-                focus={item.photo.focus}
-                focusM={item.photo.focusM}
+                focus={item.focus}
                 fill
                 sizes="(min-width: 64rem) 34vw, (min-width: 40rem) 50vw, 82vw"
                 className="transition-transform duration-[1600ms] ease-[var(--ease-expo)] group-hover:scale-[1.045]"
@@ -160,7 +166,7 @@ export function HomeByobu() {
       {/* Grand écran : les noms, à plat sous le paravent */}
       <div className="mx-auto mt-5 hidden w-[min(84vw,128svh)] grid-cols-3 gap-6 lg:grid">
         {TRIO.map((item, i) => (
-          <TLink key={item.id} href={`/creations#${item.id}`} tabIndex={-1} aria-hidden className="block">
+          <TLink key={item.id} href={item.href} tabIndex={-1} aria-hidden className="block">
             <Caption item={item} index={i} />
           </TLink>
         ))}

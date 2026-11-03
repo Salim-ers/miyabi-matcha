@@ -8,7 +8,7 @@ export function Footer() {
   const year = new Date().getFullYear();
   return (
     <footer data-surface="green" className="relative bg-matcha text-ivory">
-      <div className="container-x grid gap-10 pb-[calc(var(--bar-h)+2.5rem+env(safe-area-inset-bottom))] pt-14 sm:grid-cols-2 lg:grid-cols-[1.3fr_1fr_1fr_1fr] lg:gap-6 lg:pb-12 lg:pt-20">
+      <div className="container-x grid gap-10 pb-[var(--bar-space)] pt-14 sm:grid-cols-2 lg:grid-cols-[1.3fr_1fr_1fr_1fr] lg:gap-6 lg:pt-20">
         <div className="flex items-center gap-4">
           <MiyabiSymbol className="h-auto w-16" />
           <MiyabiWordmark className="h-auto w-24" title="MIYABI MATCHA" />
@@ -23,6 +23,13 @@ export function Footer() {
           <a href={site.maps.directions} target="_blank" rel="noopener noreferrer" className="mt-2 inline-flex min-h-11 items-center gap-1.5 text-[0.9rem]">
             Itinéraire <ArrowUpRight className="size-3.5" />
           </a>
+          <ul className="mt-2 text-[0.8125rem] leading-relaxed text-ivory/75">
+            {site.hours.map((h) => (
+              <li key={h.days}>
+                {h.days} : {h.hours}
+              </li>
+            ))}
+          </ul>
         </div>
 
         <nav aria-label="Plan du site">

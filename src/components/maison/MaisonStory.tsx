@@ -11,7 +11,7 @@ import { photos } from "@/data/photos";
 import { gsap, MQ, useGSAP } from "@/lib/animation/gsap";
 import { isLite, onStage } from "@/lib/stage";
 
-const FRAMES = [photos.powder, photos.water, photos.whisk, photos.whisked];
+const FRAMES = [photos.powder, photos.water, photos.whisk];
 
 /** Numéro de séquence, en toutes lettres japonaises : discret, jamais décoratif. */
 function SeqTitle({ index, title, tone = "ink" }: { index: string; title: string; tone?: "ink" | "ivory" }) {
@@ -108,26 +108,21 @@ export function MaisonStory() {
       </header>
 
       {/* ─── 一 La feuille : l'inspiration japonaise ─── */}
-      <section data-surface="light" aria-label={maison.leaf.title} className="relative lg:flex lg:items-start">
-        <div className="relative h-[112vw] sm:h-[90vw] lg:sticky lg:top-0 lg:h-[100svh] lg:w-[62vw]">
+      <section data-surface="light" aria-label={maison.leaf.title} className="relative lg:flex lg:items-stretch">
+        <div className="relative h-[112vw] sm:h-[90vw] lg:h-[100svh] lg:w-[62vw]">
           <RevealImage variant="rise" className="absolute inset-0" parallax={6} zoom={1.1}>
             <Photo src={photos.leaves.src} alt={photos.leaves.alt} focus={photos.leaves.focus} fill sizes="(min-width: 64rem) 62vw, 100vw" quality={85} />
           </RevealImage>
         </div>
-        <div className="container-x flex flex-col justify-between gap-10 py-10 lg:min-h-[170svh] lg:w-[38vw] lg:px-[4vw] lg:py-[14svh]">
-          <div>
-            <SeqTitle index={maison.leaf.index} title={maison.leaf.title} />
-            <RevealText as="h2" className="display mt-6 text-[clamp(2.6rem,5.2vw,7rem)] italic leading-[1.02]">
-              {maison.leaf.line}
-            </RevealText>
-          </div>
-          <RevealImage variant="shoji" className="aspect-[941/1500] w-[70%] self-end lg:w-[86%]" zoom={1.12}>
-            <Photo src={photos.field.src} alt={photos.field.alt} focus={photos.field.focus} fill sizes="(min-width: 64rem) 30vw, 66vw" />
-          </RevealImage>
+        <div className="container-x flex flex-col justify-center py-12 lg:w-[38vw] lg:px-[4vw] lg:py-0">
+          <SeqTitle index={maison.leaf.index} title={maison.leaf.title} />
+          <RevealText as="h2" className="display mt-6 text-[clamp(2.6rem,5.2vw,7rem)] italic leading-[1.02]">
+            {maison.leaf.line}
+          </RevealText>
         </div>
       </section>
 
-      {/* ─── 二 Le geste : quatre images, une seule préparation ─── */}
+      {/* ─── 二 Le geste : trois images, une seule préparation ─── */}
       <section data-surface="dark" data-gesture aria-label={maison.gesture.title} className="gesture relative bg-night text-ivory">
         <div className="container-x absolute left-0 top-[calc(var(--header-h)+0.25rem)] z-20">
           <SeqTitle index={maison.gesture.index} title={maison.gesture.title} tone="ivory" />
@@ -141,7 +136,6 @@ export function MaisonStory() {
                   <Photo src={photo.src} alt={photo.alt} focus={photo.focus} fill sizes="(min-width: 64rem) 62vw, 100vw" quality={85} />
                 </div>
                 <div aria-hidden className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-black/70 to-transparent lg:hidden" />
-                {/* Grand écran : une légende fixe remplace celle-ci pendant l'épinglage */}
                 <div className="container-x absolute inset-x-0 bottom-[calc(var(--bar-h)+2rem)] lg:bottom-[12svh] lg:w-[38vw]">
                   <div data-caption>
                     <h3 className="display text-[clamp(3rem,7vw,9.5rem)] leading-[0.95]">{frame?.title}</h3>
@@ -155,26 +149,20 @@ export function MaisonStory() {
       </section>
 
       {/* ─── 三 L'instant : la boutique ─── */}
-      <section data-surface="light" aria-label={maison.moment.title} className="relative bg-paper pb-20 pt-14 lg:pb-[16svh] lg:pt-[14svh]">
-        <div className="container-x">
-          <SeqTitle index={maison.moment.index} title={maison.moment.title} />
-          <RevealText as="h2" className="display mt-6 max-w-[17ch] text-[clamp(2.6rem,6vw,8.5rem)] leading-[1.02]">
-            {maison.moment.line}
-          </RevealText>
-        </div>
-        <div className="container-x mt-10 grid grid-cols-12 items-end gap-3 lg:mt-[10svh] lg:gap-6">
-          <RevealImage variant="rise" className="col-span-7 aspect-[1086/1166] lg:col-span-5" zoom={1.1}>
-            <Photo src={photos.tray.src} alt={photos.tray.alt} focus={photos.tray.focus} fill sizes="(min-width: 64rem) 42vw, 58vw" />
+      <section data-surface="light" aria-label={maison.moment.title} className="relative bg-paper py-14 lg:py-[12svh]">
+        <div className="container-x grid gap-10 lg:grid-cols-12 lg:items-end lg:gap-6">
+          <div className="lg:col-span-6">
+            <SeqTitle index={maison.moment.index} title={maison.moment.title} />
+            <RevealText as="h2" className="display mt-6 max-w-[19ch] text-[clamp(2.6rem,5vw,7.4rem)] leading-[1.02] [text-wrap:balance]">
+              {maison.moment.line}
+            </RevealText>
+            <div className="mt-8 lg:mt-12">
+              <Cta href="/contact">Nous trouver</Cta>
+            </div>
+          </div>
+          <RevealImage variant="shoji" className="aspect-[3/4] w-[86%] justify-self-end lg:col-span-5 lg:col-start-8 lg:w-full" zoom={1.1}>
+            <Photo src={photos.takeaway.src} alt={photos.takeaway.alt} focus={photos.takeaway.focus} fill sizes="(min-width: 64rem) 42vw, 86vw" />
           </RevealImage>
-          <RevealImage variant="fall" className="col-span-5 aspect-[2/3] lg:col-span-3" delay={0.1} zoom={1.1}>
-            <Photo src={photos.cupHand.src} alt={photos.cupHand.alt} focus={photos.cupHand.focus} fill sizes="(min-width: 64rem) 25vw, 42vw" />
-          </RevealImage>
-          <RevealImage variant="shoji" className="col-span-8 col-start-5 mt-3 aspect-[4/5] lg:col-span-4 lg:col-start-auto lg:mt-0" delay={0.15} zoom={1.1}>
-            <Photo src={photos.takeaway.src} alt={photos.takeaway.alt} focus={photos.takeaway.focus} fill sizes="(min-width: 64rem) 33vw, 66vw" />
-          </RevealImage>
-        </div>
-        <div className="container-x mt-10 lg:mt-14">
-          <Cta href="/contact">Nous trouver</Cta>
         </div>
       </section>
     </div>

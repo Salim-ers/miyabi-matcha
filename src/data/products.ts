@@ -1,8 +1,10 @@
 import { photos, type ArtPhoto } from "./photos";
 
 /**
- * Créations signature : uniquement des produits réellement photographiés. Aucun prix.
- * Les descriptions reprennent le texte de la carte source ; sans description fiable, aucune n'est affichée.
+ * Créations mises en scène sur /creations. Aucun prix.
+ * Règle du site : une photographie n'apparaît qu'une seule fois. Une photo utilisée ici
+ * ne doit donc pas servir ailleurs (voir la répartition dans docs/AUDIT-PHOTOS.md).
+ * Les descriptions reprennent le texte de la carte source.
  */
 
 export type Signature = {
@@ -19,14 +21,6 @@ export type Signature = {
 };
 
 export const signatures: Signature[] = [
-  {
-    id: "matcha-tornado",
-    name: "Matcha Tornado",
-    lines: ["Matcha", "Tornado"],
-    kind: "Matcha",
-    photo: photos.tornado,
-    tint: "#070903",
-  },
   {
     id: "crepe-forest-fruit",
     name: "Crêpe Forest Fruit",
@@ -56,32 +50,6 @@ export const signatures: Signature[] = [
     description: "Entre la noblesse du caramel doré et la profondeur du café japonais.",
     photo: photos.camelot,
     tint: "#0d0905",
-  },
-  {
-    id: "thai-milk-tea-iced-smoothie",
-    name: "Thai Milk Tea Iced Smoothie",
-    lines: ["Thai Milk Tea", "Iced Smoothie"],
-    kind: "Boba",
-    photo: photos.thai,
-    tint: "#0c0805",
-  },
-  {
-    id: "brown-sugar-coffee-iced-smoothie",
-    name: "Brown Sugar Coffee Iced Smoothie",
-    lines: ["Brown Sugar Coffee", "Iced Smoothie"],
-    kind: "Café",
-    photo: photos.brownSugar,
-    tint: "#0c0805",
-  },
-  {
-    id: "latte",
-    name: "Latte",
-    lines: ["Latte"],
-    nameJa: "ラテ",
-    kind: "Café japonais",
-    description: "Une boisson à base d'espresso, douce et crémeuse.",
-    photo: photos.latte,
-    tint: "#090806",
   },
   {
     id: "americano",

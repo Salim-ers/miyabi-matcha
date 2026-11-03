@@ -38,11 +38,13 @@ export const site = {
   },
 
   /**
-   * Horaires d'ouverture, à renseigner une fois validés par la boutique.
-   * Tant que la valeur est `null`, aucun horaire n'est affiché (seul un lien vers la fiche Google Maps l'est).
-   * Exemple : [{ days: "Lundi – Dimanche", hours: "12:00 – 20:00" }]
+   * Horaires d'ouverture : fiche Google et bio Instagram concordantes (novembre 2026).
+   * `schema` alimente les données structurées.
    */
-  hours: null as null | { days: string; hours: string }[],
+  hours: [
+    { days: "Lundi – Vendredi", hours: "12:00 – 20:00", schema: { days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], opens: "12:00", closes: "20:00" } },
+    { days: "Samedi – Dimanche", hours: "13:00 – 20:00", schema: { days: ["Saturday", "Sunday"], opens: "13:00", closes: "20:00" } },
+  ],
 } as const;
 
 export type NavItem = { id: string; label: string; short: string; href: string };

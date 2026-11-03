@@ -1,11 +1,11 @@
 /**
  * Registre photographique de MIYABI MATCHA.
+ * Règle du site : chaque photographie n'apparaît qu'une seule fois, toutes pages confondues.
  * Chaque entrée : fichier réel, description, point focal (object-position).
  * L'audit complet (dimensions, sujet, usages, limites) est dans docs/AUDIT-PHOTOS.md.
  *
  * `focus`  : point focal par défaut (grands écrans)
  * `focusM` : point focal sur mobile quand le recadrage diffère
- * `bandM`  : gros plan volontaire pour un bandeau mobile
  */
 
 export type ArtPhoto = {
@@ -13,8 +13,6 @@ export type ArtPhoto = {
   alt: string;
   focus?: string;
   focusM?: string;
-  /** Point focal pour un bandeau très horizontal (mobile), quand le produit entier ne peut pas y tenir. */
-  bandM?: string;
 };
 
 export const photos = {
@@ -33,8 +31,6 @@ export const photos = {
     src: "/images/products/camelot-caramel-latte.jpg",
     alt: "Camelot Caramel Latte MIYABI : un morceau de biscuit caramélisé déposé à la pince au-dessus du gobelet",
     focus: "50% 50%",
-    // Bandeau mobile : gros plan sur le geste et le biscuit, pas un gobelet tronqué.
-    bandM: "50% 12%",
   },
   thai: {
     src: "/images/products/thai-milk-tea-iced-smoothie.jpg",
@@ -45,8 +41,6 @@ export const photos = {
     src: "/images/products/brown-sugar-coffee-iced-smoothie.jpg",
     alt: "Brown Sugar Coffee Iced Smoothie MIYABI, crème caramélisée et perles de tapioca",
     focus: "50% 50%",
-    // Bandeau mobile : gros plan sur la crème caramélisée.
-    bandM: "50% 6%",
   },
   latte: {
     src: "/images/products/latte.jpg",

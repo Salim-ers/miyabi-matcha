@@ -1,28 +1,30 @@
 "use client";
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
-import { useSmoothScroll } from "@/components/shell/SmoothScroll";
 import { MiyabiSymbol } from "@/components/logo/Logo";
+import { useSmoothScroll } from "@/components/shell/SmoothScroll";
+import { TLink } from "@/components/shell/TLink";
 import { ArrowRight } from "@/components/ui/Icons";
 import { Photo } from "@/components/ui/Photo";
-import type { ArtPhoto } from "@/data/photos";
-import type { MenuProduct, MenuSection } from "@/data/menu";
-import { gsap, MQ, prefersReducedMotion } from "@/lib/animation/gsap";
+import { formatPrice, type MenuProduct, type MenuSection } from "@/data/menu";
+import { gsap, prefersReducedMotion } from "@/lib/animation/gsap";
 import { isDirectLoad, onStage } from "@/lib/stage";
 import { cn } from "@/lib/utils/cn";
 
 const useIsoLayoutEffect = typeof window === "undefined" ? useEffect : useLayoutEffect;
 
+const FEATURE_SIZES = "(min-width: 120rem) 36vw, (min-width: 80rem) 44vw, (min-width: 40rem) 58vw, 88vw";
+
 /**
  * La carte : une page d'usage, pensée pour être consultée vite, debout, d'une main.
  * Catégories en onglets (tout le contenu reste dans le code de la page pour le référencement et sans JavaScript).
- * Grand écran : photographie en colonne fixe, produits à droite ; le survol d'un produit la remplace.
+ * Un produit photographié occupe un grand format, son nom japonais à droite de la photo.
+ * Les autres s'affichent en fiche de papier à la verticale : aucune photo n'est inventée ni répétée.
  */
 export function CarteClient({ menu }: { menu: MenuSection[] }) {
   const firstId = menu[0]?.id ?? "matcha";
   const [activeId, setActiveId] = useState(firstId);
   const [shownId, setShownId] = useState(firstId);
-  const [preview, setPreview] = useState<ArtPhoto | null>(null);
 
   const root = useRef<HTMLDivElement>(null);
   const navRef = useRef<HTMLDivElement>(null);
@@ -31,7 +33,7 @@ export function CarteClient({ menu }: { menu: MenuSection[] }) {
   const busy = useRef(false);
   const { scrollTo } = useSmoothScroll();
 
-  const shown = menu.find((c) => c.id === shownId) ?? menu[0];
+  const hasPrices = menu.some((c) => c.products.some((p) => p.price != null));
 
   // L'indicateur glisse sous l'onglet actif.
   const moveIndicator = useCallback((id: string, animate: boolean) => {
@@ -60,7 +62,6 @@ export function CarteClient({ menu }: { menu: MenuSection[] }) {
     (id: string, opts?: { scroll?: boolean }) => {
       if (id === activeId || busy.current) return;
       setActiveId(id);
-      setPreview(null);
       moveIndicator(id, true);
       window.history.replaceState(null, "", `#${id}`);
 
@@ -102,7 +103,7 @@ export function CarteClient({ menu }: { menu: MenuSection[] }) {
     return () => window.removeEventListener("hashchange", fromHash);
   }, [menu]);
 
-  // Entrée de la nouvelle catégorie : la photographie s'ouvre, les cartes montent en cascade.
+  // Entrée de la nouvelle catégorie : le titre monte, les cartes suivent en cascade.
   const firstRun = useRef(true);
   useIsoLayoutEffect(() => {
     const el = root.current;
@@ -111,17 +112,15 @@ export function CarteClient({ menu }: { menu: MenuSection[] }) {
     firstRun.current = false;
     if (prefersReducedMotion() || (initial && isDirectLoad())) return;
 
-    const grid = el.querySelector<HTMLElement>(`[data-category="${shownId}"]`);
-    const cards = grid ? Array.from(grid.querySelectorAll<HTMLElement>("[data-card]")) : [];
-    const heading = el.querySelectorAll<HTMLElement>("[data-cat-title]");
-    const scene = el.querySelector<HTMLElement>(`[data-scene="${shownId}"]`);
+    const panel = el.querySelector<HTMLElement>(`[data-category="${shownId}"]`);
+    if (!panel) return;
+    const cards = Array.from(panel.querySelectorAll<HTMLElement>("[data-card]"));
+    const heading = panel.querySelector<HTMLElement>("[data-cat-title]");
     gsap.set(cards, { y: 34, autoAlpha: 0 });
-    gsap.set(heading, { yPercent: 110 });
-    if (scene) gsap.set(scene, { clipPath: "inset(0% 50% 0% 50%)" });
+    if (heading) gsap.set(heading, { yPercent: 110 });
     const stop = onStage(() => {
       gsap.to(cards, { y: 0, autoAlpha: 1, duration: 0.95, ease: "expo.out", stagger: { each: 0.05, grid: "auto" }, clearProps: "transform,opacity,visibility" });
-      gsap.to(heading, { yPercent: 0, duration: 1, ease: "expo.out" });
-      if (scene) gsap.to(scene, { clipPath: "inset(0% 0% 0% 0%)", duration: 1.15, ease: "expo.inOut", clearProps: "clipPath" });
+      if (heading) gsap.to(heading, { yPercent: 0, duration: 1, ease: "expo.out", clearProps: "transform" });
     });
     return () => stop();
   }, [shownId]);
@@ -133,7 +132,7 @@ export function CarteClient({ menu }: { menu: MenuSection[] }) {
       {/* Titre */}
       <header className="container-x flex items-end justify-between gap-6 pb-5 pt-[calc(var(--header-h)+1.25rem)] lg:pb-7 lg:pt-[calc(var(--header-h)+1.5rem)]">
         <h1 className="display shrink-0 whitespace-nowrap text-[clamp(3rem,13vw,6rem)] leading-[0.86] lg:text-[clamp(4rem,6.8vw,9.5rem)]">La Carte</h1>
-        <p className="max-w-[24ch] pb-1 text-right text-[0.75rem] leading-snug text-smoke sm:text-[0.8125rem]">Tarifs et disponibilités en boutique.</p>
+        {!hasPrices && <p className="max-w-[24ch] pb-1 text-right text-[0.75rem] leading-snug text-smoke sm:text-[0.8125rem]">Tarifs et disponibilités en boutique.</p>}
       </header>
 
       {/* Catégories */}
@@ -165,110 +164,127 @@ export function CarteClient({ menu }: { menu: MenuSection[] }) {
         </div>
       </div>
 
-      <div ref={anchor} className="lg:grid lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
-        {/* Photographie de la catégorie */}
-        <div className="relative lg:order-none">
-          <div className="relative h-[42vw] max-h-[20rem] overflow-hidden bg-beige sm:h-[34vw] lg:sticky lg:top-16 lg:h-[calc(100svh-4rem)] lg:max-h-none">
-            {menu.map((c) => (
-              <div key={c.id} data-scene={c.id} className={cn("scene-layer", c.id === shownId ? "z-10" : "invisible z-0")}>
-                <Photo src={c.scene.src} alt={c.id === shownId ? c.scene.alt : ""} focus={c.scene.focus} focusM={c.scene.bandM ?? c.scene.focusM} fill sizes="(min-width: 64rem) 42vw, 100vw" priority={c.id === firstId} />
-              </div>
-            ))}
-            {/* Survol d'un produit : sa photographie prend la place */}
-            {preview && (
-              <div key={preview.src} className="scene-layer z-20 hidden animate-[preview-in_0.7s_var(--ease-expo)_both] lg:block">
-                <Photo src={preview.src} alt="" focus={preview.focus} fill sizes="42vw" />
-              </div>
-            )}
-            <div aria-hidden className="absolute inset-x-0 bottom-0 z-30 h-1/2 bg-gradient-to-t from-black/55 to-transparent lg:h-1/3" />
-            <div className="absolute inset-x-[var(--gutter)] bottom-4 z-30 flex items-end justify-between gap-4 text-ivory lg:bottom-8">
+      {/* Produits */}
+      <div ref={anchor} className="container-x pb-14 pt-7 lg:pb-24 lg:pt-10">
+        {menu.map((c) => (
+          <div key={c.id} id={`panel-${c.id}`} role="tabpanel" aria-labelledby={`tab-${c.id}`} data-category={c.id} hidden={c.id !== shownId}>
+            <div className="mb-6 flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between sm:gap-6 lg:mb-9">
               <div className="overflow-hidden pb-1">
-                <h2 data-cat-title className="display text-[clamp(1.9rem,4.4vw,5.6rem)] leading-[1.02]">
-                  {shown?.label}
+                <h2 data-cat-title className="display text-[clamp(2.2rem,5vw,6.5rem)] leading-[1.02]">
+                  {c.label}
                 </h2>
               </div>
-              {shown?.labelJa && <p lang="ja" className="hidden shrink-0 pb-2 font-jp text-[0.85rem] tracking-[0.12em] text-ivory/85 sm:block">{shown.labelJa}</p>}
+              {c.labelJa && (
+                <p lang="ja" className="shrink-0 font-jp text-[0.8125rem] tracking-[0.12em] text-smoke sm:pb-2 sm:text-[0.95rem]">
+                  {c.labelJa}
+                </p>
+              )}
+            </div>
+            <div className="grid grid-flow-dense grid-cols-2 gap-x-3 gap-y-7 sm:grid-cols-3 sm:gap-x-5 xl:grid-cols-4 xl:gap-x-6 xl:gap-y-10 3xl:grid-cols-5">
+              {c.scene && (
+                <figure data-card className="col-span-2 flex gap-2.5 sm:row-span-2 lg:gap-3">
+                  <div className="relative aspect-[1/1.05] min-w-0 flex-1 overflow-hidden sm:aspect-auto sm:min-h-[24rem]">
+                    <Photo src={c.scene.src} alt={c.scene.alt} focus={c.scene.focus} fill sizes={FEATURE_SIZES} />
+                  </div>
+                  {c.labelJa && <JapaneseTitle text={c.labelJa} />}
+                </figure>
+              )}
+              {c.products.map((p) => (p.photo ? <FeatureCard key={p.id} product={p} /> : <PaperCard key={p.id} product={p} paper={c.paper} />))}
             </div>
           </div>
-        </div>
+        ))}
+        <noscript>
+          <style>{`[data-category][hidden]{display:block!important;margin-bottom:3rem}`}</style>
+        </noscript>
 
-        {/* Produits */}
-        <div className="container-x pb-14 pt-6 lg:px-[clamp(1.5rem,3vw,4rem)] lg:pb-24 lg:pt-10">
-          {menu.map((c) => (
-            <div
-              key={c.id}
-              id={`panel-${c.id}`}
-              role="tabpanel"
-              aria-labelledby={`tab-${c.id}`}
-              data-category={c.id}
-              hidden={c.id !== shownId}
-              className="grid grid-cols-2 gap-x-3 gap-y-7 sm:grid-cols-3 sm:gap-x-5 lg:grid-cols-2 lg:gap-x-6 lg:gap-y-10 3xl:grid-cols-3 4xl:grid-cols-4"
-            >
-              {c.products.map((p) => (
-                <ProductCard key={p.id} product={p} paper={c.paper} onPreview={setPreview} />
-              ))}
-            </div>
-          ))}
-          <noscript>
-            <style>{`[data-category][hidden]{display:grid!important;margin-bottom:3rem}`}</style>
-          </noscript>
-
-          {next && (
-            <button
-              type="button"
-              onClick={() => select(next.id)}
-              className="cta mt-10 flex min-h-14 w-full items-center justify-between gap-4 border-t border-ink/10 pt-5 text-left lg:mt-14"
-            >
-              <span>
-                <span className="label block text-[0.6rem] text-smoke">Ensuite</span>
-                <span className="display mt-1 block text-[clamp(1.6rem,3vw,2.6rem)] italic">{next.label}</span>
-              </span>
-              <span className="cta-dot size-11 shrink-0 bg-ink text-ivory">
-                <ArrowRight className="size-4" />
-                <ArrowRight className="size-4" />
-              </span>
-            </button>
-          )}
-        </div>
+        {next && (
+          <button
+            type="button"
+            onClick={() => select(next.id)}
+            className="cta mt-10 flex min-h-14 w-full items-center justify-between gap-4 border-t border-ink/10 pt-5 text-left lg:mt-14"
+          >
+            <span>
+              <span className="label block text-[0.6rem] text-smoke">Ensuite</span>
+              <span className="display mt-1 block text-[clamp(1.6rem,3vw,2.6rem)] italic">{next.label}</span>
+            </span>
+            <span className="cta-dot size-11 shrink-0 bg-ink text-ivory">
+              <ArrowRight className="size-4" />
+              <ArrowRight className="size-4" />
+            </span>
+          </button>
+        )}
       </div>
     </div>
   );
 }
 
-/** Carte produit : photographie réelle, ou fiche de papier au nom japonais vertical (aucune photo inventée). */
-function ProductCard({ product, paper, onPreview }: { product: MenuProduct; paper: string; onPreview: (p: ArtPhoto | null) => void }) {
-  const { photo } = product;
+/** Le titre japonais officiel, à la verticale, à droite de la photographie. */
+function JapaneseTitle({ text }: { text: string }) {
   return (
-    <article
-      data-card
-      className="group flex flex-col"
-      onMouseEnter={() => photo && window.matchMedia(MQ.finePointer).matches && onPreview(photo)}
-      onMouseLeave={() => onPreview(null)}
-    >
-      <div className="relative aspect-[4/5] overflow-hidden" style={photo ? undefined : { backgroundColor: paper }}>
-        {photo ? (
+    <p lang="ja" className="tategaki max-h-full shrink-0 text-[clamp(0.95rem,1.35vw,1.5rem)] leading-[1.5] text-matcha [text-wrap:balance]">
+      {text}
+    </p>
+  );
+}
+
+/** Nom, prix (dès qu'il est renseigné), description et lien vers la photo de la création. */
+function ProductText({ product }: { product: MenuProduct }) {
+  return (
+    <>
+      <div className="mt-3 flex items-baseline justify-between gap-3">
+        <h3 className="text-[0.9375rem] font-medium leading-snug lg:text-base">{product.name}</h3>
+        {product.price != null && <span className="shrink-0 text-[0.9375rem] tabular-nums">{formatPrice(product.price)}</span>}
+      </div>
+      {product.short && <p className="mt-1 text-[0.8125rem] leading-snug text-smoke">{product.short}</p>}
+      {product.creation && (
+        <TLink href={`/creations#${product.creation}`} className="group/link mt-1 inline-flex min-h-9 w-fit items-center gap-1.5 text-[0.8125rem] font-medium">
+          <span className="hairline">Voir la photo</span>
+          <ArrowRight className="size-3.5 transition-transform duration-500 ease-[var(--ease-expo)] group-hover/link:translate-x-1" />
+        </TLink>
+      )}
+    </>
+  );
+}
+
+/** Produit photographié : grand format, nom japonais à droite de la photo. */
+function FeatureCard({ product }: { product: MenuProduct }) {
+  const { photo } = product;
+  if (!photo) return null;
+  return (
+    <article data-card className="group col-span-2 flex flex-col sm:row-span-2">
+      <div className="flex min-h-0 flex-1 gap-2.5 lg:gap-3">
+        <div className="relative aspect-[1/1.05] min-w-0 flex-1 overflow-hidden sm:aspect-auto sm:min-h-[24rem]">
           <Photo
             src={photo.src}
             alt={photo.alt}
             focus={photo.focus}
             focusM={photo.focusM}
             fill
-            sizes="(min-width: 120rem) 20vw, (min-width: 64rem) 30vw, (min-width: 40rem) 32vw, 50vw"
+            sizes={FEATURE_SIZES}
+            quality={85}
             className="transition-transform duration-[1400ms] ease-[var(--ease-expo)] group-hover:scale-[1.04]"
           />
-        ) : (
-          <div className="absolute inset-0 flex items-center justify-center p-4 [container-type:inline-size]">
-            {product.nameJa && (
-              <span lang="ja" className="tategaki max-h-full text-[clamp(0.85rem,6.4cqw,1.5rem)] leading-[1.7] text-matcha [text-wrap:balance] transition-transform duration-[1100ms] ease-[var(--ease-expo)] group-hover:-translate-y-1">
-                {product.nameJa}
-              </span>
-            )}
-            <MiyabiSymbol className="absolute bottom-3 left-3 w-6 text-matcha/35" />
-          </div>
-        )}
+        </div>
+        {product.nameJa && <JapaneseTitle text={product.nameJa} />}
       </div>
-      <h3 className="mt-3 text-[0.9375rem] font-medium leading-snug lg:text-base">{product.name}</h3>
-      {product.short && <p className="mt-1 text-[0.8125rem] leading-snug text-smoke">{product.short}</p>}
+      <ProductText product={product} />
+    </article>
+  );
+}
+
+/** Produit sans photographie : fiche de papier au nom japonais vertical. */
+function PaperCard({ product, paper }: { product: MenuProduct; paper: string }) {
+  return (
+    <article data-card className="group flex flex-col">
+      <div className="relative flex aspect-[4/5] items-center justify-center overflow-hidden p-3 [container-type:inline-size] sm:aspect-square" style={{ backgroundColor: paper }}>
+        {product.nameJa && (
+          <span lang="ja" className="tategaki max-h-full text-[clamp(0.85rem,6.4cqw,1.5rem)] leading-[1.7] text-matcha [text-wrap:balance] transition-transform duration-[1100ms] ease-[var(--ease-expo)] group-hover:-translate-y-1">
+            {product.nameJa}
+          </span>
+        )}
+        <MiyabiSymbol className="absolute bottom-3 left-3 w-6 text-matcha/35" />
+      </div>
+      <ProductText product={product} />
     </article>
   );
 }

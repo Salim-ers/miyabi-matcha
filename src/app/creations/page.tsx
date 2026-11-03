@@ -3,10 +3,10 @@ import { CreationsGallery } from "@/components/creations/CreationsGallery";
 import { shareImage, site } from "@/data/site";
 
 const description =
-  "Les créations signature de MIYABI MATCHA à Paris 8e : Matcha Tornado, Crêpe Forest Fruit, Strawberry Matcha, Camelot Caramel Latte.";
+  "Les créations signature de MIYABI MATCHA à Paris 8e : Crêpe Forest Fruit, Strawberry Matcha, Camelot Caramel Latte, Americano.";
 
 export const metadata: Metadata = {
-  title: "Nos Créations : Matcha Tornado, Crêpe Forest Fruit, Strawberry Matcha",
+  title: "Nos Créations : Crêpe Forest Fruit, Strawberry Matcha, Camelot Caramel Latte",
   description,
   alternates: { canonical: "/creations" },
   openGraph: { url: "/creations", title: `Nos Créations · ${site.name}`, description, images: [shareImage] },

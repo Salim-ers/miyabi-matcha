@@ -14,12 +14,9 @@ type Item = { photo: ArtPhoto; w: string; ratio: string; top: string; variant: "
 
 /** Formats, décalages et dévoilements volontairement inégaux : un rouleau, pas une grille. */
 const ITEMS: Item[] = [
-  { photo: photos.leaves, w: "clamp(15rem,27vw,44rem)", ratio: "4/5", top: "0", variant: "rise" },
-  { photo: photos.whisk, w: "clamp(13rem,20vw,32rem)", ratio: "3/4", top: "clamp(2rem,11svh,9rem)", variant: "fall" },
-  { photo: photos.pour, w: "clamp(14rem,24vw,38rem)", ratio: "2/3", top: "clamp(0rem,3svh,3rem)", variant: "shoji" },
-  { photo: photos.crepeLift, w: "clamp(12rem,17vw,27rem)", ratio: "9/14", top: "clamp(3rem,15svh,12rem)", variant: "rise" },
-  { photo: photos.takeaway, w: "clamp(14rem,23vw,36rem)", ratio: "4/5", top: "0", variant: "fall" },
-  { photo: photos.water, w: "clamp(13rem,19vw,30rem)", ratio: "3/4", top: "clamp(2rem,9svh,8rem)", variant: "shoji" },
+  { photo: photos.field, w: "clamp(14rem,24vw,38rem)", ratio: "9/14", top: "0", variant: "rise" },
+  { photo: photos.whisked, w: "clamp(18rem,39vw,62rem)", ratio: "5/6", top: "clamp(1.5rem,7svh,6rem)", variant: "fall" },
+  { photo: photos.crepeBatter, w: "clamp(14rem,27vw,42rem)", ratio: "3/4", top: "0", variant: "shoji" },
 ];
 
 /**
@@ -72,7 +69,7 @@ export function HomeEmaki() {
         {ITEMS.map((item) => (
           <div key={item.photo.src} style={{ width: item.w, marginTop: item.top }}>
             <RevealImage variant={item.variant} style={{ aspectRatio: item.ratio }} start="top 96%">
-              <Photo src={item.photo.src} alt={item.photo.alt} focus={item.photo.focus} fill sizes="(min-width: 64rem) 28vw, 70vw" />
+              <Photo src={item.photo.src} alt={item.photo.alt} focus={item.photo.focus} fill sizes="(min-width: 64rem) 40vw, 76vw" />
             </RevealImage>
           </div>
         ))}

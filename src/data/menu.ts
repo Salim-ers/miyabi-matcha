@@ -7,7 +7,8 @@ import { photos, type ArtPhoto } from "./photos";
  * `description` reprend le texte visible sur la carte source. `short` en est un raccourci d'une ligne,
  * composé uniquement de mots déjà présents dans cette description : rien n'est ajouté.
  *
- * ⚠️ Volontairement AUCUN prix : les tarifs peuvent différer entre la livraison et la vente sur place.
+ * Prix : champ `price` (en euros, ex. 6.5), à reprendre de la carte de la boutique et non d'Uber Eats,
+ * dont les tarifs diffèrent. Il s'affiche automatiquement dès qu'il est renseigné. Aucun prix n'est deviné.
  *
  * Pour mettre à jour la carte : modifier ou ajouter des entrées ci-dessous.
  * Aucune modification de composant n'est nécessaire.
@@ -24,8 +25,8 @@ export type MenuCategory = {
   /** Intitulé japonais tel qu'il figure sur la carte officielle. */
   labelJa?: string;
   order: number;
-  /** Photographie d'ambiance de la catégorie (matière ou geste, jamais un autre produit de la carte). */
-  scene: ArtPhoto;
+  /** Photographie d'ambiance de la catégorie (matière ou geste, jamais un produit). Facultative. */
+  scene?: ArtPhoto;
   /** Teinte du papier pour les références sans photographie. */
   paper: string;
 };
@@ -41,16 +42,20 @@ export type MenuProduct = {
   short?: string;
   /** Photo réelle du produit. Sans photo, le nom japonais tient lieu de visuel : aucune image n'est inventée. */
   photo?: ArtPhoto;
+  /** Prix en euros, tel qu'affiché en boutique. Laisser vide tant qu'il n'est pas confirmé. */
+  price?: number;
+  /** La photo de ce produit est sur /creations : identifiant de la scène, pour y renvoyer. */
+  creation?: string;
   available?: boolean;
   order?: number;
 };
 
 export const menuCategories: MenuCategory[] = [
-  { id: "matcha", label: "Matcha", short: "Matcha", labelJa: "宇治・福岡産の高級抹茶", order: 1, scene: photos.whisked, paper: "#E4E8D9" },
-  { id: "crepes", label: "Crêpes japonaises au matcha", short: "Crêpes japonaises", tab: "Crêpes", labelJa: "抹茶の和風クレープ", order: 2, scene: photos.crepeLift, paper: "#E9E9D6" },
-  { id: "cafe", label: "Café", short: "Café", labelJa: "コーヒー", order: 3, scene: photos.camelot, paper: "#EADFD0" },
-  { id: "boba", label: "Boba", short: "Boba", order: 4, scene: photos.brownSugar, paper: "#EDE3D3" },
-  { id: "fruity-tea", label: "Fruity Tea", short: "Fruity Tea", labelJa: "フルーティーティー", order: 5, scene: photos.leaves, paper: "#EFE6DB" },
+  { id: "matcha", label: "Matcha", short: "Matcha", labelJa: "宇治・福岡産の高級抹茶", order: 1, paper: "#E4E8D9" },
+  { id: "crepes", label: "Crêpes japonaises au matcha", short: "Crêpes japonaises", tab: "Crêpes", labelJa: "抹茶の和風クレープ", order: 2, scene: photos.crepeSpread, paper: "#E9E9D6" },
+  { id: "cafe", label: "Café", short: "Café", labelJa: "コーヒー", order: 3, paper: "#EADFD0" },
+  { id: "boba", label: "Boba", short: "Boba", order: 4, paper: "#EDE3D3" },
+  { id: "fruity-tea", label: "Fruity Tea", short: "Fruity Tea", labelJa: "フルーティーティー", order: 5, paper: "#EFE6DB" },
 ];
 
 export const menuProducts: MenuProduct[] = [
@@ -73,7 +78,7 @@ export const menuProducts: MenuProduct[] = [
     description:
       "Un mélange délicat de matcha japonais et de purée de fraise, surmonté d'une crème légère et veloutée.",
     short: "Matcha japonais, purée de fraise, crème légère.",
-    photo: photos.splash,
+    creation: "strawberry-matcha",
     order: 2,
   },
   {
@@ -154,7 +159,7 @@ export const menuProducts: MenuProduct[] = [
     description:
       "Une crêpe fine et moelleuse, préparée avec du matcha japonais d'exception et garnie de crème légère et de fruits rouges.",
     short: "Crêpe fine au matcha, crème légère, fruits rouges.",
-    photo: photos.crepeForest,
+    creation: "crepe-forest-fruit",
     order: 2,
   },
   {
@@ -215,7 +220,7 @@ export const menuProducts: MenuProduct[] = [
     category: "cafe",
     description: "Entre la noblesse du caramel doré et la profondeur du café japonais.",
     short: "Caramel doré et profondeur du café japonais.",
-    photo: photos.camelot,
+    creation: "camelot-caramel-latte",
     order: 3,
   },
   {
@@ -235,7 +240,7 @@ export const menuProducts: MenuProduct[] = [
     category: "cafe",
     description: "Un Americano classique : espresso allongé d'eau chaude.",
     short: "Espresso allongé d'eau chaude.",
-    photo: photos.americano,
+    creation: "americano",
     order: 5,
   },
 
@@ -309,7 +314,10 @@ export const menuProducts: MenuProduct[] = [
   },
 ];
 
-/** Catégories triées, avec leurs produits disponibles triés. Les catégories vides sont masquées. */
+const priceFormat = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" });
+export const formatPrice = (price: number) => priceFormat.format(price);
+
+/** Catégories triées. Dans chacune, les produits photographiés d'abord (grand format), puis l'ordre de la carte. */
 export function getMenu() {
   return [...menuCategories]
     .sort((a, b) => a.order - b.order)
@@ -317,7 +325,7 @@ export function getMenu() {
       ...category,
       products: menuProducts
         .filter((p) => p.category === category.id && p.available !== false)
-        .sort((a, b) => (a.order ?? 99) - (b.order ?? 99)),
+        .sort((a, b) => Number(Boolean(b.photo)) - Number(Boolean(a.photo)) || (a.order ?? 99) - (b.order ?? 99)),
     }))
     .filter((c) => c.products.length > 0);
 }

@@ -1,9 +1,9 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
-import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { Photo } from "@/components/ui/Photo";
-import { photos, type ArtPhoto } from "@/data/photos";
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, type ReactNode } from "react";
+import { BrushSymbol } from "@/components/logo/BrushSymbol";
+import { MiyabiWordmark } from "@/components/logo/Logo";
 import { gsap, prefersReducedMotion, ScrollTrigger } from "@/lib/animation/gsap";
 import { releaseStage } from "@/lib/stage";
 import { useSmoothScroll } from "./SmoothScroll";
@@ -12,14 +12,6 @@ type Ctx = { navigate: (href: string) => void };
 const TransitionCtx = createContext<Ctx>({ navigate: () => {} });
 export const usePageTransition = () => useContext(TransitionCtx);
 
-/** Chaque page s'annonce par sa photographie et son nom. */
-const ROUTES: Record<string, { label: string; photo?: ArtPhoto }> = {
-  "/": { label: "Miyabi", photo: photos.tornado },
-  "/carte": { label: "La Carte", photo: photos.crepeForest },
-  "/creations": { label: "Nos Créations", photo: photos.splash },
-  "/maison": { label: "Notre Maison", photo: photos.whisk },
-  "/contact": { label: "Nous Trouver", photo: photos.takeaway },
-};
 const PANELS = [0, 1, 2, 3, 4];
 /** Anciennes ancres de la page unique : elles mènent désormais à de vraies pages. */
 const LEGACY_ANCHORS: Record<string, string> = {
@@ -29,10 +21,9 @@ const LEGACY_ANCHORS: Record<string, string> = {
   "#art": "/maison",
   "#visite": "/contact",
 };
-const FALLBACK_LABEL = "Miyabi";
 
 /**
- * Transition « shōji » : cinq panneaux coulissent, la photographie de la page d'arrivée s'y dévoile,
+ * Transition « shōji » : cinq panneaux coulissent, le 雅 officiel s'y trace au pinceau,
  * puis tout se retire vers le haut. Jamais de flash blanc : la nouvelle page se prépare à couvert.
  * Le bouton retour du navigateur passe par un simple fondu.
  */
@@ -40,28 +31,15 @@ export function PageTransition({ children }: { children: ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
   const overlay = useRef<HTMLDivElement>(null);
+  const stroke = useRef<SVGPathElement>(null);
   const phase = useRef<"idle" | "cover" | "wait" | "reveal">("idle");
   const fallback = useRef<number>(0);
   const seenPath = useRef(pathname);
   const { pause, resume, scrollTo } = useSmoothScroll();
-  const [dest, setDest] = useState(pathname);
-  const [thumbs, setThumbs] = useState(false);
 
   useEffect(() => {
     const target = window.location.pathname === "/" ? LEGACY_ANCHORS[window.location.hash] : undefined;
     if (target) window.location.replace(target);
-  }, []);
-
-  // Les vignettes ne chargent qu'une fois la page prête : aucun impact sur le LCP.
-  useEffect(() => {
-    const load = () => {
-      const w = window as Window & { requestIdleCallback?: (cb: () => void) => number };
-      if (w.requestIdleCallback) w.requestIdleCallback(() => setThumbs(true));
-      else window.setTimeout(() => setThumbs(true), 1500);
-    };
-    if (document.readyState === "complete") load();
-    else window.addEventListener("load", load, { once: true });
-    return () => window.removeEventListener("load", load);
   }, []);
 
   const reveal = useCallback(() => {
@@ -101,7 +79,7 @@ export function PageTransition({ children }: { children: ReactNode }) {
         return;
       }
       const el = overlay.current;
-      if (prefersReducedMotion() || !el) {
+      if (prefersReducedMotion() || !el || !stroke.current) {
         router.push(href);
         return;
       }
@@ -109,14 +87,14 @@ export function PageTransition({ children }: { children: ReactNode }) {
       html.dataset.nav = "client";
       html.dataset.transition = "cover";
       phase.current = "cover";
-      setDest(url.pathname);
       pause();
       router.prefetch(href);
       const q = gsap.utils.selector(el);
       gsap.set(el, { visibility: "visible" });
       gsap.set(q(".pt-panel"), { yPercent: 101 });
       gsap.set(q("[data-pt-content]"), { autoAlpha: 1, yPercent: 0 });
-      gsap.set(q("[data-pt-label]"), { autoAlpha: 0, y: 14 });
+      gsap.set(q("[data-pt-word]"), { autoAlpha: 0, y: 10 });
+      gsap.set(stroke.current, { strokeDashoffset: 1 });
       gsap
         .timeline({
           onComplete: () => {
@@ -126,9 +104,8 @@ export function PageTransition({ children }: { children: ReactNode }) {
           },
         })
         .to(q(".pt-panel"), { yPercent: 0, duration: 0.62, ease: "expo.inOut", stagger: { each: 0.035, from: "center" } }, 0)
-        .fromTo(q("[data-pt-frame]"), { clipPath: "inset(50% 0% 50% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 0.62, ease: "expo.inOut" }, 0.14)
-        .fromTo(q("[data-pt-frame] [data-pt-img]"), { scale: 1.28 }, { scale: 1, duration: 0.9, ease: "expo.out" }, 0.14)
-        .to(q("[data-pt-label]"), { autoAlpha: 1, y: 0, duration: 0.5, ease: "expo.out" }, 0.3);
+        .to(stroke.current, { strokeDashoffset: 0, duration: 0.72, ease: "power2.inOut" }, 0.12)
+        .to(q("[data-pt-word]"), { autoAlpha: 1, y: 0, duration: 0.5, ease: "expo.out" }, 0.4);
     },
     [pause, reveal, router, scrollTo],
   );
@@ -148,31 +125,23 @@ export function PageTransition({ children }: { children: ReactNode }) {
   }, [pathname, reveal]);
 
   const value = useMemo(() => ({ navigate }), [navigate]);
-  const route = ROUTES[dest];
 
   return (
     <TransitionCtx.Provider value={value}>
       {children}
-      <div ref={overlay} aria-hidden className="pointer-events-none invisible fixed inset-0 z-[150] overflow-hidden">
+      <div ref={overlay} aria-hidden data-pt-overlay className="pointer-events-none invisible fixed inset-0 z-[150] overflow-hidden">
         <div className="absolute inset-0 flex">
           {PANELS.map((i) => (
             <span key={i} className="pt-panel -ml-px block h-full flex-1 bg-matcha" />
           ))}
         </div>
-        <div data-pt-content className="absolute inset-0 flex flex-col items-center justify-center gap-5 text-ivory">
-          <div data-pt-frame className="relative aspect-[3/4] h-[42svh] overflow-hidden">
-            {thumbs &&
-              Object.entries(ROUTES).map(([path, r]) =>
-                r.photo ? (
-                  <div key={path} data-pt-img className={path === dest ? "absolute inset-0 opacity-100" : "absolute inset-0 opacity-0"}>
-                    <Photo src={r.photo.src} alt="" fill sizes="32svh" quality={70} focus={r.photo.focus} />
-                  </div>
-                ) : null,
-              )}
+        <div data-pt-content className="absolute inset-0 flex flex-col items-center justify-center gap-6 text-ivory">
+          <div className="w-[min(42vw,11rem)]">
+            <BrushSymbol strokeRef={stroke} ghostOpacity={0.1} className="h-auto w-full" />
           </div>
-          <p data-pt-label className="display text-[clamp(1.75rem,3vw,3rem)] italic">
-            {route?.label ?? FALLBACK_LABEL}
-          </p>
+          <div data-pt-word>
+            <MiyabiWordmark className="h-auto w-[min(28vw,7rem)]" />
+          </div>
         </div>
       </div>
     </TransitionCtx.Provider>

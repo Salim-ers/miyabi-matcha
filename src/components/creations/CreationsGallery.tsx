@@ -7,25 +7,20 @@ import { useSmoothScroll } from "@/components/shell/SmoothScroll";
 import { TLink } from "@/components/shell/TLink";
 import { Cta } from "@/components/ui/Cta";
 import { Photo } from "@/components/ui/Photo";
-import { photos } from "@/data/photos";
 import { signature, signatures, type Signature } from "@/data/products";
 import { gsap, MQ, useGSAP } from "@/lib/animation/gsap";
 import { isLite } from "@/lib/stage";
 import { cn } from "@/lib/utils/cn";
 
-const tornado = signature("matcha-tornado");
 const crepe = signature("crepe-forest-fruit");
 const strawberry = signature("strawberry-matcha");
 const camelot = signature("camelot-caramel-latte");
-const thai = signature("thai-milk-tea-iced-smoothie");
-const brown = signature("brown-sugar-coffee-iced-smoothie");
-const latte = signature("latte");
 const americano = signature("americano");
 
 /** Nom monumental d'une création. */
-function Name({ item, className, align }: { item: Signature; className?: string; align?: "right" }) {
+function Name({ item, className }: { item: Signature; className?: string }) {
   return (
-    <RevealText as="h2" className={cn("display", align === "right" && "text-right", className)}>
+    <RevealText as="h2" className={cn("display", className)}>
       {item.lines.map((line) => (
         <span key={line} className="block">
           {line}
@@ -83,7 +78,13 @@ export function CreationsGallery() {
             duration: 1.2,
             ease: "none",
             overwrite: "auto",
-            scrollTrigger: { trigger: scene, start: "top 55%", end: "bottom 45%", toggleActions: "play none none none", onEnterBack: () => gsap.to(el, { backgroundColor: scene.dataset.tint, duration: 1.2, overwrite: "auto" }) },
+            scrollTrigger: {
+              trigger: scene,
+              start: "top 55%",
+              end: "bottom 45%",
+              toggleActions: "play none none none",
+              onEnterBack: () => gsap.to(el, { backgroundColor: scene.dataset.tint, duration: 1.2, overwrite: "auto" }),
+            },
           });
         });
       });
@@ -140,72 +141,43 @@ export function CreationsGallery() {
         </nav>
       </header>
 
-      {/* ─── I. Matcha Tornado : le monolithe ─── */}
-      <section id={tornado.id} data-tint={tornado.tint} aria-label={tornado.name} className="relative scroll-mt-10 lg:min-h-[100svh]">
-        <div className="relative mx-auto aspect-[1122/949] w-full max-w-[1500px] lg:absolute lg:bottom-0 lg:right-0 lg:mx-0 lg:w-[min(74vw,120svh)] lg:max-w-none">
-          <RevealImage variant="rise" className="studio-fade-wide absolute inset-0" zoom={1.12}>
-            <Photo src={tornado.photo.src} alt={tornado.photo.alt} focus="50% 50%" fill sizes="(min-width: 64rem) 74vw, 100vw" quality={88} />
-          </RevealImage>
-        </div>
-        <div className="container-x relative pb-16 pt-6 lg:absolute lg:left-0 lg:top-[14svh] lg:w-[46vw] lg:py-0">
-          <Name item={tornado} className="text-[clamp(3.6rem,15vw,7rem)] lg:text-[clamp(4.5rem,9.6vw,13rem)]" />
-          <div className="mt-5 lg:mt-8">
-            <Kind>{tornado.kind}</Kind>
-          </div>
-        </div>
-      </section>
-
-      {/* ─── II. Crêpe Forest Fruit : le diptyque ─── */}
-      <section id={crepe.id} data-tint={crepe.tint} aria-label={crepe.name} className="relative scroll-mt-10 pt-14 lg:min-h-[118svh] lg:pt-[8svh]">
+      {/* ─── I. Crêpe Forest Fruit : l'objet seul, à gauche ─── */}
+      <section id={crepe.id} data-tint={crepe.tint} aria-label={crepe.name} className="relative scroll-mt-10 pt-6 lg:min-h-[100svh] lg:pt-[4svh]">
         <div className="relative w-full lg:w-[min(58vw,92svh)]">
           <RevealImage variant="left" className="studio-fade aspect-[823/915] w-full" zoom={1.1}>
             <Photo src={crepe.photo.src} alt={crepe.photo.alt} focus="50% 50%" fill sizes="(min-width: 64rem) 58vw, 100vw" quality={88} />
           </RevealImage>
         </div>
-        <div className="container-x relative pt-8 lg:absolute lg:right-0 lg:top-[16svh] lg:w-[46vw] lg:pt-0">
+        <div data-speed="-0.35" className="container-x relative pt-8 lg:absolute lg:right-0 lg:top-[18svh] lg:w-[46vw] lg:pt-0">
           <Name item={crepe} className="text-[clamp(3.2rem,13.5vw,6.5rem)] lg:text-[clamp(3.8rem,7.2vw,10rem)]" />
           <div className="mt-6 max-w-[34ch] lg:mt-9">
             <Kind>{crepe.kind}</Kind>
             <p className="mt-3 text-[0.9375rem] leading-relaxed text-ivory/80">{crepe.description}</p>
           </div>
         </div>
-        {/* La matière : la crêpe, avant la garniture */}
-        <div data-speed="0.7" className="relative ml-auto mt-10 w-[56vw] pr-[var(--gutter)] lg:absolute lg:bottom-[2svh] lg:right-[8vw] lg:mt-0 lg:w-[min(19vw,30svh)] lg:pr-0">
-          <RevealImage variant="rise" className="aspect-[941/1672]">
-            <Photo src={photos.crepeLift.src} alt={photos.crepeLift.alt} fill sizes="(min-width: 64rem) 20vw, 56vw" />
-          </RevealImage>
-        </div>
-        <Vertical text={crepe.nameJa} className="absolute right-[var(--gutter)] top-[16svh] hidden lg:block" />
+        <Vertical text={crepe.nameJa} className="absolute right-[var(--gutter)] top-[18svh] hidden lg:block" />
       </section>
 
-      {/* ─── III. Strawberry Matcha : l'éclaboussure, plein cadre ─── */}
-      <section id={strawberry.id} data-tint={strawberry.tint} aria-label={strawberry.name} className="relative mt-16 scroll-mt-0 lg:mt-[14svh]">
+      {/* ─── II. Strawberry Matcha : l'éclaboussure, plein cadre ─── */}
+      <section id={strawberry.id} data-tint={strawberry.tint} aria-label={strawberry.name} className="relative mt-16 scroll-mt-0 lg:mt-[12svh]">
         <div data-splash className="relative h-[120vw] max-h-[100svh] overflow-hidden sm:h-[100svh] lg:h-[100svh]">
           <div data-splash-img className="absolute inset-0">
             <Photo src={strawberry.photo.src} alt={strawberry.photo.alt} focus={strawberry.photo.focus} focusM={strawberry.photo.focusM} fill sizes="100vw" quality={88} />
           </div>
         </div>
-        {/* Le geste : le matcha versé sur la même boisson */}
-        <div className="container-x grid items-end gap-6 pb-6 pt-8 lg:grid-cols-12 lg:pt-[8svh]">
-          <div className="lg:col-span-6">
-            <Name item={strawberry} className="text-[clamp(3.2rem,14vw,6.5rem)] lg:text-[clamp(3.8rem,8vw,11rem)]" />
-            <div className="mt-6 flex items-start gap-8 lg:mt-9">
-              <div>
-                <Kind>{strawberry.kind}</Kind>
-                <p className="mt-3 max-w-[32ch] text-[0.9375rem] leading-relaxed text-ivory/80">{strawberry.description}</p>
-              </div>
-              <Vertical text={strawberry.nameJa} />
+        <div className="container-x flex flex-col gap-6 pb-6 pt-8 lg:flex-row lg:items-end lg:justify-between lg:pt-[7svh]">
+          <Name item={strawberry} className="text-[clamp(3.2rem,14vw,6.5rem)] lg:text-[clamp(3.8rem,9vw,13rem)]" />
+          <div className="flex items-start gap-8 lg:pb-3">
+            <div>
+              <Kind>{strawberry.kind}</Kind>
+              <p className="mt-3 max-w-[32ch] text-[0.9375rem] leading-relaxed text-ivory/80">{strawberry.description}</p>
             </div>
-          </div>
-          <div data-speed="-0.6" className="lg:col-span-4 lg:col-start-8">
-            <RevealImage variant="shoji" className="aspect-[2/3] w-full max-h-[86svh]">
-              <Photo src={photos.pour.src} alt={photos.pour.alt} focus={photos.pour.focus} fill sizes="(min-width: 64rem) 34vw, 92vw" />
-            </RevealImage>
+            <Vertical text={strawberry.nameJa} />
           </div>
         </div>
       </section>
 
-      {/* ─── IV. Camelot Caramel Latte : le nom derrière le gobelet ─── */}
+      {/* ─── III. Camelot Caramel Latte : le geste, à droite ─── */}
       <section id={camelot.id} data-tint={camelot.tint} aria-label={camelot.name} className="relative mt-14 scroll-mt-10 lg:mt-[12svh] lg:min-h-[100svh]">
         <div className="relative ml-auto w-full lg:absolute lg:bottom-0 lg:right-[3vw] lg:w-[min(56vw,88svh)]">
           <RevealImage variant="right" className="studio-fade aspect-[778/865] w-full" zoom={1.1}>
@@ -221,51 +193,22 @@ export function CreationsGallery() {
         </div>
       </section>
 
-      {/* ─── V. Deux smoothies, à deux vitesses ─── */}
-      <section data-tint={thai.tint} className="relative mt-16 container-x lg:mt-[14svh]">
-        <div className="grid gap-12 lg:grid-cols-12 lg:gap-6">
-          <article id={thai.id} aria-label={thai.name} data-speed="-0.5" className="scroll-mt-10 lg:col-span-6">
-            <RevealImage variant="rise" className="studio-fade aspect-[850/931] w-full" zoom={1.1}>
-              <Photo src={thai.photo.src} alt={thai.photo.alt} focus={thai.photo.focus} fill sizes="(min-width: 64rem) 50vw, 92vw" />
-            </RevealImage>
-            <Name item={thai} className="mt-4 text-[clamp(2.2rem,4.2vw,5.6rem)] leading-[1]" />
-            <div className="mt-3">
-              <Kind>{thai.kind}</Kind>
-            </div>
-          </article>
-          <article id={brown.id} aria-label={brown.name} data-speed="0.7" className="scroll-mt-10 lg:col-span-5 lg:col-start-8 lg:mt-[22svh]">
-            <RevealImage variant="fall" className="studio-fade aspect-[864/960] w-full" zoom={1.1} delay={0.1}>
-              <Photo src={brown.photo.src} alt={brown.photo.alt} focus={brown.photo.focus} fill sizes="(min-width: 64rem) 42vw, 92vw" />
-            </RevealImage>
-            <Name item={brown} className="mt-4 text-[clamp(2.2rem,3.8vw,5rem)] leading-[1]" />
-            <div className="mt-3">
-              <Kind>{brown.kind}</Kind>
-            </div>
-          </article>
+      {/* ─── IV. Americano : le nom en bandeau, le verre au centre ─── */}
+      <section id={americano.id} data-tint={americano.tint} aria-label={americano.name} className="relative mt-16 scroll-mt-10 lg:mt-[16svh]">
+        <div className="container-x">
+          <Name item={americano} className="text-center text-[clamp(3.4rem,18.6vw,28rem)] leading-[0.9]" />
         </div>
-      </section>
-
-      {/* ─── VI. Latte & Americano : une seule table ─── */}
-      <section data-tint={latte.tint} aria-label={`${latte.name} et ${americano.name}`} className="relative mt-16 lg:mt-[20svh]">
-        <div className="flex flex-col lg:flex-row lg:justify-center">
-          <article id={latte.id} className="scroll-mt-10 lg:w-[min(50vw,88svh)]">
-            <RevealImage variant="left" className="aspect-[819/910] w-full" zoom={1.08}>
-              <Photo src={latte.photo.src} alt={latte.photo.alt} focus={latte.photo.focus} fill sizes="(min-width: 64rem) 50vw, 100vw" className="seam-right-lg" />
-            </RevealImage>
-            <div className="container-x pt-4 lg:pl-[8%] lg:pt-6">
-              <Name item={latte} className="text-[clamp(2.6rem,5vw,6.5rem)]" />
-              <p className="mt-3 max-w-[30ch] text-[0.875rem] leading-relaxed text-ivory/75">{latte.description}</p>
-            </div>
-          </article>
-          <article id={americano.id} className="mt-12 scroll-mt-10 lg:-ml-[6vw] lg:mt-0 lg:w-[min(50vw,88svh)]">
-            <RevealImage variant="right" className="aspect-[774/860] w-full" zoom={1.08}>
-              <Photo src={americano.photo.src} alt={americano.photo.alt} focus={americano.photo.focus} fill sizes="(min-width: 64rem) 50vw, 100vw" className="seam-left-lg" />
-            </RevealImage>
-            <div className="container-x pt-4 lg:pl-[20%] lg:pt-6">
-              <Name item={americano} className="text-[clamp(2.6rem,5vw,6.5rem)]" />
-              <p className="mt-3 max-w-[30ch] text-[0.875rem] leading-relaxed text-ivory/75">{americano.description}</p>
-            </div>
-          </article>
+        <div className="relative mx-auto mt-4 w-full lg:mt-6 lg:w-[min(62vw,96svh)]">
+          <RevealImage variant="shoji" className="studio-fade aspect-[774/860] w-full" zoom={1.08}>
+            <Photo src={americano.photo.src} alt={americano.photo.alt} focus={americano.photo.focus} fill sizes="(min-width: 64rem) 62vw, 100vw" quality={88} />
+          </RevealImage>
+        </div>
+        <div className="container-x flex items-end justify-between gap-8 pt-6 lg:absolute lg:inset-x-0 lg:bottom-[8svh] lg:pt-0">
+          <div className="max-w-[28ch]">
+            <Kind>{americano.kind}</Kind>
+            <p className="mt-3 text-[0.9375rem] leading-relaxed text-ivory/80">{americano.description}</p>
+          </div>
+          <Vertical text={americano.nameJa} className="shrink-0" />
         </div>
       </section>
 
