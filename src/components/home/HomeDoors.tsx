@@ -12,7 +12,7 @@ const TONES = [
 /** Deux portes pour finir : la carte, la boutique. Au survol, l'une s'ouvre et l'autre se retire. */
 export function HomeDoors() {
   return (
-    <section data-surface="dark" aria-label="Continuer la visite" className="flex flex-col lg:min-h-[64svh] lg:flex-row">
+    <section data-surface="dark" aria-label="Continuer la visite" className="flex flex-col lg:min-h-[64svh] lg:flex-row land:min-h-[62svh] land:flex-row">
       {home.doors.map((door, i) => {
         const tone = TONES[i % TONES.length];
         return (
@@ -20,7 +20,7 @@ export function HomeDoors() {
             key={door.href}
             href={door.href}
             className={cn(
-              "group relative flex min-h-[38svh] flex-col justify-end overflow-hidden transition-[flex-grow] duration-[1100ms] ease-[var(--ease-expo)] lg:flex-[1_1_0%] lg:hover:flex-[1.34_1_0%]",
+              "group relative flex min-h-[38svh] flex-col justify-end overflow-hidden transition-[flex-grow] duration-[1100ms] ease-[var(--ease-expo)] lg:flex-[1_1_0%] lg:hover:flex-[1.34_1_0%] land:min-w-0 land:flex-[1_1_0%]",
               tone?.panel,
             )}
           >
@@ -30,10 +30,10 @@ export function HomeDoors() {
                 tone?.mark,
               )}
             />
-            <span className="relative flex items-end justify-between gap-6 px-[var(--gutter)] pb-[clamp(1.5rem,4.5svh,3.5rem)]">
+            <span className="relative flex items-end justify-between gap-6 px-[var(--gutter)] pb-[clamp(1.5rem,4.5svh,3.5rem)] land:gap-3">
               <span>
-                <span className={cn("label block text-[0.62rem]", tone?.hint)}>{door.hint}</span>
-                <span className="display mt-3 block whitespace-nowrap text-[clamp(2.9rem,6.3vw,9rem)]">{door.label}</span>
+                <span className={cn("label block", tone?.hint)}>{door.hint}</span>
+                <span className="display mt-3 block whitespace-nowrap text-[clamp(2.9rem,6.3vw,9rem)] land:text-[clamp(2rem,5.6vw,3.25rem)]">{door.label}</span>
               </span>
               <span className={cn("cta-dot mb-2 size-12 shrink-0 border transition-colors duration-500 lg:size-16", tone?.dot)}>
                 <ArrowRight className="size-5 transition-transform duration-500 ease-[var(--ease-expo)] group-hover:translate-x-1" />

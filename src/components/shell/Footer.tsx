@@ -8,7 +8,7 @@ export function Footer() {
   const year = new Date().getFullYear();
   return (
     <footer data-surface="green" className="relative bg-matcha text-ivory">
-      <div className="container-x grid gap-10 pb-[var(--bar-space)] pt-14 sm:grid-cols-2 lg:grid-cols-[1.3fr_1fr_1fr_1fr] lg:gap-6 lg:pt-20">
+      <div className="container-x grid gap-10 pb-[var(--bar-space)] pt-14 sm:grid-cols-2 lg:grid-cols-[1.3fr_1fr_1fr_1fr] lg:gap-6 lg:pt-20 land:gap-x-6 land:gap-y-6 land:pt-8 md:land:grid-cols-[1fr_1.3fr_0.9fr_1.1fr]">
         <div className="flex items-center gap-4">
           <MiyabiSymbol className="h-auto w-16" />
           <MiyabiWordmark className="h-auto w-24" title="MIYABI MATCHA" />

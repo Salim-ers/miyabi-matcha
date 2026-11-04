@@ -99,27 +99,27 @@ export function MobileMenu({ open, onClose }: { open: boolean; onClose: () => vo
         <MiyabiSymbol className="h-auto w-full" />
       </div>
 
-      <div className="relative flex h-full flex-col justify-end container-x pb-[calc(1.25rem+env(safe-area-inset-bottom))] pt-[var(--header-h)]">
+      <div className="relative flex h-full flex-col justify-end container-x pb-[calc(1.25rem+env(safe-area-inset-bottom))] pt-[var(--header-h)] land:flex-row land:items-end land:justify-between land:gap-8">
         <nav aria-label="Navigation du menu">
           <ul className="flex flex-col">
             <li className="overflow-hidden">
               <TLink href="/" data-m-link data-m-focus onClick={onClose} aria-current={pathname === "/" ? "page" : undefined} className="flex items-baseline gap-4 py-1.5">
-                <span className="label w-6 shrink-0 text-[0.62rem] text-ivory/60">{pad2(0)}</span>
-                <span className="display text-[clamp(2.6rem,12.5vw,5rem)] italic leading-[1.06]">Accueil</span>
+                <span className="label w-7 shrink-0 text-ivory/60">{pad2(0)}</span>
+                <span className="display whitespace-nowrap text-[clamp(1.85rem,min(11.6vw,7.4svh),5rem)] italic leading-[1.06] land:text-[clamp(1.6rem,9.5svh,3.25rem)]">Accueil</span>
               </TLink>
             </li>
             {navigation.map((item, i) => (
               <li key={item.id} className="overflow-hidden">
                 <TLink href={item.href} data-m-link onClick={onClose} aria-current={pathname === item.href ? "page" : undefined} className="flex items-baseline gap-4 py-1.5">
-                  <span className="label w-6 shrink-0 text-[0.62rem] text-ivory/60">{pad2(i + 1)}</span>
-                  <span className="display text-[clamp(2.6rem,12.5vw,5rem)] leading-[1.06]">{item.label}</span>
+                  <span className="label w-7 shrink-0 text-ivory/60">{pad2(i + 1)}</span>
+                  <span className="display whitespace-nowrap text-[clamp(1.85rem,min(11.6vw,7.4svh),5rem)] leading-[1.06] land:text-[clamp(1.6rem,9.5svh,3.25rem)]">{item.label}</span>
                 </TLink>
               </li>
             ))}
           </ul>
         </nav>
 
-        <div className="mt-8 flex items-end justify-between gap-6 border-t border-ivory/20 pt-5">
+        <div className="mt-8 flex items-end justify-between gap-6 border-t border-ivory/20 pt-5 land:mt-0 land:shrink-0 land:flex-col land:gap-3 land:border-t-0 land:pt-0 land:text-right">
           <div data-m-foot>
             <address className="text-[0.85rem] not-italic leading-relaxed text-ivory/85">
               {site.address.street}

@@ -117,7 +117,7 @@ export function Header() {
               const active = pathname === item.href;
               return (
                 <li key={item.id}>
-                  <TLink href={item.href} aria-current={active ? "page" : undefined} className="relative flex min-h-11 items-center">
+                  <TLink href={item.href} aria-current={active ? "page" : undefined} className="relative flex min-h-11 min-w-11 items-center justify-center">
                     <span className="roll text-[0.8125rem] font-medium tracking-[0.01em]">
                       <span>{item.short}</span>
                       <span aria-hidden>{item.short}</span>

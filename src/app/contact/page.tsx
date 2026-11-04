@@ -22,15 +22,15 @@ export const metadata: Metadata = {
 export default function ContactPage() {
   return (
     <div data-surface="light" className="bg-ivory text-ink">
-      <section className="container-x relative grid gap-8 pb-10 pt-[calc(var(--header-h)+1.25rem)] lg:min-h-[100svh] lg:grid-cols-12 lg:gap-6 lg:pb-14 lg:pt-[calc(var(--header-h)+1.5rem)]">
-        <div className="flex flex-col lg:col-span-7">
+      <section className="container-x relative grid gap-8 pb-10 pt-[calc(var(--header-h)+1.25rem)] lg:min-h-[100svh] lg:grid-cols-12 lg:gap-6 lg:pb-14 lg:pt-[calc(var(--header-h)+1.5rem)] land:grid-cols-12 land:items-center land:gap-6">
+        <div className="flex flex-col lg:col-span-7 land:col-span-7">
           <h1 className="label text-smoke">{contact.title}</h1>
-          <address className="mt-6 not-italic lg:mt-[7svh]">
-            <RevealText as="p" className="display text-[clamp(3.2rem,8.6vw,11.5rem)] leading-[0.92]">
+          <address className="mt-6 not-italic lg:mt-[7svh] land:mt-3">
+            <RevealText as="p" className="display text-[clamp(3.2rem,8.6vw,11.5rem)] leading-[0.92] land:text-[clamp(2.5rem,8vw,4.75rem)]">
               <span className="block">2 rue Joseph</span>
               <span className="block italic">Sansboeuf</span>
             </RevealText>
-            <p className="mt-6 flex flex-wrap items-baseline gap-x-5 gap-y-1">
+            <p className="mt-6 flex flex-wrap items-baseline gap-x-5 gap-y-1 land:mt-3">
               <span className="text-[1.0625rem] font-medium">
                 {site.address.postalCode} {site.address.city}
               </span>
@@ -38,7 +38,7 @@ export default function ContactPage() {
             </p>
           </address>
 
-          <div className="mt-8 flex flex-col items-start gap-3 lg:mt-12 lg:flex-row lg:items-center lg:gap-10">
+          <div className="mt-8 flex flex-col items-start gap-3 lg:mt-12 lg:flex-row lg:items-center lg:gap-10 land:mt-3 land:flex-row land:flex-wrap land:items-center land:gap-x-6 land:gap-y-0">
             <Cta href={site.maps.directions} external>
               Itinéraire
             </Cta>
@@ -48,8 +48,8 @@ export default function ContactPage() {
             </a>
           </div>
 
-          <dl className="mt-8 max-w-sm text-[0.9375rem] lg:mt-auto lg:pt-10">
-            <dt className="label mb-3 text-[0.62rem] text-smoke">Horaires</dt>
+          <dl className="mt-8 max-w-sm text-[0.9375rem] lg:mt-auto lg:pt-10 land:mt-4">
+            <dt className="label mb-3 text-smoke land:mb-1">Horaires</dt>
             {site.hours.map((h) => (
               <dd key={h.days} className="flex justify-between gap-6 py-0.5">
                 <span className="text-smoke">{h.days}</span>
@@ -59,14 +59,14 @@ export default function ContactPage() {
           </dl>
         </div>
 
-        <div className="relative lg:col-span-5">
-          <RevealImage variant="shoji" className="aspect-[1086/1166] w-full" zoom={1.12}>
+        <div className="relative lg:col-span-5 land:col-span-5">
+          <RevealImage variant="shoji" className="aspect-[1086/1166] w-full land:ml-auto land:w-[min(100%,84svh)]" zoom={1.12}>
             <Photo src={photos.tray.src} alt={photos.tray.alt} focus={photos.tray.focus} fill sizes="(min-width: 64rem) 42vw, 100vw" priority />
           </RevealImage>
         </div>
       </section>
 
-      <section aria-label="Carte interactive" className="h-[72svh] min-h-[26rem] lg:h-[86svh]">
+      <section aria-label="Carte interactive" className="h-[72svh] min-h-[26rem] lg:h-[86svh] land:h-[calc(100svh-1rem)] land:min-h-[18rem]">
         <MapEmbed />
       </section>
     </div>

@@ -109,7 +109,7 @@ export function Preloader() {
     <div ref={root} className="preloader fixed inset-0 z-[200] cursor-pointer text-ink" role="status" aria-label="Chargement de MIYABI MATCHA">
       <div data-pl-bg className="absolute inset-0 bg-ivory" />
       <div className="relative flex h-full flex-col items-center justify-center gap-7">
-        <div data-pl-symbol className="w-[min(46vw,13rem)] origin-center will-change-transform">
+        <div data-pl-symbol className="w-[min(46vw,13rem,46svh)] origin-center will-change-transform">
           <BrushSymbol strokeRef={stroke} ghostOpacity={0.05} className="h-auto w-full" />
         </div>
         <div data-pl-word className="invisible">

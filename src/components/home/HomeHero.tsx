@@ -11,7 +11,7 @@ import { gsap, isLightDevice, MQ, SplitText, useGSAP } from "@/lib/animation/gsa
 import { isDirectLoad, isLite, onStage } from "@/lib/stage";
 
 const DEPTH_LAYER = "/images/hero/matcha-tornado-depth.webp";
-const SIZES = "(min-width: 64rem) 62vw, 170vw";
+const SIZES = "(min-width: 64rem) 62vw, (orientation: landscape) 56vw, 170vw";
 
 /** Le titre, crené à la main : le découpage en lettres de l'animation ne gère pas le crénage de la police. */
 function Masthead() {
@@ -214,9 +214,9 @@ export function HomeHero() {
       {/* Signature + bouton */}
       <div
         data-leave
-        className="absolute inset-x-[var(--gutter)] bottom-[calc(var(--bar-h)+1.5rem+env(safe-area-inset-bottom))] flex flex-col items-start gap-y-2 lg:bottom-[4.6svh] lg:right-auto lg:w-[calc(var(--win-x)-var(--gutter)-2vw)] lg:gap-y-6"
+        className="absolute inset-x-[var(--gutter)] bottom-[calc(var(--bar-h)+1.5rem+env(safe-area-inset-bottom))] flex flex-col items-start gap-y-2 lg:bottom-[4.6svh] lg:right-auto lg:w-[calc(var(--win-x)-var(--gutter)-2vw)] lg:gap-y-6 land:bottom-[calc(0.875rem+env(safe-area-inset-bottom))] land:right-auto land:w-[calc(var(--win-x)-var(--gutter)-1.5vw)] land:gap-y-3"
       >
-        <p className="display flex flex-wrap gap-x-[0.28em] text-[clamp(1.85rem,8.8vw,3.2rem)] italic leading-[1.04] lg:block lg:text-[clamp(2.1rem,3.5vw,5.2rem)]">
+        <p className="display flex flex-wrap gap-x-[0.28em] text-[length:var(--tag)] italic leading-[1.04] lg:block land:block">
           {home.tagline.map((line) => (
             <span key={line} className="block overflow-hidden pb-[0.08em]">
               <span data-tag-line className="block">
@@ -225,7 +225,7 @@ export function HomeHero() {
             </span>
           ))}
         </p>
-        <div data-enter className="flex w-full items-center justify-between gap-4 lg:block">
+        <div data-enter className="flex w-full items-center justify-between gap-4 lg:block land:block">
           <Cta href={home.cta.href}>{home.cta.label}</Cta>
         </div>
       </div>
@@ -234,7 +234,7 @@ export function HomeHero() {
         data-leave
         className="absolute bottom-[4.6svh] right-[var(--gutter)] hidden w-[calc(var(--win-x)-var(--gutter)-2vw)] text-right lg:block"
       >
-        <p data-enter className="label text-[0.62rem] text-smoke">
+        <p data-enter className="label text-smoke">
           {home.cover.label}
         </p>
         <p data-enter className="display mt-2 text-[clamp(1.2rem,1.7vw,2.4rem)] italic leading-tight">

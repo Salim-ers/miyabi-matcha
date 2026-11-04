@@ -19,8 +19,8 @@ export default function HomePage() {
     <>
       <HomeHero />
       {/* Écrans tactiles et mouvement réduit : la phrase d'identité a sa propre scène */}
-      <section data-surface="dark" className="statement bg-night px-[var(--gutter)] py-24 text-ivory sm:py-32">
-        <RevealText as="p" className="display mx-auto max-w-[20ch] text-center text-[clamp(2.4rem,9.5vw,5.5rem)] italic leading-[1.06]">
+      <section data-surface="dark" className="statement bg-night px-[var(--gutter)] py-24 text-ivory sm:py-32 land:py-14">
+        <RevealText as="p" className="display mx-auto max-w-[20ch] text-center text-[clamp(2.4rem,9.5vw,5.5rem)] italic leading-[1.06] land:text-[clamp(2.25rem,6.4vw,3.75rem)]">
           {home.statement.join(" ")}
         </RevealText>
       </section>

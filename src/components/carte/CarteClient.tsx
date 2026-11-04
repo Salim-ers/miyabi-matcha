@@ -51,7 +51,10 @@ export function CarteClient({ menu }: { menu: MenuSection[] }) {
     const mark = indicator.current;
     const tab = nav?.querySelector<HTMLElement>(`[data-tab="${id}"]`);
     if (!nav || !mark || !tab) return;
-    const props = { x: tab.offsetLeft, width: tab.offsetWidth };
+    // Le trait souligne le texte : la marge tactile de l'onglet n'en fait pas partie.
+    const style = getComputedStyle(tab);
+    const left = parseFloat(style.paddingLeft);
+    const props = { x: tab.offsetLeft + left, width: tab.offsetWidth - left - parseFloat(style.paddingRight) };
     if (animate && !prefersReducedMotion()) gsap.to(mark, { ...props, duration: 0.8, ease: "expo.out", overwrite: true });
     else gsap.set(mark, props);
     const scroller = tab.parentElement;
@@ -141,14 +144,14 @@ export function CarteClient({ menu }: { menu: MenuSection[] }) {
     <div ref={root} className="bg-ivory">
       {/* Titre */}
       <header className="container-x flex items-end justify-between gap-6 pb-5 pt-[calc(var(--header-h)+1.25rem)] lg:pb-7 lg:pt-[calc(var(--header-h)+1.5rem)]">
-        <h1 className="display shrink-0 whitespace-nowrap text-[clamp(3rem,13vw,6rem)] leading-[0.86] lg:text-[clamp(4rem,6.8vw,9.5rem)]">La Carte</h1>
+        <h1 className="display shrink-0 whitespace-nowrap text-[clamp(3rem,13vw,6rem)] leading-[0.86] lg:text-[clamp(4rem,6.8vw,9.5rem)] land:text-[clamp(2.75rem,8vw,4rem)]">La Carte</h1>
         {!allPriced && <p className="max-w-[24ch] pb-1 text-right text-[0.75rem] leading-snug text-smoke sm:text-[0.8125rem]">Tarifs et disponibilités en boutique.</p>}
       </header>
 
       {/* Catégories */}
       <span ref={sentinel} aria-hidden className="block h-px" />
       <div ref={navRef} className="carte-nav border-y border-ink/10 bg-ivory">
-        <div role="tablist" aria-label="Catégories de la carte" className="no-scrollbar relative flex gap-1 overflow-x-auto container-x sm:gap-3 lg:gap-8">
+        <div role="tablist" aria-label="Catégories de la carte" className="no-scrollbar relative flex gap-1 overflow-x-auto container-x sm:gap-3 lg:gap-2">
           {menu.map((c) => {
             const on = c.id === activeId;
             return (
@@ -162,7 +165,7 @@ export function CarteClient({ menu }: { menu: MenuSection[] }) {
                 aria-controls={`panel-${c.id}`}
                 onClick={() => select(c.id)}
                 className={cn(
-                  "shrink-0 whitespace-nowrap px-2 py-4 text-[0.875rem] font-medium transition-colors duration-500 first:pl-0 lg:px-0 lg:py-5 lg:text-[0.9375rem]",
+                  "shrink-0 whitespace-nowrap px-2 py-4 text-[0.875rem] font-medium transition-colors duration-500 first:pl-0 lg:px-3 lg:py-5 lg:text-[0.9375rem] land:py-3",
                   on ? "text-ink" : "text-smoke hover:text-ink",
                 )}
               >
@@ -191,7 +194,7 @@ export function CarteClient({ menu }: { menu: MenuSection[] }) {
                 </p>
               )}
             </div>
-            <div className="grid grid-cols-2 gap-x-3 gap-y-7 sm:grid-cols-3 sm:gap-x-5 lg:gap-x-7 lg:gap-y-11 2xl:grid-cols-4 4xl:grid-cols-5">
+            <div className="grid grid-cols-2 gap-x-3 gap-y-7 sm:grid-cols-3 sm:gap-x-5 lg:gap-x-7 lg:gap-y-11 2xl:grid-cols-4 4xl:grid-cols-5 land:grid-cols-3 md:land:grid-cols-4">
               {c.products.map((p, i) => (
                 <ProductCard key={p.id} product={p} priority={c.id === firstId && i < 3} />
               ))}
@@ -218,7 +221,7 @@ export function CarteClient({ menu }: { menu: MenuSection[] }) {
             className="cta mt-5 flex min-h-14 w-full items-center justify-between gap-4 border-t border-ink/10 pt-5 text-left"
           >
             <span>
-              <span className="label block text-[0.6rem] text-smoke">Ensuite</span>
+              <span className="label block text-smoke">Ensuite</span>
               <span className="display mt-1 block text-[clamp(1.6rem,3vw,2.6rem)] italic">{next.label}</span>
             </span>
             <span className="cta-dot size-11 shrink-0 bg-ink text-ivory">

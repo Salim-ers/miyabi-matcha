@@ -24,8 +24,8 @@ const FOLDED = (80 * Math.PI) / 180;
 function Caption({ item, index }: { item: Panel; index: number }) {
   return (
     <span className="flex items-baseline justify-between gap-3">
-      <span className="display text-[clamp(1.5rem,2.2vw,3.2rem)] italic leading-[1.06]">{item.name}</span>
-      <span className="label shrink-0 text-[0.62rem] text-smoke">0{index + 1}</span>
+      <span className="display text-[clamp(1.5rem,2.2vw,3.2rem)] italic leading-[1.06] land:text-[1.25rem]">{item.name}</span>
+      <span className="label shrink-0 text-smoke">0{index + 1}</span>
     </span>
   );
 }
@@ -100,7 +100,7 @@ export function HomeByobu() {
   );
 
   return (
-    <section ref={root} data-surface="light" className="relative overflow-hidden bg-ivory pb-20 pt-20 lg:pb-[clamp(6rem,13svh,10rem)] lg:pt-[clamp(6rem,13svh,10rem)]">
+    <section ref={root} data-surface="light" className="relative overflow-hidden bg-ivory pb-20 pt-20 lg:pb-[clamp(6rem,13svh,10rem)] lg:pt-[clamp(6rem,13svh,10rem)] land:py-10">
       <div className="container-x flex items-center justify-between gap-6">
         <h2 className="label text-smoke">{home.signaturesLabel}</h2>
         <TLink href="/creations" className="group inline-flex min-h-11 items-center gap-2 text-[0.8125rem] font-medium">
@@ -111,10 +111,10 @@ export function HomeByobu() {
 
       <div
         data-stage
-        className="byobu-stage no-scrollbar mt-6 flex snap-x snap-mandatory gap-3 overflow-x-auto px-[var(--gutter)] lg:mx-auto lg:mt-10 lg:grid lg:w-[min(84vw,128svh)] lg:grid-cols-3 lg:gap-0 lg:overflow-visible lg:px-0"
+        className="byobu-stage no-scrollbar mt-6 flex snap-x snap-mandatory gap-3 overflow-x-auto px-[var(--gutter)] lg:mx-auto lg:mt-10 lg:grid lg:w-[min(84vw,128svh)] lg:grid-cols-3 lg:gap-0 lg:overflow-visible lg:px-0 land:mt-3 land:justify-center-safe"
       >
         {TRIO.map((item, i) => (
-          <div key={item.id} className="w-[78vw] shrink-0 snap-center sm:w-[46vw] lg:contents">
+          <div key={item.id} className="w-[78vw] shrink-0 snap-center sm:w-[46vw] lg:contents land:w-[min(30vw,62svh)]">
             <TLink
               data-panel
               href={item.href}

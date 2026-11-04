@@ -20,7 +20,7 @@ function SeqTitle({ index, title, tone = "ink" }: { index: string; title: string
       <span className="font-jp text-[0.95rem]" aria-hidden>
         {index}
       </span>
-      <span className="label text-[0.62rem]">{title}</span>
+      <span className="label">{title}</span>
     </p>
   );
 }
@@ -105,27 +105,27 @@ export function MaisonStory() {
   return (
     <div ref={root} className="bg-ivory text-ink">
       {/* ─── Ouverture ─── */}
-      <header data-surface="light" className="container-x relative flex min-h-[86svh] flex-col justify-end overflow-hidden pb-10 pt-[calc(var(--header-h)+1rem)] lg:min-h-[100svh] lg:pb-14">
-        <div data-maison-symbol aria-hidden className="pointer-events-none absolute right-[-8vw] top-[10svh] w-[92vw] text-sage/60 lg:right-[4vw] lg:top-[9svh] lg:w-[min(58vw,104svh)]">
+      <header data-surface="light" className="container-x relative flex min-h-[86svh] flex-col justify-end overflow-hidden pb-10 pt-[calc(var(--header-h)+1rem)] lg:min-h-[100svh] lg:pb-14 land:min-h-[100svh] land:pb-5">
+        <div data-maison-symbol aria-hidden className="pointer-events-none absolute right-[-8vw] top-[10svh] w-[92vw] text-sage/60 lg:right-[4vw] lg:top-[9svh] lg:w-[min(58vw,104svh)] land:right-[4vw] land:top-[9svh] land:w-[min(58vw,104svh)]">
           <BrushSymbol strokeRef={stroke} ghostOpacity={0} className="h-auto w-full" />
         </div>
-        <h1 className="display relative text-[clamp(4rem,15vw,20rem)] leading-[0.86]">
+        <h1 className="display relative text-[clamp(4rem,15vw,20rem)] leading-[0.86] land:text-[min(15vw,26svh)]">
           <span className="block">{maison.title[0]}</span>
           <span className="block italic">{maison.title[1]}</span>
         </h1>
-        <p className="relative mt-6 max-w-[34ch] text-[1rem] leading-relaxed text-smoke lg:mt-8">{maison.name}</p>
+        <p className="relative mt-6 max-w-[34ch] text-[1rem] leading-relaxed text-smoke lg:mt-8 land:mt-3">{maison.name}</p>
       </header>
 
       {/* ─── 一 La feuille : l'inspiration japonaise ─── */}
-      <section data-surface="light" aria-label={maison.leaf.title} className="relative lg:flex lg:items-stretch">
-        <div className="relative h-[112vw] sm:h-[90vw] lg:h-[100svh] lg:w-[62vw]">
+      <section data-surface="light" aria-label={maison.leaf.title} className="relative lg:flex lg:items-stretch land:flex land:items-stretch">
+        <div className="relative h-[112vw] sm:h-[90vw] lg:h-[100svh] lg:w-[62vw] land:h-[100svh] land:w-[58vw]">
           <RevealImage variant="rise" className="absolute inset-0" parallax={6} zoom={1.1}>
             <Photo src={photos.leaves.src} alt={photos.leaves.alt} focus={photos.leaves.focus} fill sizes="(min-width: 64rem) 62vw, 66vw" quality={85} />
           </RevealImage>
         </div>
-        <div className="container-x flex flex-col justify-center py-12 lg:w-[38vw] lg:px-[4vw] lg:py-0">
+        <div className="container-x flex flex-col justify-center py-12 lg:w-[38vw] lg:px-[4vw] lg:py-0 land:w-[42vw] land:py-6">
           <SeqTitle index={maison.leaf.index} title={maison.leaf.title} />
-          <RevealText as="h2" className="display mt-6 text-[clamp(2.6rem,5.2vw,7rem)] italic leading-[1.02]">
+          <RevealText as="h2" className="display mt-6 text-[clamp(2.6rem,5.2vw,7rem)] italic leading-[1.02] land:mt-3 land:text-[clamp(1.9rem,4.6vw,3rem)]">
             {maison.leaf.line}
           </RevealText>
         </div>
@@ -141,11 +141,11 @@ export function MaisonStory() {
             const frame = maison.gesture.frames[i];
             return (
               <div key={photo.src} data-frame className="gesture-frame h-[100svh] overflow-hidden bg-night" style={{ zIndex: i + 1 }}>
-                <div data-frame-img className="absolute inset-y-0 right-0 w-full lg:w-[min(62vw,106svh)]">
+                <div data-frame-img className="absolute inset-y-0 right-0 w-full lg:w-[min(62vw,106svh)] land:w-[min(62vw,106svh)]">
                   <Photo src={photo.src} alt={photo.alt} focus={photo.focus} fill sizes="(min-width: 64rem) 62vw, 66vw" quality={85} />
                 </div>
-                <div aria-hidden className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-black/70 to-transparent lg:hidden" />
-                <div className="container-x absolute inset-x-0 bottom-[calc(var(--bar-h)+2rem)] lg:bottom-[12svh] lg:w-[38vw]">
+                <div aria-hidden className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-black/70 to-transparent lg:hidden land:hidden" />
+                <div className="container-x absolute inset-x-0 bottom-[calc(var(--bar-h)+2rem)] lg:bottom-[12svh] lg:w-[38vw] land:bottom-[12svh] land:right-auto land:w-[38vw]">
                   <div data-caption>
                     <h3 className="display text-[clamp(3rem,7vw,9.5rem)] leading-[0.95]">{frame?.title}</h3>
                     <p className="mt-3 text-[1rem] text-ivory/80 lg:mt-5">{frame?.line}</p>
@@ -158,18 +158,18 @@ export function MaisonStory() {
       </section>
 
       {/* ─── 三 L'instant : la boutique ─── */}
-      <section data-surface="light" aria-label={maison.moment.title} className="relative bg-paper py-14 lg:py-[12svh]">
-        <div className="container-x grid gap-10 lg:grid-cols-12 lg:items-end lg:gap-6">
-          <div className="lg:col-span-6">
+      <section data-surface="light" aria-label={maison.moment.title} className="relative bg-paper py-14 lg:py-[12svh] land:py-6">
+        <div className="container-x grid gap-10 lg:grid-cols-12 lg:items-end lg:gap-6 land:grid-cols-12 land:items-center land:gap-6">
+          <div className="lg:col-span-6 land:col-span-7">
             <SeqTitle index={maison.moment.index} title={maison.moment.title} />
-            <RevealText as="h2" className="display mt-6 max-w-[19ch] text-[clamp(2.6rem,5vw,7.4rem)] leading-[1.02] [text-wrap:balance]">
+            <RevealText as="h2" className="display mt-6 max-w-[19ch] text-[clamp(2.6rem,5vw,7.4rem)] leading-[1.02] [text-wrap:balance] land:mt-3 land:text-[clamp(1.9rem,5vw,3.25rem)]">
               {maison.moment.line}
             </RevealText>
-            <div className="mt-8 lg:mt-12">
+            <div className="mt-8 lg:mt-12 land:mt-4">
               <Cta href="/contact">Nous trouver</Cta>
             </div>
           </div>
-          <RevealImage variant="shoji" className="aspect-[3/4] w-[86%] justify-self-end lg:col-span-5 lg:col-start-8 lg:w-full" zoom={1.1}>
+          <RevealImage variant="shoji" className="aspect-[3/4] w-[86%] justify-self-end lg:col-span-5 lg:col-start-8 lg:w-full land:col-span-5 land:w-[min(100%,calc((100svh-3rem)*0.75))]" zoom={1.1}>
             <Photo src={photos.takeaway.src} alt={photos.takeaway.alt} focus={photos.takeaway.focus} fill sizes="(min-width: 64rem) 42vw, 86vw" />
           </RevealImage>
         </div>

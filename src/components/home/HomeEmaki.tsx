@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, type CSSProperties } from "react";
 import { RevealImage } from "@/components/motion/RevealImage";
 import { TLink } from "@/components/shell/TLink";
 import { ArrowRight } from "@/components/ui/Icons";
@@ -10,13 +10,13 @@ import { photos, type ArtPhoto } from "@/data/photos";
 import { gsap, MQ, useGSAP } from "@/lib/animation/gsap";
 import { isLite } from "@/lib/stage";
 
-type Item = { photo: ArtPhoto; w: string; ratio: string; top: string; variant: "shoji" | "rise" | "fall" };
+type Item = { photo: ArtPhoto; w: string; ratio: number; top: string; variant: "shoji" | "rise" | "fall" };
 
 /** Formats, décalages et dévoilements volontairement inégaux : un rouleau, pas une grille. */
 const ITEMS: Item[] = [
-  { photo: photos.field, w: "clamp(14rem,24vw,38rem)", ratio: "9/14", top: "0", variant: "rise" },
-  { photo: photos.whisked, w: "clamp(18rem,39vw,62rem)", ratio: "5/6", top: "clamp(1.5rem,7svh,6rem)", variant: "fall" },
-  { photo: photos.crepeBatter, w: "clamp(14rem,27vw,42rem)", ratio: "3/4", top: "0", variant: "shoji" },
+  { photo: photos.field, w: "clamp(14rem,24vw,38rem)", ratio: 9 / 14, top: "0px", variant: "rise" },
+  { photo: photos.whisked, w: "clamp(18rem,39vw,62rem)", ratio: 5 / 6, top: "clamp(1.5rem,7svh,6rem)", variant: "fall" },
+  { photo: photos.crepeBatter, w: "clamp(14rem,27vw,42rem)", ratio: 3 / 4, top: "0px", variant: "shoji" },
 ];
 
 /**
@@ -57,17 +57,17 @@ export function HomeEmaki() {
   );
 
   return (
-    <section ref={root} data-surface="light" className="relative overflow-hidden bg-paper pb-16 pt-16 lg:pb-[clamp(6rem,14svh,11rem)] lg:pt-[clamp(6rem,14svh,11rem)]">
-      <div className="container-x mb-8 flex items-center justify-between gap-6 lg:mb-12">
+    <section ref={root} data-surface="light" className="relative overflow-hidden bg-paper pb-16 pt-16 lg:pb-[clamp(6rem,14svh,11rem)] lg:pt-[clamp(6rem,14svh,11rem)] land:py-8">
+      <div className="container-x mb-8 flex items-center justify-between gap-6 lg:mb-12 land:mb-2">
         <h2 className="label text-smoke">{home.universeLabel}</h2>
         <TLink href={home.universeLink.href} className="group inline-flex min-h-11 items-center gap-2 text-[0.8125rem] font-medium">
           <span className="hairline">{home.universeLink.label}</span>
           <ArrowRight className="size-4 transition-transform duration-500 ease-[var(--ease-expo)] group-hover:translate-x-1" />
         </TLink>
       </div>
-      <div data-track className="emaki-track">
+      <div data-track className="emaki-track land:justify-center-safe">
         {ITEMS.map((item) => (
-          <div key={item.photo.src} style={{ width: item.w, marginTop: item.top }}>
+          <div key={item.photo.src} style={{ "--emaki-w": item.w, "--emaki-r": item.ratio, "--emaki-top": item.top } as CSSProperties}>
             <RevealImage variant={item.variant} style={{ aspectRatio: item.ratio }} start="top 96%">
               <Photo src={item.photo.src} alt={item.photo.alt} focus={item.photo.focus} fill sizes="(min-width: 64rem) 40vw, 76vw" />
             </RevealImage>

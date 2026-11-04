@@ -32,7 +32,7 @@ function Name({ item, className }: { item: Signature; className?: string }) {
 }
 
 function Kind({ children }: { children: ReactNode }) {
-  return <p className="label text-[0.62rem] text-ivory/60">{children}</p>;
+  return <p className="label text-ivory/60">{children}</p>;
 }
 
 function Vertical({ text, className }: { text?: string; className?: string }) {
@@ -133,9 +133,9 @@ export function CreationsGallery() {
         <RevealText as="h1" mode="chars" className="display -ml-[0.04em] text-[clamp(4rem,22.4vw,32rem)] leading-[0.86]">
           Créations
         </RevealText>
-        <nav aria-label="Les créations" className="mt-8 hidden flex-wrap gap-x-7 gap-y-2 lg:flex">
+        <nav aria-label="Les créations" className="mt-5 hidden flex-wrap gap-x-7 lg:flex">
           {signatures.map((s) => (
-            <TLink key={s.id} href={`#${s.id}`} className="text-[0.8125rem] text-ivory/60 transition-colors duration-300 hover:text-ivory">
+            <TLink key={s.id} href={`#${s.id}`} className="inline-flex min-h-11 items-center text-[0.8125rem] text-ivory/60 transition-colors duration-300 hover:text-ivory">
               {s.name}
             </TLink>
           ))}
@@ -143,26 +143,26 @@ export function CreationsGallery() {
       </header>
 
       {/* ─── I. Crêpe Forest Fruit : l'objet seul, à gauche ─── */}
-      <section id={crepe.id} data-tint={crepe.tint} aria-label={crepe.name} className="relative scroll-mt-10 pt-6 lg:min-h-[100svh] lg:pt-[4svh]">
-        <div className="relative w-full lg:w-[min(58vw,92svh)]">
+      <section id={crepe.id} data-tint={crepe.tint} aria-label={crepe.name} className="relative scroll-mt-10 pt-6 lg:min-h-[100svh] lg:pt-[4svh] land:grid land:grid-cols-[auto_1fr] land:items-center land:pt-0">
+        <div className="relative w-full lg:w-[min(58vw,92svh)] land:w-[min(50vw,88svh)]">
           <RevealImage variant="left" className="studio-fade aspect-[823/915] w-full" zoom={1.1}>
             <Photo src={crepe.photo.src} alt={crepe.photo.alt} focus="50% 50%" fill sizes="(min-width: 64rem) 58vw, 66vw" quality={88} />
           </RevealImage>
         </div>
-        <div data-speed="-0.35" className="container-x relative pt-8 lg:absolute lg:right-0 lg:top-[18svh] lg:w-[46vw] lg:pt-0">
-          <Name item={crepe} className="text-[clamp(3.2rem,13.5vw,6.5rem)] lg:text-[clamp(3.8rem,7.2vw,10rem)]" />
-          <div className="mt-6 max-w-[34ch] lg:mt-9">
+        <div data-speed="-0.35" className="container-x relative z-10 pt-8 lg:absolute lg:right-0 lg:top-[18svh] lg:w-[46vw] lg:pt-0 land:pt-0">
+          <Name item={crepe} className="text-[clamp(3.2rem,13.5vw,6.5rem)] lg:text-[clamp(3.8rem,7.2vw,10rem)] land:text-[clamp(2.5rem,6.4vw,4rem)]" />
+          <div className="mt-6 max-w-[34ch] lg:mt-9 land:mt-4">
             <Kind>{crepe.kind}</Kind>
             <p className="mt-3 text-[0.9375rem] leading-relaxed text-ivory/80">{crepe.description}</p>
           </div>
         </div>
         {/* La matière : la crêpe, avant la garniture */}
-        <div data-speed="0.7" className="relative ml-auto mt-10 w-[56vw] pr-[var(--gutter)] lg:absolute lg:bottom-[2svh] lg:right-[8vw] lg:mt-0 lg:w-[min(21vw,34svh)] lg:pr-0">
+        <div data-speed="0.7" className="relative ml-auto mt-10 w-[56vw] pr-[var(--gutter)] lg:absolute lg:bottom-[2svh] lg:right-[8vw] lg:mt-0 lg:w-[min(21vw,34svh)] lg:pr-0 land:col-span-2 land:mt-6 land:w-[min(40vw,72svh)]">
           <RevealImage variant="rise" className="aspect-[3/4]">
             <Photo src={photos.crepeSpread.src} alt={photos.crepeSpread.alt} focus={photos.crepeSpread.focus} fill sizes="(min-width: 64rem) 22vw, 56vw" />
           </RevealImage>
         </div>
-        <Vertical text={crepe.nameJa} className="absolute right-[var(--gutter)] top-[18svh] hidden lg:block" />
+        <Vertical text={crepe.nameJa} className="absolute right-[var(--gutter)] top-[18svh] z-10 hidden lg:block" />
       </section>
 
       {/* ─── II. Strawberry Matcha : l'éclaboussure, plein cadre ─── */}
@@ -172,8 +172,8 @@ export function CreationsGallery() {
             <Photo src={strawberry.photo.src} alt={strawberry.photo.alt} focus={strawberry.photo.focus} focusM={strawberry.photo.focusM} fill sizes="100vw" quality={88} />
           </div>
         </div>
-        <div className="container-x flex flex-col gap-6 pb-6 pt-8 lg:flex-row lg:items-end lg:justify-between lg:pt-[7svh]">
-          <Name item={strawberry} className="text-[clamp(3.2rem,14vw,6.5rem)] lg:text-[clamp(3.8rem,9vw,13rem)]" />
+        <div className="container-x flex flex-col gap-6 pb-6 pt-8 lg:flex-row lg:items-end lg:justify-between lg:pt-[7svh] land:flex-row land:items-end land:justify-between">
+          <Name item={strawberry} className="text-[clamp(3.2rem,14vw,6.5rem)] lg:text-[clamp(3.8rem,9vw,13rem)] land:text-[clamp(2.5rem,6.4vw,4rem)]" />
           <div className="flex items-start gap-8 lg:pb-3">
             <div>
               <Kind>{strawberry.kind}</Kind>
@@ -185,15 +185,15 @@ export function CreationsGallery() {
       </section>
 
       {/* ─── III. Camelot Caramel Latte : le geste, à droite ─── */}
-      <section id={camelot.id} data-tint={camelot.tint} aria-label={camelot.name} className="relative mt-14 scroll-mt-10 lg:mt-[12svh] lg:min-h-[100svh]">
-        <div className="relative ml-auto w-full lg:absolute lg:bottom-0 lg:right-[3vw] lg:w-[min(56vw,88svh)]">
+      <section id={camelot.id} data-tint={camelot.tint} aria-label={camelot.name} className="relative mt-14 scroll-mt-10 lg:mt-[12svh] lg:min-h-[100svh] land:flex land:flex-row-reverse land:items-center">
+        <div className="relative ml-auto w-full lg:absolute lg:bottom-0 lg:right-[3vw] lg:w-[min(56vw,88svh)] land:ml-0 land:w-[min(50vw,88svh)] land:shrink-0">
           <RevealImage variant="right" className="studio-fade aspect-[778/865] w-full" zoom={1.1}>
             <Photo src={camelot.photo.src} alt={camelot.photo.alt} focus="50% 50%" fill sizes="(min-width: 64rem) 56vw, 66vw" quality={88} />
           </RevealImage>
         </div>
-        <div className="container-x relative pt-8 lg:absolute lg:bottom-[12svh] lg:left-0 lg:w-[42vw] lg:pt-0">
-          <Name item={camelot} className="text-[clamp(3.2rem,14vw,6.5rem)] lg:text-[clamp(3.6rem,6.6vw,9rem)]" />
-          <div className="mt-6 max-w-[34ch]">
+        <div className="container-x relative z-10 pt-8 lg:absolute lg:bottom-[12svh] lg:left-0 lg:w-[42vw] lg:pt-0 land:min-w-0 land:flex-1 land:pt-0">
+          <Name item={camelot} className="text-[clamp(3.2rem,14vw,6.5rem)] lg:text-[clamp(3.6rem,6.6vw,9rem)] land:text-[clamp(2.5rem,6.4vw,4rem)]" />
+          <div className="mt-6 max-w-[34ch] land:mt-4">
             <Kind>{camelot.kind}</Kind>
             <p className="mt-3 text-[0.9375rem] leading-relaxed text-ivory/80">{camelot.description}</p>
           </div>
@@ -205,12 +205,12 @@ export function CreationsGallery() {
         <div className="container-x">
           <Name item={americano} className="text-center text-[clamp(3.4rem,18.6vw,28rem)] leading-[0.9]" />
         </div>
-        <div className="relative mx-auto mt-4 w-full lg:mt-6 lg:w-[min(62vw,96svh)]">
+        <div className="relative mx-auto mt-4 w-full lg:mt-6 lg:w-[min(62vw,96svh)] land:w-[min(62vw,88svh)]">
           <RevealImage variant="shoji" className="studio-fade aspect-[774/860] w-full" zoom={1.08}>
             <Photo src={americano.photo.src} alt={americano.photo.alt} focus={americano.photo.focus} fill sizes="(min-width: 64rem) 62vw, 66vw" quality={88} />
           </RevealImage>
         </div>
-        <div className="container-x flex items-end justify-between gap-8 pt-6 lg:absolute lg:inset-x-0 lg:bottom-[8svh] lg:pt-0">
+        <div className="container-x relative z-10 flex items-end justify-between gap-8 pt-6 lg:absolute lg:inset-x-0 lg:bottom-[8svh] lg:pt-0">
           <div className="max-w-[28ch]">
             <Kind>{americano.kind}</Kind>
             <p className="mt-3 text-[0.9375rem] leading-relaxed text-ivory/80">{americano.description}</p>
@@ -220,7 +220,7 @@ export function CreationsGallery() {
       </section>
 
       {/* ─── Sortie ─── */}
-      <section className="container-x flex flex-col items-start gap-8 py-20 lg:flex-row lg:items-end lg:justify-between lg:py-[16svh]">
+      <section className="container-x flex flex-col items-start gap-8 py-20 lg:flex-row lg:items-end lg:justify-between lg:py-[16svh] land:flex-row land:items-end land:justify-between land:py-12">
         <RevealText as="p" className="display max-w-[14ch] text-[clamp(2.6rem,6.4vw,8rem)] italic leading-[1.02]">
           Toute la carte vous attend.
         </RevealText>

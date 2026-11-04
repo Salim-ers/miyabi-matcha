@@ -143,7 +143,7 @@ export function PageTransition({ children }: { children: ReactNode }) {
           ))}
         </div>
         <div data-pt-content className="absolute inset-0 flex flex-col items-center justify-center gap-6 text-ivory">
-          <div data-pt-symbol className="w-[min(42vw,11rem)]">
+          <div data-pt-symbol className="w-[min(42vw,11rem,44svh)]">
             <BrushSymbol strokeRef={stroke} ghostOpacity={0.1} className="h-auto w-full" />
           </div>
           <div data-pt-word>

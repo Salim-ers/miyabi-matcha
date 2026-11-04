@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* À l'horizontale sous 64rem (téléphone couché, petite tablette) : la hauteur est la ressource rare. */
+@custom-variant land (@media (orientation: landscape) and (max-width: 63.999rem));
+
 /* ───────────────────────── Identité ───────────────────────── */
 @theme {
   --color-ivory: #f7f5ef;
@@ -29,7 +32,8 @@
   --bar-h: 3.5rem;
   /* Espace à réserver sous le contenu pour la barre Carte + Itinéraire */
   --bar-space: calc(var(--bar-h) + 2.5rem + env(safe-area-inset-bottom));
-  --gutter: clamp(1.125rem, 3.2vw, 4.5rem);
+  /* Sur un iPhone couché, l'encoche et les bords arrondis réduisent la zone utile */
+  --gutter: max(clamp(1.125rem, 3.2vw, 4.5rem), env(safe-area-inset-left), env(safe-area-inset-right));
   --chrome-fg: var(--color-ink);
   --chrome-muted: color-mix(in oklab, var(--color-ink) 58%, transparent);
   --chrome-bg: var(--color-ivory);
@@ -55,6 +59,18 @@ html:not([data-tone-live]):has(#contenu > [data-surface="dark"]) [data-header] {
 @media (min-width: 64rem) and (hover: hover) and (pointer: fine) {
   .mobile-bar { display: none; }
   :root { --bar-space: 3rem; }
+}
+/* À l'horizontale : en-tête plus fin, et la barre se range dans le coin au lieu de couvrir le centre de l'écran. */
+@media (orientation: landscape) and (max-width: 63.999rem) {
+  :root {
+    --header-h: 3.25rem;
+    --bar-h: 3rem;
+    --bar-space: calc(var(--bar-h) + 1.5rem + env(safe-area-inset-bottom));
+  }
+  .mobile-bar { justify-content: flex-end; padding-inline: var(--gutter); }
+  .mobile-bar > div { width: auto; }
+  .mobile-bar a { min-height: 2.5rem; padding-inline: 0.875rem; font-size: 0.75rem; }
+  .mobile-bar svg { display: none; }
 }
 
 /* Grands écrans : la typographie et les espacements montent en douceur */
@@ -170,22 +186,24 @@ html[data-transition="cover"] #contenu { pointer-events: none; }
 
 /* ───────────────────────── Accueil : la couverture ───────────────────────── */
 .hero {
+  /* Toute la géométrie part de cette hauteur : si elle dépasse l'écran, le titre et la photo restent alignés. */
+  --hero-h: max(100svh, 34rem);
+  --tag: clamp(2.1rem, 3.5vw, 5.2rem);
   --win-x: 29vw;
   --win-top: 0px;
   --win-bottom: 0px;
-  --mast: min(24.5vw, 50svh);
+  --mast: min(24.5vw, calc(var(--hero-h) * 0.5));
   --cap: calc(var(--mast) * 0.75);
   --ovl: calc(var(--cap) * 0.32);
   --head: calc(var(--header-h) + 1svh);
   --win-w: calc(100vw - 2 * var(--win-x));
-  --win-h: calc(100svh - var(--win-top) - var(--win-bottom));
+  --win-h: calc(var(--hero-h) - var(--win-top) - var(--win-bottom));
   --ph-max: calc((var(--win-h) - var(--head) - var(--cap) + var(--ovl)) / 0.97);
   --pw: min(calc(var(--win-w) / 0.56), calc(var(--ph-max) * 1.1823));
   --ph: calc(var(--pw) / 1.1823);
-  --mast-y: calc(100svh - var(--win-bottom) - var(--ph) * 0.97 + var(--ovl) - var(--cap));
+  --mast-y: calc(var(--hero-h) - var(--win-bottom) - var(--ph) * 0.97 + var(--ovl) - var(--cap));
   position: relative;
-  height: 100svh;
-  min-height: 34rem;
+  height: var(--hero-h);
   overflow: hidden;
   background: var(--color-ivory);
 }
@@ -235,13 +253,27 @@ html[data-transition="cover"] #contenu { pointer-events: none; }
 }
 /* Écran tactile : un dégradé posé sur l'image remplace le masque, bien plus coûteux à composer */
 @media (hover: none), (pointer: coarse), (max-width: 63.999rem) {
-  .hero-photo-mask::after { content: ""; position: absolute; inset: 0 0 auto; height: 7%; background: linear-gradient(180deg, var(--color-night), transparent); }
+  .hero-photo-mask::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    /* Des bandes étroites : seule la zone de chaque dégradé est peinte, pas toute la photo. */
+    background:
+      linear-gradient(180deg, var(--color-night), transparent) top / 100% 7% no-repeat,
+      linear-gradient(90deg, var(--color-night), transparent) left / 10% 100% no-repeat,
+      linear-gradient(270deg, var(--color-night), transparent) right / 10% 100% no-repeat;
+  }
   .hero-sweep { display: none; }
   [data-brush-stroke] { filter: none; }
 }
 /* Tablette à l'horizontale : l'alcôve s'arrête au-dessus de la barre */
 @media (min-width: 64rem) and (pointer: coarse) {
-  .hero { --win-bottom: calc(4.75rem + env(safe-area-inset-bottom)); }
+  .hero {
+    --win-bottom: calc(4.75rem + env(safe-area-inset-bottom));
+    /* Sans masque, le bord de la photo se verrait : l'alcôve n'est jamais plus large que la photo. */
+    --pw: min(calc(42vw / 0.56), calc(var(--ph-max) * 1.1823));
+    --win-x: max(29vw, calc(50vw - var(--pw) / 2));
+  }
 }
 .hero-phrase { display: none; }
 .statement { display: block; }
@@ -251,17 +283,42 @@ html[data-transition="cover"] #contenu { pointer-events: none; }
 }
 @media (max-width: 63.999rem) {
   .hero {
+    --hero-h: max(100svh, 30rem);
+    --tag: clamp(1.85rem, 8.8vw, 3.2rem);
     --win-x: 3.2vw;
     --win-top: var(--header-h);
-    --win-bottom: calc(11.5rem + env(safe-area-inset-bottom));
-    --mast: min(23.3vw, 30svh);
+    /* Sous l'alcôve : la barre, le bouton, le slogan et leurs marges. Le slogan ne touche jamais la photo, à toute largeur. */
+    --win-bottom: calc(var(--bar-h) + 1.5rem + env(safe-area-inset-bottom) + var(--tag) * 1.124 + 3.25rem + 0.75rem);
+    --mast: min(23.3vw, calc(var(--hero-h) * 0.3));
     --head: 1.25rem;
     --ovl: calc(var(--cap) * 0.3);
-    min-height: 30rem;
   }
 }
 @media (max-width: 63.999rem) and (min-width: 40rem) {
-  .hero { --win-x: 4vw; --win-bottom: calc(13rem + env(safe-area-inset-bottom)); }
+  .hero { --win-x: 4vw; }
+}
+/* À l'horizontale, comme sur grand écran : une alcôve au centre, le slogan à gauche, la barre à droite. */
+@media (orientation: landscape) and (max-width: 63.999rem) {
+  .hero {
+    --hero-h: max(100svh, 17.5rem);
+    --tag: clamp(1.5rem, 3.6vw, 2.25rem);
+    /* L'alcôve n'est jamais plus large que la photo : aucun bord de photo visible, et les colonnes y gagnent. */
+    --pw: min(calc(44vw / 0.56), calc(var(--ph-max) * 1.1823));
+    --win-x: max(28vw, calc(50vw - var(--pw) / 2));
+    --win-top: 0px;
+    --win-bottom: 0px;
+    --mast: min(24.5vw, calc(var(--hero-h) * 0.5));
+    --head: calc(var(--header-h) + 0.25rem);
+    --ovl: calc(var(--cap) * 0.32);
+  }
+  /* La colonne est étroite : le libellé du bouton passe sur deux lignes. */
+  .hero .cta { gap: 0.75rem; }
+  .hero .roll { max-width: 10.8em; white-space: normal; }
+  .hero .roll > span:last-child { right: 0; white-space: normal; }
+}
+/* Fenêtre d'ordinateur très basse : la couverture reste entière à l'écran. */
+@media (min-width: 64rem) and (max-height: 34rem) {
+  .hero { --hero-h: max(100svh, 24rem); }
 }
 
 /* ───────────────────────── Accueil : le paravent ───────────────────────── */
@@ -281,7 +338,11 @@ html[data-transition="cover"] #contenu { pointer-events: none; }
 /* ───────────────────────── Accueil : l'emaki ───────────────────────── */
 .emaki-track { display: flex; align-items: flex-start; gap: clamp(1rem, 2.6vw, 3.5rem); overflow-x: auto; scroll-snap-type: x proximity; padding-inline: var(--gutter); scrollbar-width: none; }
 .emaki-track::-webkit-scrollbar { display: none; }
-.emaki-track > * { flex: none; scroll-snap-align: center; }
+.emaki-track > * { flex: none; scroll-snap-align: center; width: var(--emaki-w); margin-top: var(--emaki-top); }
+/* À l'horizontale : chaque photo tient entière dans la hauteur de l'écran. */
+@media (orientation: landscape) and (max-width: 63.999rem) {
+  .emaki-track > * { width: min(var(--emaki-w), calc(76svh * var(--emaki-r))); margin-top: 0; }
+}
 .emaki-track.is-driven { overflow: visible; scroll-snap-type: none; width: max-content; will-change: transform; }
 
 /* ───────────────────────── La carte ───────────────────────── */
@@ -295,10 +356,15 @@ html[data-header-visible="true"] .carte-nav[data-stuck="true"] { transform: tran
 .menu-jp {
   flex: none;
   width: 1.3em;
-  font-size: min(5.9cqh, 1.2rem);
+  /* Le nom le plus long compte 16 signes */
+  font-size: min(6.1cqh, 1.2rem);
   line-height: 1.3;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.02em;
   color: var(--color-matcha);
+}
+/* Très petites cartes : le texte garde une taille lisible et les noms longs passent sur deux colonnes. */
+@container (max-height: 9.5rem) {
+  .menu-jp { width: 2.6em; font-size: 0.625rem; }
 }
 
 /* ───────────────────────── Nos créations ───────────────────────── */
@@ -312,10 +378,24 @@ html[data-header-visible="true"] .carte-nav[data-stuck="true"] { transform: tran
   .reveal-inner { will-change: transform; }
 }
 @media (hover: none), (pointer: coarse), (max-width: 63.999rem) {
+  /* Photo en pleine largeur : deux bandes suffisent, et elles ne repeignent presque rien. */
   .studio-fade::before,
   .studio-fade::after { content: ""; position: absolute; z-index: 1; inset-inline: 0; height: 6%; pointer-events: none; }
   .studio-fade::before { top: 0; background: linear-gradient(180deg, var(--color-night), transparent); }
   .studio-fade::after { bottom: 0; background: linear-gradient(0deg, var(--color-night), transparent); }
+}
+/* Photo moins large que l'écran (tablette, ou à l'horizontale) : le fondu fait les quatre côtés pour qu'aucun bord ne se voie. */
+@media (min-width: 64rem) and (hover: none), (min-width: 64rem) and (pointer: coarse), (orientation: landscape) and (max-width: 63.999rem) {
+  .studio-fade::before {
+    inset: 0;
+    height: auto;
+    background:
+      linear-gradient(180deg, var(--color-night), transparent) top / 100% 5% no-repeat,
+      linear-gradient(0deg, var(--color-night), transparent) bottom / 100% 4% no-repeat,
+      linear-gradient(90deg, var(--color-night), transparent) left / 9% 100% no-repeat,
+      linear-gradient(270deg, var(--color-night), transparent) right / 9% 100% no-repeat;
+  }
+  .studio-fade::after { content: none; }
 }
 
 /* ───────────────────────── Notre maison : la séquence du geste ───────────────────────── */
