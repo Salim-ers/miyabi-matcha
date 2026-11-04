@@ -10,6 +10,7 @@ import { photos, type ArtPhoto } from "./photos";
  * Sources complémentaires : carte de la boutique (prix et produits) et affiches officielles (photos, noms japonais).
  * Images : 5 produits sans prise de vue ont une image générée par IA (public/images/menu/ia), à remplacer par de vraies photos.
  * Prix : champ `price` (en euros, ex. 6.5), repris de la carte de la boutique, et non d'Uber Eats, dont les tarifs diffèrent.
+ * Quand la carte et l'affiche se contredisent, l'affiche fait foi : Yuzu Sparkling, Coconut Cloud et Crêpe Strawberry.
  * Il s'affiche automatiquement dès qu'il est renseigné. Aucun prix n'est deviné.
  *
  * Pour mettre à jour la carte : modifier ou ajouter des entrées ci-dessous.
@@ -87,7 +88,7 @@ export const menuProducts: MenuProduct[] = [
     description: "Un mélange pétillant de matcha japonais d'exception et de yuzu frais.",
     short: "Matcha japonais et yuzu frais, pétillant.",
     photo: photos.yuzu,
-    price: 5.95,
+    price: 6.5,
     order: 3,
   },
   {
@@ -111,7 +112,7 @@ export const menuProducts: MenuProduct[] = [
       "Un latte aérien : matcha japonais d'exception et lait de coco onctueux, surmonté d'une mousse légère.",
     short: "Matcha japonais, lait de coco, mousse légère.",
     photo: photos.coconut,
-    price: 5.95,
+    price: 6.5,
     order: 5,
   },
   {
@@ -162,7 +163,7 @@ export const menuProducts: MenuProduct[] = [
       "Une crêpe fine et moelleuse, préparée avec du matcha japonais d'exception et garnie de crème légère et de fraises fraîches.",
     short: "Crêpe fine au matcha, crème légère, fraises fraîches.",
     photo: photos.crepeStrawberry,
-    price: 9,
+    price: 10,
     order: 3,
   },
   {

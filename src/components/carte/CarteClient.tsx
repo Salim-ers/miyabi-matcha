@@ -239,8 +239,9 @@ export function CarteClient({ menu }: { menu: MenuSection[] }) {
 function ProductText({ product }: { product: MenuProduct }) {
   return (
     <>
-      <div className="mt-3 flex items-baseline justify-between gap-3">
-        <h3 className="text-[0.9375rem] font-medium leading-snug lg:text-base">{product.name}</h3>
+      {/* Le prix reste à droite du nom tant que le mot le plus long tient à côté, sinon il passe dessous. */}
+      <div className="mt-3 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5">
+        <h3 className="flex-[1_1_min-content] text-[0.9375rem] font-medium leading-snug lg:text-base">{product.name}</h3>
         {product.price != null && <span className="shrink-0 text-[0.9375rem] tabular-nums">{formatPrice(product.price)}</span>}
       </div>
       {product.short && <p className="mt-1 text-[0.8125rem] leading-snug text-smoke">{product.short}</p>}
